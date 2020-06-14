@@ -1,0 +1,15 @@
+version: "3.1"
+
+services:
+  petstore:
+    image: postgres:12
+    container_name: petstore_db
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: petstore,petstore_test
+      POSTGRES_PASSWORD: password
+      POSTGRES_INITDB_ARGS: '--encoding UTF8 --lc-collate C --lc-ctype C'
+    volumes:
+      - ./setup.sh:/docker-entrypoint-initdb.d/setup.sh
+    ports:
+      - 6432:5432
+

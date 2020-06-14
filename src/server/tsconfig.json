@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "lib": ["es2017"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+
+        "strict": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "keyofStringsOnly": true,
+        "noEmitOnError": true,
+        "skipLibCheck": true,
+        "downlevelIteration": true,
+
+        "rootDir": "./",
+        "baseUrl": "./",
+        "outDir": "../../out/server",
+        "types": ["node"],
+        "paths": {
+            "server/*": [
+                "./src/*"
+            ]
+        }
+    },
+    "include": [
+        "./**/*"
+    ],
+    "exclude": [
+        "out",
+        "node_modules"
+    ]
+}

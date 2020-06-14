@@ -1,0 +1,9 @@
+**
+!.config
+!src
+!tools
+!package-lock.json
+!package.json
+!tsconfig.json
+!Makefile
+!.npmrc
