@@ -1,4 +1,7 @@
+/* eslint-disable import/first */
 import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 import * as Knex from 'knex';
 import * as glob from 'glob';
@@ -7,8 +10,6 @@ import * as fs from 'fs';
 import {sortBy} from 'lodash';
 import {dbManager} from 'server/lib/db-manager';
 import {logger} from 'server/lib/logger';
-
-dotenv.config();
 
 interface Version {
     current?: string;
