@@ -6,9 +6,13 @@ export enum SignUpType {
 }
 
 export enum DbTable {
+    ALEMBIC_VERSION = 'alembic_version',
     USERS = 'users'
 }
 
-export enum ClientErrorCode {
-    EMAIL_EXIST = 'EMAIL_EXIST'
+export enum ClientStatusCode {
+    USER_EMAIL_EXIST = 'USER_EMAIL_EXIST',
+    USER_NOT_EXIST = 'USER_NOT_EXIST',
+    USER_NOT_VERIFIED = 'USER_NOT_VERIFIED',
+    USER_INVALID_TOKEN = 'USER_INVALID_TOKEN'
 }

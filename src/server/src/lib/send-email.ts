@@ -43,6 +43,10 @@ export async function getTransporter() {
 }
 
 export async function sendEmail(email: string, params: Params) {
+	if (!config['email.enable']) {
+		return;
+	}
+
 	const transporter = await getTransporter();
 	const info = await transporter.sendMail({
 		from: `BFluffy ${config['email.login']}`,

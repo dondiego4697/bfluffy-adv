@@ -23,6 +23,8 @@
         "class-methods-use-this": "off",
         "no-await-in-loop": "off",
         "no-restricted-syntax": "off",
-        "camelcase": "off"
+        "camelcase": "off",
+        "import/no-extraneous-dependencies": "off",
+        "consistent-return": "off"
     }
 }

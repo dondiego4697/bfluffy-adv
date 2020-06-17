@@ -17,6 +17,7 @@ export interface Config {
 	'auth.privateKey': string;
 	'host.app': string;
 	'email.mock': boolean;
+	'email.enable': boolean;
 	'email.login': string;
 	'email.password': string;
 }
@@ -36,6 +37,7 @@ const production: Config = {
 	'db.hosts': [],
 	'auth.privateKey': process.env.AUTH_PRIVATE_KEY!,
 	'email.mock': false,
+	'email.enable': true,
 	'email.login': '',
 	'email.password': process.env.EMAIL_PASSWORD!,
 	'host.app': 'unknown'
@@ -56,10 +58,21 @@ const development: Config = {
 	'email.mock': true
 };
 
+const tests: Config = {
+	...development,
+	'db.database': 'petstore_test',
+	'db.password': 'password',
+	'db.user': 'postgres',
+	'auth.privateKey': 'some_value',
+	'email.password': 'password',
+	'email.enable': false
+};
+
 const configs = new Map<string, Readonly<Config>>([
 	['production', production],
 	['testing', testing],
 	['development', development],
+	['tests', tests]
 ]);
 
 const env = process.env.ENVIRONMENT || 'development';

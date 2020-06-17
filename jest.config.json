@@ -1,0 +1,13 @@
+{
+    "maxWorkers": 1,
+    "projects": [
+        {
+            "displayName": "integration",
+            "testMatch": ["<rootDir>/out/server/tests/integration/**/*.test.js"]
+        },
+        {
+            "displayName": "unit",
+            "testMatch": ["<rootDir>/out/server/tests/unit/**/*.test.js"]
+        }
+    ]
+}

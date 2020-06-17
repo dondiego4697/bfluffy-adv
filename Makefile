@@ -6,6 +6,7 @@ build-server-cmd = node_modules/.bin/tsc -p src/server/tsconfig.json $(1)
 $(OUT_DIR)/node_modules:
 	mkdir -p $@
 	ln -s ../server/src $@/server
+	ln -s ../server/tests $@/tests
 
 .PHONY: deps
 deps:
@@ -57,8 +58,10 @@ server-dev:
 		-e ts,json
 
 .PHONY: tests
-tests:
-	@echo stub
+tests: build-server
+	@ENVIRONMENT=tests \
+		DISABLE_LOGGING=1 \
+		node_modules/.bin/jest --config=jest.config.json --runInBand --forceExit
 
 .PHONY: migrate-db
 migrate-db: build-server
@@ -66,5 +69,5 @@ migrate-db: build-server
 
 .PHONY: migrate-test-db
 migrate-test-db: build-server
-	@QLOUD_ENVIRONMENT=tests \
+	@ENVIRONMENT=tests \
 		node $(OUT_DIR)/server/tools/create-tables.js

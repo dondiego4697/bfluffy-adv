@@ -15,9 +15,12 @@ const signupSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-	email: Joi.string().required(),
-	password: Joi.string().required()
-});
+	verified_token: Joi.string(),
+	credentials: Joi.object({
+		email: Joi.string().email().required(),
+		password: Joi.string().required()
+	})
+}).xor('verified_token', 'credentials');
 
 const forgotPasswordSchema = Joi.object({
 	email: Joi.string().required()
