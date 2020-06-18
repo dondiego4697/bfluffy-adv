@@ -12,3 +12,13 @@ $text-xl: 28px;
 $text-l: 18px;
 $text-m: 13px;
 $text-s: 11px;
+
+@font-face {
+    font-family: MontserratRegular;
+    src: url('/fonts/Montserrat/Montserrat-Regular.ttf');
+}
+
+@font-face {
+    font-family: MontserratBold;
+    src: url('/fonts/Montserrat/Montserrat-Bold.ttf');
+}

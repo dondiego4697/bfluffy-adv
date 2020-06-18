@@ -1,3 +1,6 @@
 export enum RoutePaths {
-    MAIN = '/'
+    MAIN = '/',
+    LOGIN = '/login',
+    SIGNUP = '/signup',
+    CREATE_AD = '/create_ad'
 }

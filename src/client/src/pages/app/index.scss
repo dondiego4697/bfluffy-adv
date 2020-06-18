@@ -10,11 +10,14 @@ html, body, #root {
 .root {
     width: 100vw;
     display: flex;
+    flex-direction: column;
     background-color: $background-color;
+    font-family: MontserratRegular;
 
     &__container {
         width: 100vw;
         height: 100vh;
         overflow: auto;
+        padding: 40px;
     }
 }
