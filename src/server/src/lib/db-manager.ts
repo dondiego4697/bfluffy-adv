@@ -4,10 +4,16 @@ import {
 	PgClient,
 	PgClientConfig,
 } from 'server/lib/pg-client';
+import {types} from 'pg';
 import * as fs from 'fs';
 import * as path from 'path';
 import {logger} from 'server/lib/logger';
 import {config} from 'server/config';
+
+function parseDbInt8(value: any) {
+	return value === null ? null : parseInt(value, 10);
+}
+types.setTypeParser(types.builtins.INT8, parseDbInt8);
 
 export class DBManager {
     private dbClient: PgClient;

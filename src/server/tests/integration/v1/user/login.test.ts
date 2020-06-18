@@ -38,43 +38,44 @@ describe(REQUEST_PATH, () => {
 		nock.enableNetConnect();
 	});
 
-	describe('by verified_token', () => {
+	describe('by auth_token', () => {
 		it('should login and update verified', async () => {
-			const newUser = await TestFactory.createUser({
+			const user = await TestFactory.createUser({
 				signUpType: SignUpType.EMAIL,
 				password: 'password'
 			});
 
-			const verifiedToken = AuthToken.encode({
-				email: newUser.email,
+			const authToken = AuthToken.encode({
+				email: user.email,
 				password: 'password'
 			});
 
-			const {body, statusCode} = await client.post(
+			const {body, statusCode, headers} = await client.post(
 				`${url}${REQUEST_PATH}`,
 				{
 					json: {
-						verified_token: verifiedToken
+						auth_token: authToken
 					}
 				}
 			);
 
 			expect(statusCode).toEqual(200);
-			expect(body).toEqual({
-				token: verifiedToken
-			});
+			expect(body).toEqual({});
+
+			const cookie = headers['set-cookie']![0];
+			expect(cookie.includes(`auth_token=${authToken}`)).toBeTruthy();
 
 			const users = await TestFactory.getAllUsers();
-			const newUserVirified = users.find((user) => user.email === newUser.email);
-			expect(newUserVirified?.verified).toBeTruthy();
+			const verifiedUser = users.find((item) => item.email === user.email);
+			expect(verifiedUser?.verified).toBeTruthy();
 		});
 
-		it('should throw error if verified_token is invalid', async () => {
+		it('should throw error if auth_token is invalid', async () => {
 			const {body, statusCode} = await client.post<Boom.Payload>(
 				`${url}${REQUEST_PATH}`,
 				{
 					json: {
-						verified_token: 'invalid_token'
+						auth_token: 'invalid_token'
 					}
 				}
 			);
@@ -83,8 +84,8 @@ describe(REQUEST_PATH, () => {
 			expect(body.message).toEqual('USER_INVALID_TOKEN');
 		});
 
-		it('should throw error if user not exist', async () => {
-			const verifiedToken = AuthToken.encode({
+		it('should throw error if user not exist by email', async () => {
+			const authToken = AuthToken.encode({
 				email: 'unknown@mail.ru',
 				password: 'password'
 			});
@@ -93,7 +94,31 @@ describe(REQUEST_PATH, () => {
 				`${url}${REQUEST_PATH}`,
 				{
 					json: {
-						verified_token: verifiedToken
+						auth_token: authToken
+					}
+				}
+			);
+
+			expect(statusCode).toEqual(400);
+			expect(body.message).toEqual('USER_NOT_EXIST');
+		});
+
+		it('should throw error if user not exist by password', async () => {
+			const user = await TestFactory.createUser({
+				signUpType: SignUpType.EMAIL,
+				password: 'password'
+			});
+
+			const authToken = AuthToken.encode({
+				email: user.email,
+				password: 'unknown_password'
+			});
+
+			const {body, statusCode} = await client.post<Boom.Payload>(
+				`${url}${REQUEST_PATH}`,
+				{
+					json: {
+						auth_token: authToken
 					}
 				}
 			);
@@ -105,23 +130,23 @@ describe(REQUEST_PATH, () => {
 
 	describe('by credentials', () => {
 		it('should log in by credentials', async () => {
-			const newUser = await TestFactory.createUser({
+			const user = await TestFactory.createUser({
 				signUpType: SignUpType.EMAIL,
 				password: 'password',
 				verified: true
 			});
 
-			const token = AuthToken.encode({
-				email: newUser.email,
+			const authToken = AuthToken.encode({
+				email: user.email,
 				password: 'password'
 			});
 
-			const {body, statusCode} = await client.post(
+			const {body, statusCode, headers} = await client.post(
 				`${url}${REQUEST_PATH}`,
 				{
 					json: {
 						credentials: {
-							email: newUser.email,
+							email: user.email,
 							password: 'password'
 						}
 					}
@@ -129,10 +154,13 @@ describe(REQUEST_PATH, () => {
 			);
 
 			expect(statusCode).toEqual(200);
-			expect(body).toEqual({token});
+			expect(body).toEqual({});
+
+			const cookie = headers['set-cookie']![0];
+			expect(cookie.includes(`auth_token=${authToken}`)).toBeTruthy();
 		});
 
-		it('should throw error if user not exist', async () => {
+		it('should throw error if user not exist by email', async () => {
 			const {body, statusCode} = await client.post<Boom.Payload>(
 				`${url}${REQUEST_PATH}`,
 				{
@@ -149,8 +177,8 @@ describe(REQUEST_PATH, () => {
 			expect(body.message).toEqual('USER_NOT_EXIST');
 		});
 
-		it('should throw error if user is not verified', async () => {
-			const newUser = await TestFactory.createUser({
+		it('should throw error if user not exist by password', async () => {
+			const user = await TestFactory.createUser({
 				signUpType: SignUpType.EMAIL,
 				password: 'password'
 			});
@@ -160,7 +188,29 @@ describe(REQUEST_PATH, () => {
 				{
 					json: {
 						credentials: {
-							email: newUser.email,
+							email: user.email,
+							password: 'unknown_password'
+						}
+					}
+				}
+			);
+
+			expect(statusCode).toEqual(400);
+			expect(body.message).toEqual('USER_NOT_EXIST');
+		});
+
+		it('should throw error if user is not verified', async () => {
+			const user = await TestFactory.createUser({
+				signUpType: SignUpType.EMAIL,
+				password: 'password'
+			});
+
+			const {body, statusCode} = await client.post<Boom.Payload>(
+				`${url}${REQUEST_PATH}`,
+				{
+					json: {
+						credentials: {
+							email: user.email,
 							password: 'password'
 						}
 					}

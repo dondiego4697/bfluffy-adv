@@ -3,7 +3,6 @@ import * as faker from 'faker';
 import {SignUpType, DbTable} from 'server/types/consts';
 import {DBTableUsers} from 'server/types/db/users';
 import {dbManager} from 'server/lib/db-manager';
-import {formatCreatedDate} from 'server/lib/date-format';
 import {getPasswordHash} from 'server/lib/crypto';
 
 interface CreateUserParams {
@@ -18,7 +17,7 @@ interface User {
     displayName: DBTableUsers.Schema['display_name'];
     password: DBTableUsers.Schema['password'];
     signUpType: DBTableUsers.Schema['sign_up_type'];
-    createdAt: string;
+    createdAt: DBTableUsers.Schema['created_at'];
     verified: DBTableUsers.Schema['verified'];
 }
 
@@ -46,11 +45,7 @@ async function createUser(params: CreateUserParams): Promise<User> {
 		.returning('*');
 
 	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
-
-	return {
-		...row,
-		createdAt: formatCreatedDate(row.createdAt)
-	};
+	return row;
 }
 
 async function getAllUsers(): Promise<User[]> {
@@ -59,23 +54,17 @@ async function getAllUsers(): Promise<User[]> {
 		.from(DbTable.USERS);
 
 	const {rows} = await dbManager.executeReadQuery(query.toString());
-	return rows.map((row) => ({
-		...row,
-		createdAt: formatCreatedDate(row.createdAt)
-	}));
+	return rows;
 }
 
-async function getUserByCredentials(email: string, password: string): Promise<User[]> {
+async function getUserByCredentials(email: string, password: string): Promise<User> {
 	const query = knex
 		.select(USER_COLUMNS)
 		.from(DbTable.USERS)
 		.where({email, password});
 
 	const {rows: [row]} = await dbManager.executeReadQuery(query.toString());
-	return {
-		...row,
-		createdAt: formatCreatedDate(row.createdAt)
-	};
+	return row;
 }
 
 export const TestFactory = {

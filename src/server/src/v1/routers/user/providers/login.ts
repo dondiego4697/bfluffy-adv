@@ -6,6 +6,7 @@ import {UserDbProvider} from 'server/v1/db-provider/user';
 import {verifiedUser} from 'server/v1/db-provider/user/api/update-user';
 import {ClientStatusCode} from 'server/types/consts';
 import {logger} from 'server/lib/logger';
+import {config} from 'server/config';
 import {getPasswordHash} from 'server/lib/crypto';
 
 interface Credentials {
@@ -14,31 +15,36 @@ interface Credentials {
 }
 
 interface Body {
-    verified_token?: string;
+    auth_token?: string;
     credentials?: Credentials;
 }
 
 export const login = wrap<Request, Response>(async (req, res) => {
 	const {
-		verified_token: verifiedToken,
+		auth_token: authToken,
 		credentials
 	} = req.body as Body;
 
-	if (verifiedToken) {
-		res.json(await loginByVerifiedToken(verifiedToken));
-		return;
+	let token: string | null = null;
+
+	if (authToken) {
+		token = await loginByAuthToken(authToken);
 	}
 
 	if (credentials) {
-		res.json(await loginByCredentials(credentials));
-		return;
+		token = await loginByCredentials(credentials);
 	}
 
-	throw Boom.badImplementation();
+	if (!token) {
+		throw Boom.badImplementation();
+	}
+
+	res.cookie('auth_token', token, {maxAge: config['auth.token.ttl']});
+	res.json({});
 });
 
-async function loginByVerifiedToken(token: string) {
-	const credentials = AuthToken.decode(token);
+async function loginByAuthToken(authToken: string): Promise<string> {
+	const credentials = AuthToken.decode(authToken);
 
 	const user = await UserDbProvider.getUserByCredentials(
 		credentials.email,
@@ -46,7 +52,7 @@ async function loginByVerifiedToken(token: string) {
 	);
 
 	if (!user) {
-		logger.error(`User by verified token email: ${credentials.email} did not found`);
+		logger.error(`[login by auth token] User by email ${credentials.email} did not found`);
 		throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
 	}
 
@@ -54,17 +60,17 @@ async function loginByVerifiedToken(token: string) {
 		await verifiedUser(user.email);
 	}
 
-	return {token};
+	return authToken;
 }
 
-async function loginByCredentials(credentials: Credentials) {
+async function loginByCredentials(credentials: Credentials): Promise<string> {
 	const user = await UserDbProvider.getUserByCredentials(
 		credentials.email,
 		getPasswordHash(credentials.password)
 	);
 
 	if (!user) {
-		logger.error(`User by credentials email: ${credentials.email} did not found`);
+		logger.error(`[login by credentials] User by email ${credentials.email} did not found`);
 		throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
 	}
 
@@ -72,5 +78,5 @@ async function loginByCredentials(credentials: Credentials) {
 		throw Boom.badRequest(ClientStatusCode.USER_NOT_VERIFIED);
 	}
 
-	return {token: AuthToken.encode(credentials)};
+	return AuthToken.encode(credentials);
 }

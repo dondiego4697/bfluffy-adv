@@ -1,6 +1,7 @@
 import {createUser} from 'server/v1/db-provider/user/api/create-user';
 import {
-	verifiedUser
+	verifiedUser,
+	updatePasswordByEmail
 } from 'server/v1/db-provider/user/api/update-user';
 import {
 	getUserByEmail,
@@ -11,5 +12,6 @@ export const UserDbProvider = {
 	createUser,
 	getUserByEmail,
 	getUserByCredentials,
-	verifiedUser
+	verifiedUser,
+	updatePasswordByEmail
 };

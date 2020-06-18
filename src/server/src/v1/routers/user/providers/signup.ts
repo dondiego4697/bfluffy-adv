@@ -20,21 +20,24 @@ interface Body {
 export const signup = wrap<Request, Response>(async (req, res) => {
 	const body = req.body as Body;
 
+	let result: any | null = null;
+
 	if (body.type === SignUpType.EMAIL) {
-		res.json(await signupByEmail(body));
-		return;
+		result = await signupByEmail(body);
 	}
 
-	throw Boom.badImplementation();
+	if (!result) {
+		throw Boom.badImplementation();
+	}
+
+	res.json(result);
 });
 
-export function formEmailMessage(token: string) {
+export function formEmailMessage(authToken: string) {
 	const host = config['host.app'];
 
 	const url = new URL('/login', host);
-	const query = new URLSearchParams({
-		verified_token: token
-	});
+	const query = new URLSearchParams({auth_token: authToken});
 	url.search = query.toString();
 
 	return {
@@ -51,19 +54,18 @@ async function signupByEmail(body: Body) {
 		password: getPasswordHash(body.password)
 	});
 
-	const token = AuthToken.encode({
+	const authToken = AuthToken.encode({
 		email: user.email,
 		password: body.password
 	});
 
-	const {html, text} = formEmailMessage(token);
+	const {html, text} = formEmailMessage(authToken);
 
-	// DO NOT TOUCH !!! OR TEST MANUAL
 	await sendEmail(user.email, {
-		subject: 'top subject',
+		subject: 'TODO top subject',
 		html,
 		text
 	});
 
-	return {token};
+	return {auth_token: authToken};
 }

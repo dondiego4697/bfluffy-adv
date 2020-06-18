@@ -2,7 +2,6 @@ import * as Knex from 'knex';
 import {dbManager} from 'server/lib/db-manager';
 import {DbTable} from 'server/types/consts';
 import {DBTableUsers} from 'server/types/db/users';
-import {formatCreatedDate} from 'server/lib/date-format';
 
 interface User {
 	id: DBTableUsers.Schema['id'];
@@ -10,7 +9,7 @@ interface User {
     displayName: DBTableUsers.Schema['display_name'];
     password: DBTableUsers.Schema['password'];
     signUpType: DBTableUsers.Schema['sign_up_type'];
-    createdAt: string;
+    createdAt: DBTableUsers.Schema['created_at'];
     verified: DBTableUsers.Schema['verified'];
 }
 
@@ -31,14 +30,7 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 		.where({email});
 
 	const {rows: [row]} = await dbManager.executeReadQuery(query.toString());
-	if (!row) {
-		return;
-	}
-
-	return {
-		...row,
-		createdAt: formatCreatedDate(row.createdAt)
-	};
+	return row;
 }
 
 export async function getUserByCredentials(email: string, password: string): Promise<User | undefined> {
@@ -59,12 +51,5 @@ export async function getUserByCredentials(email: string, password: string): Pro
 		});
 
 	const {rows: [row]} = await dbManager.executeReadQuery(query.toString());
-	if (!row) {
-		return;
-	}
-
-	return {
-		...row,
-		createdAt: formatCreatedDate(row.createdAt)
-	};
+	return row;
 }

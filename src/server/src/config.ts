@@ -15,6 +15,7 @@ export interface Config {
     'db.poolSettings.max': number;
 	'db.poolSettings.idleTimeoutMillis': number;
 	'auth.privateKey': string;
+	'auth.token.ttl': number;
 	'host.app': string;
 	'email.mock': boolean;
 	'email.enable': boolean;
@@ -31,10 +32,11 @@ const production: Config = {
 	'db.password': process.env.DB_PASSWORD!,
 	'db.database': process.env.DB_DATABASE!,
 	'db.port': 6432,
-	'db.poolSettings.connectionTimeoutMillis': 1_000 * 10, // 10s
+	'db.poolSettings.connectionTimeoutMillis': 1000 * 10, // 10s
 	'db.poolSettings.max': 16,
-	'db.poolSettings.idleTimeoutMillis': 1_000 * 60 * 60 * 2, // 2h
+	'db.poolSettings.idleTimeoutMillis': 1000 * 60 * 60 * 2, // 2h
 	'db.hosts': [],
+	'auth.token.ttl': 24 * 3600 * 1000, // 24h
 	'auth.privateKey': process.env.AUTH_PRIVATE_KEY!,
 	'email.mock': false,
 	'email.enable': true,
@@ -53,6 +55,7 @@ const development: Config = {
 	'logger.level': 'silly',
 	'db.hosts': ['localhost'],
 	'db.useCert': false,
+	'auth.token.ttl': 10 * 60 * 1000, // 10m
 	'host.app': 'http://localhost:8080',
 	'email.login': 'testmock@mail.ru',
 	'email.mock': true

@@ -27,8 +27,8 @@ interface User {
 const knex = Knex({client: 'pg'});
 
 export async function createUser(params: Params): Promise<User> {
-	const user = await UserDbProvider.getUserByEmail(params.email);
-	if (user) {
+	const existedUser = await UserDbProvider.getUserByEmail(params.email);
+	if (existedUser) {
 		throw Boom.badRequest(ClientStatusCode.USER_EMAIL_EXIST);
 	}
 
@@ -49,14 +49,12 @@ export async function createUser(params: Params): Promise<User> {
 			'verified'
 		]);
 
-	const {rows} = await dbManager.executeModifyQuery(query.toString());
+	const {rows: [user]} = await dbManager.executeModifyQuery(query.toString());
 
-	const newUser = rows[0];
-
-	if (!newUser) {
-		logger.error(`User did not create: ${JSON.stringify(omit(params, 'password'))}`);
+	if (!user) {
+		logger.error(`[create user] User did not create: ${JSON.stringify(omit(params, 'password'))}`);
 		throw Boom.badRequest();
 	}
 
-	return newUser;
+	return user;
 }

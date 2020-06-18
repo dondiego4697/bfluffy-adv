@@ -57,20 +57,23 @@ describe(REQUEST_PATH, () => {
 
 		expect(statusCode).toEqual(200);
 
-		const token = AuthToken.encode({
+		const authToken = AuthToken.encode({
 			email: 'new_test@mail.ru',
 			password: 'password'
 		});
-		expect(body).toEqual({token});
+		expect(body).toEqual({auth_token: authToken});
 
-		const newUser = await TestFactory.getUserByCredentials(
+		const user = await TestFactory.getUserByCredentials(
 			'new_test@mail.ru',
 			getPasswordHash('password')
 		);
-		expect(newUser).not.toBeUndefined();
 
-		expect(newUser).toEqual({
-			id: '2',
+		expect(user).not.toBeUndefined();
+		expect({
+			...user,
+			createdAt: formatCreatedDate(user.createdAt),
+		}).toEqual({
+			id: 2,
 			email: 'new_test@mail.ru',
 			displayName: 'Test Test',
 			password: getPasswordHash('password'),
