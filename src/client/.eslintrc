@@ -22,9 +22,14 @@
         "no-plusplus": "off",
         "class-methods-use-this": "off",
         "import/no-extraneous-dependencies": "off",
+        "no-nested-ternary": "off",
+        "consistent-return": "off",
 
         "react/jsx-indent": "off",
         "react/jsx-closing-tag-location": "off",
-        "react/jsx-filename-extension": "off"
+        "react/jsx-filename-extension": "off",
+        "react/jsx-indent-props": "off",
+        "react/destructuring-assignment": "off",
+        "jsx-quotes": ["error", "prefer-single"]
     }
 }

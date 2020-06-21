@@ -1,9 +1,10 @@
 import * as express from 'express';
 import * as Joi from '@hapi/joi';
-import {bodyValidateMiddleware} from 'server/middlewares/validate';
+import {bodyValidateMiddleware, queryValidateMiddleware} from 'server/middlewares/validate';
 import {signup} from 'server/v1/routers/user/providers/signup';
 import {login} from 'server/v1/routers/user/providers/login';
 import {resetPassword, forgotPassword} from 'server/v1/routers/user/providers/password';
+import {checkEmail} from 'server/v1/routers/user/providers/validate';
 import {SignUpType} from 'server/types/consts';
 
 const signupSchema = Joi.object({
@@ -26,6 +27,10 @@ const forgotPasswordSchema = Joi.object({
 	email: Joi.string().required()
 });
 
+const checkEmailSchema = Joi.object({
+	email: Joi.string().required()
+});
+
 const resetPasswordSchema = Joi.object({
 	auth_token: Joi.string().required(),
 	new_password: Joi.string().required()
@@ -35,4 +40,5 @@ export const router = express.Router()
 	.post('/signup', bodyValidateMiddleware(signupSchema), signup)
 	.post('/login', bodyValidateMiddleware(loginSchema), login)
 	.post('/forgot_password', bodyValidateMiddleware(forgotPasswordSchema), forgotPassword)
-	.post('/reset_password', bodyValidateMiddleware(resetPasswordSchema), resetPassword);
+	.post('/reset_password', bodyValidateMiddleware(resetPasswordSchema), resetPassword)
+	.get('/check_email', queryValidateMiddleware(checkEmailSchema), checkEmail);

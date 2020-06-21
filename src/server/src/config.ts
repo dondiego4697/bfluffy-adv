@@ -21,6 +21,7 @@ export interface Config {
 	'email.enable': boolean;
 	'email.login': string;
 	'email.password': string;
+	'client.bundlesRootFolder': string;
 }
 
 const production: Config = {
@@ -42,7 +43,8 @@ const production: Config = {
 	'email.enable': true,
 	'email.login': '',
 	'email.password': process.env.EMAIL_PASSWORD!,
-	'host.app': 'unknown'
+	'host.app': 'unknown',
+	'client.bundlesRootFolder': '/bundles/'
 };
 
 const testing: Config = {
@@ -57,8 +59,8 @@ const development: Config = {
 	'db.useCert': false,
 	'auth.token.ttl': 10 * 60 * 1000, // 10m
 	'host.app': 'http://localhost:8080',
-	'email.login': 'testmock@mail.ru',
-	'email.mock': true
+	'email.login': 'dondiego4697@yandex.ru',
+	'email.mock': false
 };
 
 const tests: Config = {

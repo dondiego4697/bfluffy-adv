@@ -42,7 +42,15 @@ async function createUser(params: CreateUserParams): Promise<User> {
 			sign_up_type: params.signUpType,
 			verified: params.verified
 		})
-		.returning('*');
+		.returning([
+			'id',
+			'email',
+			'display_name as displayName',
+			'password',
+			'sign_up_type as signUpType',
+			'created_at as createdAt',
+			'verified'
+		]);
 
 	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
 	return row;

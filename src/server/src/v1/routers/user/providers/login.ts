@@ -19,31 +19,37 @@ interface Body {
     credentials?: Credentials;
 }
 
+interface UserResponse {
+	token: string;
+	name: string;
+	email: string;
+}
+
 export const login = wrap<Request, Response>(async (req, res) => {
 	const {
 		auth_token: authToken,
 		credentials
 	} = req.body as Body;
 
-	let token: string | null = null;
+	let userResponse: UserResponse | null = null;
 
 	if (authToken) {
-		token = await loginByAuthToken(authToken);
+		userResponse = await loginByAuthToken(authToken);
 	}
 
 	if (credentials) {
-		token = await loginByCredentials(credentials);
+		userResponse = await loginByCredentials(credentials);
 	}
 
-	if (!token) {
+	if (!userResponse) {
 		throw Boom.badImplementation();
 	}
 
-	res.cookie('auth_token', token, {maxAge: config['auth.token.ttl']});
-	res.json({});
+	res.cookie('auth_token', userResponse.token, {maxAge: config['auth.token.ttl']});
+	res.json(userResponse);
 });
 
-async function loginByAuthToken(authToken: string): Promise<string> {
+async function loginByAuthToken(authToken: string): Promise<UserResponse> {
 	const credentials = AuthToken.decode(authToken);
 
 	const user = await UserDbProvider.getUserByCredentials(
@@ -60,10 +66,14 @@ async function loginByAuthToken(authToken: string): Promise<string> {
 		await verifiedUser(user.email);
 	}
 
-	return authToken;
+	return {
+		token: authToken,
+		email: user.email,
+		name: user.displayName
+	};
 }
 
-async function loginByCredentials(credentials: Credentials): Promise<string> {
+async function loginByCredentials(credentials: Credentials): Promise<UserResponse> {
 	const user = await UserDbProvider.getUserByCredentials(
 		credentials.email,
 		getPasswordHash(credentials.password)
@@ -78,5 +88,9 @@ async function loginByCredentials(credentials: Credentials): Promise<string> {
 		throw Boom.badRequest(ClientStatusCode.USER_NOT_VERIFIED);
 	}
 
-	return AuthToken.encode(credentials);
+	return {
+		token: AuthToken.encode(credentials),
+		email: user.email,
+		name: user.displayName
+	};
 }

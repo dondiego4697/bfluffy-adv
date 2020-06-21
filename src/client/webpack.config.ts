@@ -93,6 +93,12 @@ export default (_env: any, argv: any) => {
 	if (argv.mode === 'production') {
 		config.mode = 'production';
 		config.devtool = false;
+	} else {
+		(config as any).devServer = {
+			historyApiFallback: true,
+			contentBase: outPath,
+			port: 8083
+		};
 	}
 
 	return config;

@@ -60,7 +60,11 @@ describe(REQUEST_PATH, () => {
 			);
 
 			expect(statusCode).toEqual(200);
-			expect(body).toEqual({});
+			expect(body).toEqual({
+				email: user.email,
+				name: user.displayName,
+				token: authToken
+			});
 
 			const cookie = headers['set-cookie']![0];
 			expect(cookie.includes(`auth_token=${authToken}`)).toBeTruthy();
@@ -154,7 +158,11 @@ describe(REQUEST_PATH, () => {
 			);
 
 			expect(statusCode).toEqual(200);
-			expect(body).toEqual({});
+			expect(body).toEqual({
+				email: user.email,
+				name: user.displayName,
+				token: authToken
+			});
 
 			const cookie = headers['set-cookie']![0];
 			expect(cookie.includes(`auth_token=${authToken}`)).toBeTruthy();
