@@ -4,6 +4,7 @@ import {withRouter, RouteComponentProps} from 'react-router';
 
 import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
+import {Navbar} from 'client/components/navbar';
 
 import './index.scss';
 
@@ -22,6 +23,7 @@ class App extends React.Component<Props> {
 
 		return (
   			<div className={b()}>
+				<Navbar />
   				<div className={b('container')}>
   					{children}
 				</div>

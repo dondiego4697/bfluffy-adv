@@ -18,12 +18,19 @@
         "rootDir": "./",
         "baseUrl": "./",
         "outDir": "../../out/server",
-        "types": ["node"],
         "paths": {
             "server/*": [
                 "./src/*"
+            ],
+            "tests/*": [
+                "./tests/*"
             ]
-        }
+        },
+        "types": [
+            "node",
+            "express",
+            "jest"
+        ]
     },
     "include": [
         "./**/*"

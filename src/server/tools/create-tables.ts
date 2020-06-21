@@ -1,4 +1,7 @@
+/* eslint-disable import/first */
 import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 import * as Knex from 'knex';
 import * as glob from 'glob';
@@ -7,8 +10,7 @@ import * as fs from 'fs';
 import {sortBy} from 'lodash';
 import {dbManager} from 'server/lib/db-manager';
 import {logger} from 'server/lib/logger';
-
-dotenv.config();
+import {DbTable} from 'server/types/consts';
 
 interface Version {
     current?: string;
@@ -20,7 +22,7 @@ interface SqlByVersion {
     cmd: string[];
 }
 
-const TABLE_ALEMBIC_VERSION = 'alembic_version';
+const TABLE_ALEMBIC_VERSION = DbTable.ALEMBIC_VERSION;
 
 const knex = Knex({client: 'pg'});
 const queryAlembicVersion = knex

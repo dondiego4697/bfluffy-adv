@@ -1,4 +1,7 @@
+/* eslint-disable import/first */
 import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 import * as Boom from '@hapi/boom';
 import * as assert from 'assert';
@@ -12,8 +15,6 @@ import {router as staticRouter} from 'server/middlewares/static';
 import {ping} from 'server/middlewares/db-ping';
 import {logger} from 'server/lib/logger';
 
-dotenv.config();
-
 export const app = express()
 	.set('views', path.resolve('src/resources/views'))
 	.set('view engine', 'pug')
@@ -23,7 +24,7 @@ export const app = express()
 	.use(bodyParser.json())
 	.get('/ping', ping)
 	.use(staticRouter)
-	.use('/v1', v1)
+	.use('/api/v1', v1)
 	.use('/', renderPage)
 	.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')))
 	// eslint-disable-next-line
