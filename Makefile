@@ -34,8 +34,8 @@ validate: lint
 
 .PHONY: lint
 lint:
-	@node_modules/.bin/eslint src/server --ext .ts
-	@node_modules/.bin/eslint src/client --ext .tsx,.ts
+	@node_modules/.bin/eslint src/server --ext .ts --fix
+	@node_modules/.bin/eslint src/client --ext .tsx,.ts --fix
 
 .PHONY: dev
 dev:

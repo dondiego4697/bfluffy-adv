@@ -7,7 +7,11 @@ export enum SignUpType {
 
 export enum DbTable {
     ALEMBIC_VERSION = 'alembic_version',
-    USERS = 'users'
+    USERS = 'users',
+    ANIMAL_CATEGORY = 'animal_category',
+    ANIMAL_BREED = 'animal_breed',
+    CITY = 'city',
+    REGION = 'region',
 }
 
 export enum ClientStatusCode {

@@ -6,5 +6,6 @@ CREATE TABLE users (
     sign_up_type TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     verified BOOLEAN DEFAULT FALSE NOT NULL,
+    CONSTRAINT pk_users PRIMARY KEY (id),
     CONSTRAINT uq_users_email UNIQUE (email)
 );
