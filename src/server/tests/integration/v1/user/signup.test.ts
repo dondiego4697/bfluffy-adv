@@ -61,7 +61,7 @@ describe(REQUEST_PATH, () => {
 			email: 'new_test@mail.ru',
 			password: 'password'
 		});
-		expect(body).toEqual({auth_token: authToken});
+		expect(body).toEqual({authToken});
 
 		const user = await TestFactory.getUserByCredentials(
 			'new_test@mail.ru',

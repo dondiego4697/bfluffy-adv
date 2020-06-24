@@ -4,5 +4,6 @@ export enum RoutePaths {
     SIGNUP = '/signup',
     FORGOT_PASSWORD = '/forgot_password',
     RESET_PASSWORD = '/reset_password',
-    CREATE_AD = '/create_ad'
+    FARM_EDIT = '/farm/edit/:id',
+    AD_EDIT = '/ad/edit/:id'
 }

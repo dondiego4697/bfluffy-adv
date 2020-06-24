@@ -6,6 +6,7 @@ import {Divider} from 'antd';
 import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
 import {RoutePaths} from 'client/lib/routes';
+import {NEW_ITEM} from 'client/consts';
 
 import './index.scss';
 import 'antd/dist/antd.css';
@@ -46,8 +47,12 @@ export class Navbar extends React.Component<Props> {
 							)
 					}
 					<div className={b('controls-container')}>
-						<Link to={RoutePaths.CREATE_AD}>
+						<Link to={RoutePaths.AD_EDIT}>
 							Подать объявление
+						</Link>
+						<br />
+						<Link to={RoutePaths.FARM_EDIT.replace(':id', NEW_ITEM)}>
+							Создать питомник
 						</Link>
 					</div>
 				</div>

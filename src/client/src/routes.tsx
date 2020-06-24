@@ -2,11 +2,12 @@ import * as React from 'react';
 import {Switch, Route} from 'react-router-dom';
 
 import App from 'client/pages/app';
+import {RoutePaths} from 'client/lib/routes';
 import {ClientDataModel} from 'client/models/client-data';
 import {NotFoundPage} from 'client/pages/not-found';
 import {MainPage} from 'client/pages/main-page';
 import {LoginPage} from 'client/pages/login';
-import {RoutePaths} from 'client/lib/routes';
+import {FarmEditPage} from 'client/pages/farm/edit';
 
 interface Props {
     clientDataModel?: ClientDataModel;
@@ -21,6 +22,7 @@ export class RoutesApp extends React.Component<Props> {
 				<Route exact path={RoutePaths.SIGNUP} component={LoginPage} />
 				<Route exact path={RoutePaths.FORGOT_PASSWORD} component={LoginPage} />
 				<Route exact path={RoutePaths.RESET_PASSWORD} component={LoginPage} />
+				<Route exact path={RoutePaths.FARM_EDIT} component={FarmEditPage} />
 				<Route component={NotFoundPage} />
 			</Switch>
 		);

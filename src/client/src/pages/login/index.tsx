@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {inject, observer} from 'mobx-react';
-import {Store, RuleRender, RuleObject} from 'rc-field-form/lib/interface';
+import {Store, RuleRender} from 'rc-field-form/lib/interface';
 import {RouteComponentProps} from 'react-router';
 import {Form, Input, Button} from 'antd';
 import {Link} from 'react-router-dom';
@@ -10,6 +10,7 @@ import bevis from 'client/lib/bevis';
 import {RoutePaths} from 'client/lib/routes';
 import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
 import {ModalMessage} from 'client/components/modal-message';
+import {FORM_VALIDATE_MESSAGES, FORM_ITEM_REQUIRED, FORM_EMAIL_REQUIRED} from 'client/consts';
 
 import './index.scss';
 
@@ -19,22 +20,6 @@ interface Props extends RouteComponentProps {
 
 const b = bevis('login-page');
 
-const VALIDATE_MESSAGES = {
-	required: 'Обязательное поле',
-	types: {
-		email: 'Невалидный email'
-	}
-};
-
-const EMAIL_REQUIRED: RuleObject = {
-	required: true,
-	type: 'email'
-};
-
-const REQUIRED: RuleObject = {
-	required: true
-};
-
 const PASSWORD_VALIDATOR: RuleRender = ({getFieldValue}) => ({
 	validator(_rule, value) {
 		if (!value || getFieldValue('password') === value) {
@@ -42,6 +27,21 @@ const PASSWORD_VALIDATOR: RuleRender = ({getFieldValue}) => ({
 		}
 
 		return Promise.reject(new Error('Пароли не совпадают'));
+	}
+});
+
+const EMAIL_VALIDATOR: RuleRender = () => ({
+	validator(_rule, value) {
+		if (!value) {
+			return Promise.resolve();
+		}
+
+		return UserRequestBookV1.checkEmail(value)
+			.then((body) => {
+				if (body.exist) {
+					throw new Error('Такой email уже существует');
+				}
+			});
 	}
 });
 
@@ -111,14 +111,14 @@ export class LoginPage extends React.Component<Props> {
     		<Form
     			layout='vertical'
     			onFinish={this.onFinishResetPasswordHandler}
-    			validateMessages={VALIDATE_MESSAGES}
+    			validateMessages={FORM_VALIDATE_MESSAGES}
     		>
     			<Form.Item
     				name='password'
     				label='Новый пароль'
     				hasFeedback
     				rules={[
-    					REQUIRED
+    					FORM_ITEM_REQUIRED
     				]}
     			>
     				<Input.Password />
@@ -129,7 +129,7 @@ export class LoginPage extends React.Component<Props> {
     				hasFeedback
     				dependencies={['password']}
     				rules={[
-    					REQUIRED,
+    					FORM_ITEM_REQUIRED,
     					PASSWORD_VALIDATOR
     				]}
     			>
@@ -149,14 +149,14 @@ export class LoginPage extends React.Component<Props> {
     		<Form
     			layout='vertical'
     			onFinish={this.onFinishForgotPasswordHandler}
-    			validateMessages={VALIDATE_MESSAGES}
+    			validateMessages={FORM_VALIDATE_MESSAGES}
     		>
     			<Form.Item
     				name='email'
     				label='e-mail'
     				hasFeedback
     				rules={[
-    					EMAIL_REQUIRED
+    					FORM_EMAIL_REQUIRED
     				]}
     			>
     				<Input />
@@ -175,14 +175,14 @@ export class LoginPage extends React.Component<Props> {
     		<Form
     			layout='vertical'
     			onFinish={this.onFinishLoginHandler}
-    			validateMessages={VALIDATE_MESSAGES}
+    			validateMessages={FORM_VALIDATE_MESSAGES}
     		>
     			<Form.Item
     				name='email'
     				label='e-mail'
     				hasFeedback
     				rules={[
-    					EMAIL_REQUIRED
+    					FORM_EMAIL_REQUIRED
     				]}
     			>
     				<Input />
@@ -192,7 +192,7 @@ export class LoginPage extends React.Component<Props> {
     				label='Пароль'
     				hasFeedback
     				rules={[
-    					REQUIRED
+    					FORM_ITEM_REQUIRED
     				]}
     			>
     				<Input.Password />
@@ -212,14 +212,14 @@ export class LoginPage extends React.Component<Props> {
     		<Form
     			layout='vertical'
     			onFinish={this.onFinishSignupHandler}
-    			validateMessages={VALIDATE_MESSAGES}
+    			validateMessages={FORM_VALIDATE_MESSAGES}
     		>
     			<Form.Item
     				name='name'
     				label='Ваше имя'
     				hasFeedback
     				rules={[
-    					REQUIRED
+    					FORM_ITEM_REQUIRED
     				]}
     			>
     				<Input />
@@ -229,21 +229,8 @@ export class LoginPage extends React.Component<Props> {
     				label='e-mail'
     				hasFeedback
     				rules={[
-    					EMAIL_REQUIRED,
-    					() => ({
-    						validator(_rule, value) {
-    							if (!value) {
-    								return Promise.resolve();
-    							}
-
-    							return UserRequestBookV1.checkEmail(value)
-    								.then((body) => {
-    									if (body.exist) {
-    										throw new Error('Такой email уже существует');
-    									}
-    								});
-    						}
-    					})
+    					FORM_EMAIL_REQUIRED,
+    					EMAIL_VALIDATOR
     				]}
     			>
     				<Input />
@@ -253,7 +240,7 @@ export class LoginPage extends React.Component<Props> {
     				label='Пароль'
     				hasFeedback
     				rules={[
-    					REQUIRED
+    					FORM_ITEM_REQUIRED
     				]}
     			>
     				<Input.Password />
@@ -264,7 +251,7 @@ export class LoginPage extends React.Component<Props> {
     				hasFeedback
     				dependencies={['password']}
     				rules={[
-    					REQUIRED,
+    					FORM_ITEM_REQUIRED,
     					PASSWORD_VALIDATOR
     				]}
     			>

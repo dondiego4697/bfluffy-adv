@@ -38,7 +38,7 @@ describe(REQUEST_PATH, () => {
 		nock.enableNetConnect();
 	});
 
-	describe('by auth_token', () => {
+	describe('by authToken', () => {
 		it('should login and update verified', async () => {
 			const user = await TestFactory.createUser({
 				signUpType: SignUpType.EMAIL,
@@ -53,9 +53,7 @@ describe(REQUEST_PATH, () => {
 			const {body, statusCode, headers} = await client.post(
 				`${url}${REQUEST_PATH}`,
 				{
-					json: {
-						auth_token: authToken
-					}
+					json: {authToken}
 				}
 			);
 
@@ -74,12 +72,12 @@ describe(REQUEST_PATH, () => {
 			expect(verifiedUser?.verified).toBeTruthy();
 		});
 
-		it('should throw error if auth_token is invalid', async () => {
+		it('should throw error if authToken is invalid', async () => {
 			const {body, statusCode} = await client.post<Boom.Payload>(
 				`${url}${REQUEST_PATH}`,
 				{
 					json: {
-						auth_token: 'invalid_token'
+						authToken: 'invalid_token'
 					}
 				}
 			);
@@ -97,9 +95,7 @@ describe(REQUEST_PATH, () => {
 			const {body, statusCode} = await client.post<Boom.Payload>(
 				`${url}${REQUEST_PATH}`,
 				{
-					json: {
-						auth_token: authToken
-					}
+					json: {authToken}
 				}
 			);
 
@@ -121,9 +117,7 @@ describe(REQUEST_PATH, () => {
 			const {body, statusCode} = await client.post<Boom.Payload>(
 				`${url}${REQUEST_PATH}`,
 				{
-					json: {
-						auth_token: authToken
-					}
+					json: {authToken}
 				}
 			);
 
