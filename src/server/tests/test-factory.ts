@@ -13,9 +13,14 @@ interface CreateUserParams {
     verified?: boolean;
 }
 
+interface CreateFarmParams {
+	cityId: number;
+	ownerId: number;
+}
+
 interface City {
-	id: DBTableCity.Schema['display_name'];
-	code: DBTableCity.Schema['display_name'];
+	id: DBTableCity.Schema['id'];
+	code: DBTableCity.Schema['code'];
 	displayName: DBTableCity.Schema['display_name'];
 	regionId: DBTableCity.Schema['region_id'];
 }
@@ -135,10 +140,43 @@ async function getAllFarms(): Promise<Farm[]> {
 	return rows;
 }
 
+async function createFarm(params: CreateFarmParams): Promise<Farm> {
+	const query = knex(DbTable.FARM)
+		.insert({
+			city_id: params.cityId,
+	        contacts: JSON.stringify({
+				email: faker.internet.email(),
+				phone: faker.phone.phoneNumber()
+			}),
+			owner_id: params.ownerId,
+	        name: faker.company.companyName(),
+	        description: faker.company.catchPhrase(),
+			address: faker.address.streetAddress()
+		})
+		.returning([
+			'id',
+			'city_id as cityId',
+			'contacts',
+			'name',
+			'description',
+			'owner_id as ownerId',
+			'address',
+			'rating',
+			'archive',
+			'created_at as createdAt',
+			'updated_at as updatedAt',
+			'public_id as publicId'
+		]);
+
+	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
+	return row;
+}
+
 export const TestFactory = {
 	createUser,
 	getAllUsers,
 	getUserByCredentials,
 	getAllFarms,
-	getAllCities
+	getAllCities,
+	createFarm
 };

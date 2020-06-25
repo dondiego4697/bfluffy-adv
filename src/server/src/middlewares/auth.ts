@@ -7,7 +7,7 @@ import {getPasswordHash} from 'server/lib/crypto';
 import {ClientStatusCode} from 'server/types/consts';
 
 interface UserData {
-	id?: number;
+	id: number;
 	isAuth: boolean; // Запрос с auth токеном
 	isVerified: boolean;
 }
@@ -22,6 +22,7 @@ declare global {
 
 export const auth = wrap<Request, Response>(async (req, _res, next) => {
 	req.userData = {
+		id: -1,
 		isAuth: false,
 		isVerified: false
 	};
