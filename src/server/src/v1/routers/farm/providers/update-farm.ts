@@ -4,6 +4,7 @@ import {wrap} from 'async-middleware';
 import {FarmDbProvider} from 'server/v1/db-provider/farm';
 import {GeoDbProvider} from 'server/v1/db-provider/geo';
 import {logger} from 'server/lib/logger';
+import {ClientStatusCode} from 'server/types/consts';
 import {Body} from 'server/v1/routers/farm/providers/create-farm';
 
 interface Query {
@@ -31,9 +32,12 @@ export const updateFarm = wrap<Request, Response>(async (req, res) => {
 		throw Boom.notFound(`Farm with id ${publicId} did not found`);
 	}
 
+	if (req.userData.id !== farm.ownerId) {
+		throw Boom.forbidden(ClientStatusCode.EDIT_FARM_FORBIDDEN);
+	}
+
 	await FarmDbProvider.updateFarm(publicId, {
 		cityId: city.id,
-		ownerId: req.userData.id,
 		contacts,
 		name,
 		description,

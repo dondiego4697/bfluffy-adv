@@ -6,6 +6,7 @@ import {DBTableUsers} from 'server/types/db/users';
 import {dbManager} from 'server/lib/db-manager';
 import {getPasswordHash} from 'server/lib/crypto';
 import {DBTableCity} from 'server/types/db/city';
+import {AuthToken} from 'server/lib/auth-token';
 
 interface CreateUserParams {
     signUpType: SignUpType;
@@ -16,6 +17,7 @@ interface CreateUserParams {
 interface CreateFarmParams {
 	cityId: number;
 	ownerId: number;
+	archive?: boolean;
 }
 
 interface City {
@@ -85,6 +87,20 @@ async function createUser(params: CreateUserParams): Promise<User> {
 	return row;
 }
 
+async function createUserWithToken(params: CreateUserParams) {
+	const user = await createUser({
+		...params,
+		password: params.password || 'password'
+	});
+
+	const authToken = AuthToken.encode({
+		email: user.email,
+		password: 'password'
+	});
+
+	return {user, authToken};
+}
+
 async function getAllCities(): Promise<City[]> {
 	const query = knex
 		.select([
@@ -149,6 +165,7 @@ async function createFarm(params: CreateFarmParams): Promise<Farm> {
 				phone: faker.phone.phoneNumber()
 			}),
 			owner_id: params.ownerId,
+			archive: params.archive,
 	        name: faker.company.companyName(),
 	        description: faker.company.catchPhrase(),
 			address: faker.address.streetAddress()
@@ -174,6 +191,7 @@ async function createFarm(params: CreateFarmParams): Promise<Farm> {
 
 export const TestFactory = {
 	createUser,
+	createUserWithToken,
 	getAllUsers,
 	getUserByCredentials,
 	getAllFarms,

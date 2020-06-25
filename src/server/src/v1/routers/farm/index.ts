@@ -3,6 +3,8 @@ import * as Joi from '@hapi/joi';
 import {bodyValidateMiddleware, queryValidateMiddleware} from 'server/middlewares/validate';
 import {createFarm} from 'server/v1/routers/farm/providers/create-farm';
 import {updateFarm} from 'server/v1/routers/farm/providers/update-farm';
+import {getFarmInfo} from 'server/v1/routers/farm/providers/get-farm-info';
+import {deleteFarm} from 'server/v1/routers/farm/providers/delete-farm';
 
 const createSchema = {
 	body: Joi.object({
@@ -20,9 +22,13 @@ const createSchema = {
 	})
 };
 
+const getFarmInfoSchema = Joi.object({
+	publicId: Joi.string().uuid().required()
+});
+
 export const router = express.Router()
 	.get('/list')
-	.get('/info')
+	.get('/info', queryValidateMiddleware(getFarmInfoSchema), getFarmInfo)
 	.post('/create', bodyValidateMiddleware(createSchema.body), createFarm)
 	.post(
 		'/update',
@@ -30,4 +36,4 @@ export const router = express.Router()
 		bodyValidateMiddleware(createSchema.body),
 		updateFarm
 	)
-	.post('/delete');
+	.post('/delete', bodyValidateMiddleware(getFarmInfoSchema), deleteFarm);

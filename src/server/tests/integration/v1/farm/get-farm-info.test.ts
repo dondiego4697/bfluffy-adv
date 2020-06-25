@@ -26,7 +26,7 @@ const client = got.extend({
 	}
 });
 
-const REQUEST_PATH = '/api/v1/farm/update';
+const REQUEST_PATH = '/api/v1/farm/info';
 
 describe(REQUEST_PATH, () => {
 	const testDb = new TestDb();
@@ -48,26 +48,17 @@ describe(REQUEST_PATH, () => {
 		await testDb.loadFixtures(fixtures);
 	});
 
-	it('should update farm', async () => {
-		const [cityBefore, cityAfter] = await TestFactory.getAllCities();
+	it('should return farm info', async () => {
+		const [city] = await TestFactory.getAllCities();
+
 		const farm = await TestFactory.createFarm({
-			cityId: cityBefore.id,
+			cityId: city.id,
 			ownerId: 1
 		});
 
-		const {body, statusCode} = await client.post<any>(
+		const {body, statusCode} = await client.get<any>(
 			`${url}${REQUEST_PATH}`,
 			{
-				json: {
-					cityCode: cityAfter.code,
-	                contacts: {
-						email: 'updated@mail.ru',
-						phone: '70000000000'
-					},
-	                name: 'name updated',
-	                description: 'description updated',
-	                address: 'address updated'
-				},
 				searchParams: {
 					publicId: farm.publicId
 				}
@@ -75,25 +66,14 @@ describe(REQUEST_PATH, () => {
 		);
 
 		expect(statusCode).toEqual(200);
-		expect(body).toEqual({publicId: farm.publicId});
-
-		const farms = await TestFactory.getAllFarms();
-		const updatedFarm = farms.find((item) => item.publicId === body.publicId);
-
-		expect(omit(updatedFarm, ['createdAt', 'updatedAt'])).toEqual({
-			id: 1,
-			cityId: 2,
-			contacts: {
-				email: 'updated@mail.ru',
-				phone: '70000000000'
-			},
-			name: 'name updated',
-			description: 'description updated',
-			ownerId: 1,
-			address: 'address updated',
-			rating: 0,
-			archive: false,
-			publicId: body.publicId
+		expect(omit(body, ['createdAt', 'updatedAt'])).toEqual({
+			address: farm.address,
+			cityCode: city.code,
+			contacts: farm.contacts,
+			description: farm.description,
+			farmPublicId: farm.publicId,
+			name: farm.name,
+			rating: farm.rating
 		});
 	});
 
@@ -109,19 +89,9 @@ describe(REQUEST_PATH, () => {
 			signUpType: SignUpType.EMAIL
 		});
 
-		const {statusCode} = await client.post<any>(
+		const {statusCode} = await client.get<any>(
 			`${url}${REQUEST_PATH}`,
 			{
-				json: {
-					cityCode: city.code,
-	                contacts: {
-						email: 'some@mail.ru',
-						phone: '70000000000'
-					},
-	                name: 'name',
-	                description: 'description',
-	                address: 'address'
-				},
 				searchParams: {
 					publicId: farm.publicId
 				},
@@ -134,24 +104,23 @@ describe(REQUEST_PATH, () => {
 		expect(statusCode).toEqual(403);
 	});
 
-	it('should throw error if public id does not exist', async () => {
+	it('should throw error if farm is archived', async () => {
 		const [city] = await TestFactory.getAllCities();
 
-		const {statusCode} = await client.post<any>(
+		const farm = await TestFactory.createFarm({
+			cityId: city.id,
+			ownerId: 1,
+			archive: true
+		});
+
+		const {statusCode} = await client.get<any>(
 			`${url}${REQUEST_PATH}`,
 			{
-				json: {
-					cityCode: city.code,
-	                contacts: {
-						email: 'some@mail.ru',
-						phone: '70000000000'
-					},
-	                name: 'name',
-	                description: 'description',
-	                address: 'address'
-				},
 				searchParams: {
-					publicId: '9fc5a3fe-58ca-4e62-9a02-f157fd97f03d'
+					publicId: farm.publicId
+				},
+				headers: {
+					cookie: `auth_token=${authToken}`
 				}
 			}
 		);
