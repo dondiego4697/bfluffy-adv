@@ -10,11 +10,11 @@ const createSchema = {
 	body: Joi.object({
 		cityCode: Joi.string().required(),
 		contacts: Joi.object({
-			email: Joi.string().email().optional(),
-			phone: Joi.string().optional()
+			email: Joi.string().email().empty('').allow(null),
+			phone: Joi.string().empty('').allow(null),
 		}).default({}),
 		name: Joi.string().required(),
-		description: Joi.string().optional(),
+		description: Joi.string().empty('').allow(null),
 		address: Joi.string().required()
 	}),
 	query: Joi.object({

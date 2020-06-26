@@ -30,6 +30,7 @@
         "react/jsx-filename-extension": "off",
         "react/jsx-indent-props": "off",
         "react/destructuring-assignment": "off",
-        "jsx-quotes": ["error", "prefer-single"]
+        "jsx-quotes": ["error", "prefer-single"],
+        "react/no-deprecated": "off"
     }
 }

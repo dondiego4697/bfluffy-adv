@@ -50,7 +50,7 @@ const EMAIL_VALIDATOR: RuleRender = () => ({
 export class LoginPage extends React.Component<Props> {
     private onLoginByAuthToken = (authToken: string) => this.props.clientDataModel?.loginByAuthToken(authToken)
             .then(() => this.props.history.replace(RoutePaths.MAIN))
-            .catch((error) => ModalMessage.showError(error.message))
+            .catch((error) => ModalMessage.showError(error.response.data.message))
 
     private onFinishLoginHandler = (values: Store) => UserRequestBookV1.logInByCredentials({
     	email: values.email,
@@ -58,7 +58,7 @@ export class LoginPage extends React.Component<Props> {
     })
     	.then(() => this.props.history.replace(RoutePaths.MAIN))
     	.then(() => this.props.clientDataModel?.initClientDataModel())
-    	.catch((error) => ModalMessage.showError(error.message))
+    	.catch((error) => ModalMessage.showError(error.response.data.message))
 
     private onFinishSignupHandler = (values: Store) => UserRequestBookV1.signUpByEmail({
     	email: values.email,
@@ -72,7 +72,7 @@ export class LoginPage extends React.Component<Props> {
     			onOk: () => this.props.history.replace(RoutePaths.MAIN)
     		});
     	})
-    	.catch((error) => ModalMessage.showError(error.message))
+    	.catch((error) => ModalMessage.showError(error.response.data.message))
 
     private onFinishResetPasswordHandler = (values: Store) => {
     	const authToken = this.getAuthTokenFromQuery();
@@ -87,7 +87,7 @@ export class LoginPage extends React.Component<Props> {
     	})
     		.then(() => this.props.history.replace(RoutePaths.MAIN))
     		.then(() => this.props.clientDataModel?.initClientDataModel())
-    		.catch((error) => ModalMessage.showError(error.message));
+    		.catch((error) => ModalMessage.showError(error.response.data.message));
     }
 
     private onFinishForgotPasswordHandler = (values: Store) => UserRequestBookV1.forgotPassword(values.email)
@@ -97,7 +97,7 @@ export class LoginPage extends React.Component<Props> {
     			content: `Вам на почту ${values.email} отправлено письмо с подтверждением`
     		});
     	})
-    	.catch((error) => ModalMessage.showError(error.message))
+    	.catch((error) => ModalMessage.showError(error.response.data.message))
 
     private getAuthTokenFromQuery() {
     	const {location} = this.props;

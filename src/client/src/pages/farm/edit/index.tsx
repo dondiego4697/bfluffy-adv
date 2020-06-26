@@ -1,56 +1,112 @@
 import * as React from 'react';
+import {
+	AsYouType as PhoneFormatter,
+	parsePhoneNumberFromString
+} from 'libphonenumber-js';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
-import {Store} from 'rc-field-form/lib/interface';
+import {Store, RuleRender} from 'rc-field-form/lib/interface';
 import {
 	Form, Input, Select, Button
 } from 'antd';
+import {FormInstance} from 'antd/lib/form';
 
 import {FarmEditModel} from 'client/models/farm/edit';
 import {RoutePaths} from 'client/lib/routes';
-import {GeoModel} from 'client/models/geo';
 import bevis from 'client/lib/bevis';
 import {ModalMessage} from 'client/components/modal-message';
-import {FORM_VALIDATE_MESSAGES, FORM_ITEM_REQUIRED} from 'client/consts';
+import {NotFoundPage} from 'client/pages/not-found';
+import {FORM_VALIDATE_MESSAGES, FORM_ITEM_REQUIRED, NEW_ITEM} from 'client/consts';
 
 import './index.scss';
 
-interface Props extends RouteComponentProps {
-    farmEditModel?: FarmEditModel;
-    geoModel?: GeoModel;
+interface RouteParams {
+    id: string;
+}
+
+interface Props extends RouteComponentProps<RouteParams> {
+	farmEditModel: FarmEditModel;
 }
 
 const {Option} = Select;
 
 const b = bevis('farm-edit-page');
 
-@inject('farmEditModel', 'geoModel')
+const PHONE_VALIDATOR: RuleRender = () => ({
+	validator(_rule, value) {
+		if (!value) {
+			return Promise.resolve();
+		}
+
+		const phone = parsePhoneNumberFromString(value, 'RU');
+		if (phone?.isValid()) {
+			return Promise.resolve();
+		}
+
+		return Promise.reject(new Error('Невалидный телефонный номер'));
+	}
+});
+
+@inject('farmEditModel')
 @observer
 export class FarmEditPage extends React.Component<Props> {
-    private onFinishHandler = (values: Store) => this.props.farmEditModel!.createFarm({
-    	cityCode: values.cityCode,
-	        contacts: {
-    		email: values.email,
-    		phone: values.phone
-    	},
-	        name: values.name,
-	        description: values.description,
-	        address: values.address
-    })
-    	.then(() => this.props.history.replace(RoutePaths.FARM_EDIT))
-    		.catch((error) => ModalMessage.showError(error.message))
+	private formRef = React.createRef<FormInstance>();
 
-    private handleCitySearch = (cityDisplayName?: string) => {
-    	if (!cityDisplayName) {
-    		return [];
+	public componentWillMount() {
+		this.props.farmEditModel!.clearFarm();
+	}
+
+	public componentDidMount(): void {
+    	this.loadData();
+	}
+
+	public componentWillReceiveProps(nextProps: Props) {
+    	if (nextProps.match.params.id !== this.props.match.params.id) {
+			this.props.farmEditModel!.clearFarm();
+
+			this.loadData(nextProps.match.params.id)
+				.then(() => this.formRef.current?.resetFields());
+    	}
+	}
+
+	private searchCityHandler = (cityDisplayName?: string) => this.props.farmEditModel!.findCity(cityDisplayName);
+
+	private onFinishHandler = (values: Store) => {
+    	const params = {
+    		cityCode: values.cityCode.value,
+    		contacts: {
+    			email: values.email,
+    			phone: values.phone
+    		},
+    		name: values.farmName,
+    		description: values.farmDescription,
+    		address: values.farmAddress
+    	};
+
+    	if (this.props.farmEditModel!.isNew) {
+    		return this.props.farmEditModel!.createFarm(params)
+    			.then((response) => this.props.history.replace(RoutePaths.FARM_EDIT.replace(':id', response.publicId)))
+    			.catch((error) => ModalMessage.showError(error.response.data.message));
     	}
 
-        this.props.farmEditModel!.foundCities = this.props.geoModel!.findCityByName(cityDisplayName);
-    }
+    	return this.props.farmEditModel!.updateFarm(params)
+    		.then((response) => this.props.history.replace(RoutePaths.FARM_EDIT.replace(':id', response.publicId)))
+    		.catch((error) => ModalMessage.showError(error.response.data.message));
+	}
 
-    private renderForm() {
+	private loadData(id?: string) {
+    	const publicId = id || this.props.match.params.id;
+    	if (publicId === NEW_ITEM) {
+    		return Promise.resolve();
+    	}
+
+    	return this.props.farmEditModel!.getFarmInfo(publicId);
+	}
+
+	private renderForm() {
     	return (
     		<Form
+    			ref={this.formRef}
     			layout='vertical'
     			fields={this.props.farmEditModel!.formFields}
     			onFinish={this.onFinishHandler}
@@ -58,7 +114,7 @@ export class FarmEditPage extends React.Component<Props> {
     		>
     			<Form.Item
     				label='Название питомника'
-    				name='name'
+    				name='farmName'
     				rules={[
     					FORM_ITEM_REQUIRED
     				]}
@@ -67,16 +123,14 @@ export class FarmEditPage extends React.Component<Props> {
     			</Form.Item>
     			<Form.Item
     				label='Описание питомника'
-    				name='description'
-    				rules={[
-    					FORM_ITEM_REQUIRED
-    				]}
+    				name='farmDescription'
+    				rules={[]}
     			>
     				<Input.TextArea />
     			</Form.Item>
     			<Form.Item
     				label='Адрес'
-    				name='address'
+    				name='farmAddress'
     				rules={[
     					FORM_ITEM_REQUIRED
     				]}
@@ -97,7 +151,19 @@ export class FarmEditPage extends React.Component<Props> {
     			<Form.Item
     				label='Телефон'
     				name='phone'
-    				rules={[]}
+    				normalize={(value) => {
+    					const phoneFormatter = new PhoneFormatter('RU');
+    					const phone = phoneFormatter.input(value);
+
+    					if (phone === '+' || !phone) {
+    						return;
+    					}
+
+    					return phone.startsWith('+') ? phone : `+${phone}`;
+    				}}
+    				rules={[
+    					PHONE_VALIDATOR
+    				]}
     			>
     				<Input />
     			</Form.Item>
@@ -111,10 +177,10 @@ export class FarmEditPage extends React.Component<Props> {
     				<Select
     					showSearch
     					defaultActiveFirstOption
+    					labelInValue
     					showArrow={false}
     					filterOption={false}
-    					onSearch={this.handleCitySearch}
-    					// onChange={this.handleCityChange}
+    					onSearch={this.searchCityHandler}
     					notFoundContent={null}
     					style={{width: 200}}
     				>
@@ -132,14 +198,18 @@ export class FarmEditPage extends React.Component<Props> {
     			</Form.Item>
     			<Form.Item>
     				<Button type='primary' htmlType='submit'>
-                        Сохранить
+    					{this.props.farmEditModel!.isNew ? 'Сохранить' : 'Обновить'}
     				</Button>
     			</Form.Item>
     		</Form>
     	);
-    }
+	}
 
-    public render(): React.ReactNode {
+	public render(): React.ReactNode {
+    	if (this.props.farmEditModel!.notFound) {
+    		return <NotFoundPage />;
+    	}
+
     	return (
   			<div className={b()}>
   				<div className={b('container')}>
@@ -147,5 +217,5 @@ export class FarmEditPage extends React.Component<Props> {
     			</div>
     		</div>
     	);
-    }
+	}
 }

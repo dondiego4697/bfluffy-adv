@@ -31,6 +31,7 @@ export const createFarm = wrap<Request, Response>(async (req, res) => {
 		throw Boom.badRequest();
 	}
 
+	// TODO по адресу добавлять координаты
 	const publicId = await FarmDbProvider.createFarm({
 		cityId: city.id,
 		ownerId: req.userData.id,

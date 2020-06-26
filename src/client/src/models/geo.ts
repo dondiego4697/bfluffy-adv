@@ -25,4 +25,8 @@ export class GeoModel {
 			(city) => city.cityDisplayName.toLowerCase().includes(subtext.toLowerCase())
 		);
 	}
+
+	public findCityByCode(code: string) {
+		return this.cityList.find((city) => city.cityCode === code);
+	}
 }

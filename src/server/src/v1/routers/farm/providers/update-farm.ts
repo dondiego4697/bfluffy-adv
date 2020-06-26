@@ -36,6 +36,8 @@ export const updateFarm = wrap<Request, Response>(async (req, res) => {
 		throw Boom.forbidden(ClientStatusCode.EDIT_FARM_FORBIDDEN);
 	}
 
+	// TODO если адрес изменился -> по адресу добавлять координаты
+
 	await FarmDbProvider.updateFarm(publicId, {
 		cityId: city.id,
 		contacts,
