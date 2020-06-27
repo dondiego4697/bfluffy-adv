@@ -1,7 +1,8 @@
 export namespace DBTableRegion {
+
     export interface Schema {
         id: number;
-        code: string;
+        code: number;
         display_name: string;
     }
 }

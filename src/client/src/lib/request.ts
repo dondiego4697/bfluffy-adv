@@ -4,7 +4,9 @@ const VALID_ERRORS: Record<string, string> = {
 	USER_EMAIL_EXIST: 'Пользователь с таким email уже существует',
 	USER_NOT_EXIST: 'Пользователь не найден',
 	USER_NOT_VERIFIED: 'Пользователь не подтвердил регистрацию',
-	USER_INVALID_TOKEN: 'Неверный пользовательский токен'
+	USER_INVALID_TOKEN: 'Неверный пользовательский токен',
+	USER_NOT_AUTHORIZED: 'Пользователь не авторизован',
+	EDIT_FARM_FORBIDDEN: 'Доступ на редактирование закрыт'
 };
 
 export function getRequest<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
@@ -39,5 +41,8 @@ function makeError(error: any, request: any, config: any) {
 	}));
 
 	const {message} = response.data || {};
-	throw new Error(VALID_ERRORS[message] || 'Неизвестная ошибка');
+
+	const newError = error;
+	newError.response.data.message = VALID_ERRORS[message] || 'Неизвестная ошибка';
+	throw newError;
 }

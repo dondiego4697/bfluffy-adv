@@ -47,7 +47,7 @@ async function loginByAuthToken(authToken: string) {
 	return postRequest<LoginResponse>(
 		'/api/v1/user/login',
 		{
-			auth_token: authToken
+			authToken
 		},
 		{
 			responseType: 'json'
@@ -87,8 +87,8 @@ async function resetPassword(params: ResetPasswordParams) {
 	return postRequest<{}>(
 		'/api/v1/user/reset_password',
 		{
-			auth_token: authToken,
-			new_password: newPassword
+			authToken,
+			newPassword
 		},
 		{
 			responseType: 'json'

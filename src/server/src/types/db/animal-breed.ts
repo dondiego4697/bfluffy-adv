@@ -1,4 +1,5 @@
 export namespace DBTableAnimalBreed {
+
     export interface Schema {
         id: number;
         code: string;

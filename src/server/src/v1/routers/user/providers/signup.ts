@@ -1,16 +1,15 @@
 import * as Boom from '@hapi/boom';
-import {URL, URLSearchParams} from 'url';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import {SignUpType} from 'server/types/consts';
 import {UserDbProvider} from 'server/v1/db-provider/user';
 import {AuthToken} from 'server/lib/auth-token';
-import {config} from 'server/config';
 import {sendEmail} from 'server/lib/send-email';
 import {getPasswordHash} from 'server/lib/crypto';
+import {EmailMessage} from 'server/email-message';
 
 interface Body {
-    external_token?: string;
+    externalToken?: string;
     email: string;
     type: SignUpType;
     name: string;
@@ -33,19 +32,6 @@ export const signup = wrap<Request, Response>(async (req, res) => {
 	res.json(result);
 });
 
-export function formEmailMessage(authToken: string) {
-	const host = config['host.app'];
-
-	const url = new URL('/login', host);
-	const query = new URLSearchParams({auth_token: authToken});
-	url.search = query.toString();
-
-	return {
-		html: `<div>${url.toString()}</div>`,
-		text: url.toString()
-	};
-}
-
 async function signupByEmail(body: Body) {
 	const user = await UserDbProvider.createUser({
 		email: body.email,
@@ -59,7 +45,7 @@ async function signupByEmail(body: Body) {
 		password: body.password
 	});
 
-	const {html, text} = formEmailMessage(authToken);
+	const {html, text} = EmailMessage.signup(authToken);
 
 	await sendEmail(user.email, {
 		subject: 'TODO top subject',
@@ -67,5 +53,5 @@ async function signupByEmail(body: Body) {
 		text
 	});
 
-	return {auth_token: authToken};
+	return {authToken};
 }

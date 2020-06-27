@@ -53,8 +53,8 @@ describe(REQUEST_PATH, () => {
 			`${url}${REQUEST_PATH}`,
 			{
 				json: {
-					auth_token: authTokenForReset,
-					new_password: 'new_password'
+					authToken: authTokenForReset,
+					newPassword: 'new_password'
 				}
 			}
 		);
@@ -86,8 +86,8 @@ describe(REQUEST_PATH, () => {
 			`${url}${REQUEST_PATH}`,
 			{
 				json: {
-					auth_token: authToken,
-					new_password: 'new_password'
+					authToken,
+					newPassword: 'new_password'
 				}
 			}
 		);
@@ -111,8 +111,8 @@ describe(REQUEST_PATH, () => {
 			`${url}${REQUEST_PATH}`,
 			{
 				json: {
-					auth_token: authToken,
-					new_password: 'new_password'
+					authToken,
+					newPassword: 'new_password'
 				}
 			}
 		);

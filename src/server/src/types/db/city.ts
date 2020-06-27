@@ -1,4 +1,5 @@
 export namespace DBTableCity {
+
     export interface Schema {
         id: number;
         code: string;

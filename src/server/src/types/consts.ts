@@ -12,11 +12,18 @@ export enum DbTable {
     ANIMAL_BREED = 'animal_breed',
     CITY = 'city',
     REGION = 'region',
+    FARM = 'farm',
+    ANIMAL_AD = 'animal_ad',
+    ANIMAL_AD_GALLERY = 'animal_ad_gallery',
+    ANIMAL_DOCUMENT = 'animal_document',
+    ANIMAL_AD_DOCUMENT = 'animal_ad_document'
 }
 
 export enum ClientStatusCode {
     USER_EMAIL_EXIST = 'USER_EMAIL_EXIST',
     USER_NOT_EXIST = 'USER_NOT_EXIST',
     USER_NOT_VERIFIED = 'USER_NOT_VERIFIED',
-    USER_INVALID_TOKEN = 'USER_INVALID_TOKEN'
+    USER_INVALID_TOKEN = 'USER_INVALID_TOKEN',
+    USER_NOT_AUTHORIZED = 'USER_NOT_AUTHORIZED',
+    EDIT_FARM_FORBIDDEN = 'EDIT_FARM_FORBIDDEN'
 }

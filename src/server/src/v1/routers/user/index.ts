@@ -8,7 +8,7 @@ import {checkEmail} from 'server/v1/routers/user/providers/validate';
 import {SignUpType} from 'server/types/consts';
 
 const signupSchema = Joi.object({
-	external_token: Joi.string(),
+	externalToken: Joi.string(),
 	email: Joi.string().email().required(),
 	type: Joi.string().valid(...Object.values(SignUpType)).required(),
 	name: Joi.string().required(),
@@ -16,12 +16,12 @@ const signupSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-	auth_token: Joi.string(),
+	authToken: Joi.string(),
 	credentials: Joi.object({
 		email: Joi.string().email().required(),
 		password: Joi.string().required()
 	})
-}).xor('auth_token', 'credentials');
+}).xor('authToken', 'credentials');
 
 const forgotPasswordSchema = Joi.object({
 	email: Joi.string().required()
@@ -32,8 +32,8 @@ const checkEmailSchema = Joi.object({
 });
 
 const resetPasswordSchema = Joi.object({
-	auth_token: Joi.string().required(),
-	new_password: Joi.string().required()
+	authToken: Joi.string().required(),
+	newPassword: Joi.string().required()
 });
 
 export const router = express.Router()

@@ -1,6 +1,7 @@
 import {SignUpType} from 'server/types/consts';
 
 export namespace DBTableUsers {
+
     export interface Schema {
         id: number;
         email: string;

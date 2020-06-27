@@ -54,13 +54,13 @@ describe(REQUEST_PATH, () => {
 		);
 
 		expect(statusCode).toEqual(200);
-		expect(AuthToken.decode(body.auth_token)).toEqual({
+		expect(AuthToken.decode(body.authToken)).toEqual({
 			email: user.email,
 			password: user.password
 		});
 
 		mockdate.set(Date.now() + 24 * 60 * 60 * 1000 + 60 * 1000);
-		expect(() => AuthToken.decode(body.auth_token)).toThrow();
+		expect(() => AuthToken.decode(body.authToken)).toThrow();
 	});
 
 	it('should throw error if user not exist', async () => {

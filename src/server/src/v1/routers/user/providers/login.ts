@@ -15,7 +15,7 @@ interface Credentials {
 }
 
 interface Body {
-    auth_token?: string;
+    authToken?: string;
     credentials?: Credentials;
 }
 
@@ -26,10 +26,7 @@ interface UserResponse {
 }
 
 export const login = wrap<Request, Response>(async (req, res) => {
-	const {
-		auth_token: authToken,
-		credentials
-	} = req.body as Body;
+	const {authToken, credentials} = req.body as Body;
 
 	let userResponse: UserResponse | null = null;
 

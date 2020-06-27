@@ -41,9 +41,9 @@ const production: Config = {
 	'auth.privateKey': process.env.AUTH_PRIVATE_KEY!,
 	'email.mock': false,
 	'email.enable': true,
-	'email.login': '',
+	'email.login': 'be.fluffy@yandex.ru',
 	'email.password': process.env.EMAIL_PASSWORD!,
-	'host.app': 'unknown',
+	'host.app': 'TODO',
 	'client.bundlesRootFolder': '/bundles/'
 };
 
@@ -58,9 +58,7 @@ const development: Config = {
 	'db.hosts': ['localhost'],
 	'db.useCert': false,
 	'auth.token.ttl': 10 * 60 * 1000, // 10m
-	'host.app': 'http://localhost:8080',
-	'email.login': 'dondiego4697@yandex.ru',
-	'email.mock': false
+	'host.app': 'http://localhost:8080'
 };
 
 const tests: Config = {

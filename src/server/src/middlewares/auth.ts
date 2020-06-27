@@ -1,12 +1,14 @@
+import * as Boom from '@hapi/boom';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import {AuthToken} from 'server/lib/auth-token';
 import {UserDbProvider} from 'server/v1/db-provider/user';
 import {getPasswordHash} from 'server/lib/crypto';
+import {ClientStatusCode} from 'server/types/consts';
 
 interface UserData {
+	id: number;
 	isAuth: boolean; // Запрос с auth токеном
-	isExistInDb: boolean;
 	isVerified: boolean;
 }
 
@@ -18,17 +20,17 @@ declare global {
     }
 }
 
-export const auth = wrap<Request, Response>(async (req) => {
+export const auth = wrap<Request, Response>(async (req, _res, next) => {
 	req.userData = {
+		id: -1,
 		isAuth: false,
-		isExistInDb: false,
 		isVerified: false
 	};
 
 	const {auth_token: authToken} = req.cookies;
 
 	if (!authToken) {
-		return;
+		throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
 	}
 
 	req.userData.isAuth = true;
@@ -40,9 +42,11 @@ export const auth = wrap<Request, Response>(async (req) => {
 	);
 
 	if (!user) {
-		return;
+		throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
 	}
 
-	req.userData.isExistInDb = true;
+	req.userData.id = user.id;
 	req.userData.isVerified = user.verified;
+
+	next();
 });

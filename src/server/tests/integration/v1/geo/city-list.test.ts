@@ -14,7 +14,7 @@ const client = got.extend({
 	responseType: 'json'
 });
 
-const REQUEST_PATH = '/api/v1/geo/city_list';
+const REQUEST_PATH = '/api/v1/geo/regions_hash';
 
 describe(REQUEST_PATH, () => {
 	const testDb = new TestDb();
