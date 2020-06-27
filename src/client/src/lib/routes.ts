@@ -1,5 +1,6 @@
 export enum RoutePaths {
     MAIN = '/',
+    CABINET = '/cabinet',
     LOGIN = '/login',
     SIGNUP = '/signup',
     FORGOT_PASSWORD = '/forgot_password',

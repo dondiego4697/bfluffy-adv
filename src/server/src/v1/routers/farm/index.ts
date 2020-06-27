@@ -5,6 +5,7 @@ import {createFarm} from 'server/v1/routers/farm/providers/create-farm';
 import {updateFarm} from 'server/v1/routers/farm/providers/update-farm';
 import {getFarmInfo} from 'server/v1/routers/farm/providers/get-farm-info';
 import {deleteFarm} from 'server/v1/routers/farm/providers/delete-farm';
+import {getFarmList} from 'server/v1/routers/farm/providers/get-farm-list';
 
 const createSchema = {
 	body: Joi.object({
@@ -27,7 +28,7 @@ const getFarmInfoSchema = Joi.object({
 });
 
 export const router = express.Router()
-	.get('/list')
+	.get('/list', getFarmList)
 	.get('/info', queryValidateMiddleware(getFarmInfoSchema), getFarmInfo)
 	.post('/create', bodyValidateMiddleware(createSchema.body), createFarm)
 	.post(

@@ -4,7 +4,22 @@ interface CreateFarmResponse {
 	publicId: string;
 }
 
-export interface FarmInfoResponse {
+export interface Farm {
+	contacts: {
+		phone?: string;
+		email: string;
+	};
+	name: string;
+	description: string;
+	address: string;
+	rating: number;
+	createdAt: string;
+	updatedAt: string;
+	farmPublicId: string;
+	cityCode: string;
+}
+
+export interface FarmInfo {
 	contacts: {
 		phone?: string;
 		email: string;
@@ -84,10 +99,19 @@ async function deleteFarm(publicId: string) {
 }
 
 async function getFarmInfo(publicId: string) {
-	return getRequest<FarmInfoResponse>(
+	return getRequest<FarmInfo>(
 		'/api/v1/farm/info',
 		{
 			params: {publicId},
+			responseType: 'json'
+		}
+	);
+}
+
+async function getFarmList() {
+	return getRequest<Farm[]>(
+		'/api/v1/farm/list',
+		{
 			responseType: 'json'
 		}
 	);
@@ -97,5 +121,6 @@ export const FarmRequestBookV1 = {
 	createFarm,
 	updateFarm,
 	deleteFarm,
-	getFarmInfo
+	getFarmInfo,
+	getFarmList
 };

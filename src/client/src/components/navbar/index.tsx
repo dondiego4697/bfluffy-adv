@@ -32,7 +32,9 @@ export class Navbar extends React.Component<Props> {
 					{
 						clientDataModel?.user
 							? (
-								<div>{clientDataModel.user.name}</div>
+								<Link to={RoutePaths.CABINET}>
+									{clientDataModel.user.name}
+								</Link>
 							)
 							: (
 								<div className={b('login-controls-container')}>

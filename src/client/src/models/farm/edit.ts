@@ -3,14 +3,14 @@ import {observable, action, computed} from 'mobx';
 import {BasePageModel} from 'client/models/base';
 import {
 	FarmRequestBookV1,
-	FarmInfoResponse as Farm,
+	FarmInfo,
 	CreateFarmParams
 } from 'client/lib/request-book/v1/farm';
 import {City} from 'client/lib/request-book/v1/geo';
 import {geoModel} from 'client/models';
 
 export class FarmEditModel extends BasePageModel {
-    @observable public farm: Farm | null = null;
+    @observable public farm: FarmInfo | null = null;
 
     @observable public notFound: boolean = false;
 
