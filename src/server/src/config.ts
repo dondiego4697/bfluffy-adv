@@ -22,6 +22,7 @@ export interface Config {
 	'email.login': string;
 	'email.password': string;
 	'client.bundlesRootFolder': string;
+	'emulation.request': boolean;
 }
 
 const production: Config = {
@@ -44,7 +45,8 @@ const production: Config = {
 	'email.login': 'be.fluffy@yandex.ru',
 	'email.password': process.env.EMAIL_PASSWORD!,
 	'host.app': 'TODO',
-	'client.bundlesRootFolder': '/bundles/'
+	'client.bundlesRootFolder': '/bundles/',
+	'emulation.request': false
 };
 
 const testing: Config = {
@@ -58,7 +60,8 @@ const development: Config = {
 	'db.hosts': ['localhost'],
 	'db.useCert': false,
 	'auth.token.ttl': 10 * 60 * 1000, // 10m
-	'host.app': 'http://localhost:8080'
+	'host.app': 'http://localhost:8080',
+	'emulation.request': true
 };
 
 const tests: Config = {
@@ -68,7 +71,8 @@ const tests: Config = {
 	'db.user': 'postgres',
 	'auth.privateKey': 'some_value',
 	'email.password': 'password',
-	'email.enable': false
+	'email.enable': false,
+	'emulation.request': false
 };
 
 const configs = new Map<string, Readonly<Config>>([

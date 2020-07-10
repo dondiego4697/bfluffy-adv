@@ -5,6 +5,13 @@ export enum SignUpType {
     EMAIL = 'email'
 }
 
+export enum FarmType {
+    FARM = 'farm',
+    BREEDER = 'breeder',
+    SHOP = 'shop'
+}
+
+
 export enum DbTable {
     ALEMBIC_VERSION = 'alembic_version',
     USERS = 'users',

@@ -7,7 +7,7 @@ import * as Boom from '@hapi/boom';
 import * as assert from 'assert';
 import * as path from 'path';
 import * as express from 'express';
-import {router as v1} from 'server/v1';
+import {router as v1} from 'server/v1/routers';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import {renderPage} from 'server/middlewares/render-page';

@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION updated_at_column_f()
 
 CREATE TABLE farm (
     id BIGSERIAL NOT NULL,
+    public_id UUID NOT NULL DEFAULT uuid_generate_v1(),
     city_id INTEGER NOT NULL,
     contacts JSONB NOT NULL,
     name TEXT NOT NULL,
@@ -17,6 +18,7 @@ CREATE TABLE farm (
     owner_id BIGINT NOT NULL,
     address TEXT NOT NULL,
     rating SMALLINT NOT NULL DEFAULT 0,
+    type TEXT NOT NULL,
     archive BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
@@ -25,6 +27,7 @@ CREATE TABLE farm (
     CONSTRAINT fk_farm_owner_id_users FOREIGN KEY(owner_id) REFERENCES users (id)
 );
 
+CREATE INDEX farm_public_id_idx ON farm (public_id);
 CREATE INDEX farm_lower_name_gin_idx ON farm USING GIN (lower(name) gin_trgm_ops);
 
 CREATE TRIGGER
@@ -38,6 +41,7 @@ FOR EACH ROW EXECUTE PROCEDURE
 
 CREATE TABLE animal_ad (
     id BIGSERIAL NOT NULL,
+    public_id UUID NOT NULL DEFAULT uuid_generate_v1(),
     animal_breed_id INTEGER NOT NULL,
     sex BOOLEAN,
     cost NUMERIC(9, 2) NOT NULL,
@@ -56,6 +60,7 @@ CREATE TABLE animal_ad (
     CONSTRAINT fk_animal_ad_owner_id_users FOREIGN KEY(owner_id) REFERENCES users (id)
 );
 
+CREATE INDEX animal_ad_public_id_idx ON farm (public_id);
 CREATE INDEX animal_ad_lower_name_gin_idx ON animal_ad USING GIN (lower(name) gin_trgm_ops);
 
 CREATE TRIGGER

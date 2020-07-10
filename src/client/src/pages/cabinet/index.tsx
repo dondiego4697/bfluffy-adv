@@ -1,23 +1,26 @@
 import * as React from 'react';
 import {inject, observer} from 'mobx-react';
-import {Card} from 'antd';
+import {Card, Skeleton} from 'antd';
 import {RouteComponentProps} from 'react-router';
 import {EditOutlined} from '@ant-design/icons';
 
 import {CabinetModel} from 'client/models/cabinet';
+import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
 import {RoutePaths} from 'client/lib/routes';
+import {DataState} from 'client/consts';
 
 import './index.scss';
 
 interface Props extends RouteComponentProps {
 	cabinetModel: CabinetModel;
+	clientDataModel: ClientDataModel;
 }
 
 const b = bevis('cabinet');
 const {Meta} = Card;
 
-@inject('cabinetModel')
+@inject('cabinetModel', 'clientDataModel')
 @observer
 export class CabinetPage extends React.Component<Props> {
 	public componentDidMount(): void {
@@ -32,6 +35,10 @@ export class CabinetPage extends React.Component<Props> {
     	return (
   			<div className={b()}>
   				<div className={b('container')}>
+				  	<Skeleton
+						loading={this.props.clientDataModel.state === DataState.LOADING}
+						active={true}
+					>
     				{
 						this.props.cabinetModel.farmList.map((farm) => (
 							<Card
@@ -55,6 +62,7 @@ export class CabinetPage extends React.Component<Props> {
 							</Card>
 						))
 					}
+					</Skeleton>
     			</div>
     		</div>
     	);

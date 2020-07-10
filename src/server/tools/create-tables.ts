@@ -39,6 +39,8 @@ async function createDbTables() {
 
 	try {
 		const currentVersion = await getCurrentVersion();
+		logger.info(`Current version: ${currentVersion}`);
+
 		let sqlByVersion = getSqlByVersion();
 
 		let prevVersion = '';

@@ -5,6 +5,7 @@ import {AuthToken} from 'server/lib/auth-token';
 import {UserDbProvider} from 'server/v1/db-provider/user';
 import {getPasswordHash} from 'server/lib/crypto';
 import {ClientStatusCode} from 'server/types/consts';
+import {config} from 'server/config';
 
 interface UserData {
 	id: number;
@@ -20,7 +21,7 @@ declare global {
     }
 }
 
-export const auth = wrap<Request, Response>(async (req, _res, next) => {
+export const auth = wrap<Request, Response>(async (req, res, next) => {
 	req.userData = {
 		id: -1,
 		isAuth: false,
@@ -48,5 +49,11 @@ export const auth = wrap<Request, Response>(async (req, _res, next) => {
 	req.userData.id = user.id;
 	req.userData.isVerified = user.verified;
 
+	setAuthTokenCookie(authToken, res);
+
 	next();
 });
+
+export function setAuthTokenCookie(authToken: string, res: Response) {
+	res.cookie('auth_token', authToken, {maxAge: config['auth.token.ttl']});
+}
