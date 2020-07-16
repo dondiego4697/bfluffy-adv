@@ -6,11 +6,11 @@ export enum SignUpType {
 }
 
 export enum FarmType {
-    FARM = 'farm',
-    BREEDER = 'breeder',
-    SHOP = 'shop'
+    FARM = 'farm', // питомник
+    BREEDER = 'breeder', // частный разводчик
+    SHELTER = 'shelter', // приют
+    SHOP = 'shop' // магазин
 }
-
 
 export enum DbTable {
     ALEMBIC_VERSION = 'alembic_version',
@@ -19,11 +19,7 @@ export enum DbTable {
     ANIMAL_BREED = 'animal_breed',
     CITY = 'city',
     REGION = 'region',
-    FARM = 'farm',
-    ANIMAL_AD = 'animal_ad',
-    ANIMAL_AD_GALLERY = 'animal_ad_gallery',
-    ANIMAL_DOCUMENT = 'animal_document',
-    ANIMAL_AD_DOCUMENT = 'animal_ad_document'
+    FARM = 'farm'
 }
 
 export enum ClientStatusCode {

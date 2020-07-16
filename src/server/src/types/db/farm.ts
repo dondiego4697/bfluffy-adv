@@ -1,3 +1,5 @@
+import {FarmType} from 'server/types/consts';
+
 export namespace DBTableFarm {
 
     export interface FieldContacts {
@@ -10,11 +12,12 @@ export namespace DBTableFarm {
         city_id: number;
         contacts: FieldContacts;
         name: string;
+        type: FarmType;
         description?: string;
         owner_id: number;
         address: string;
         rating: number;
-        archive: boolean;
+        is_archive: boolean;
         created_at: Date;
         updated_at: Date;
         public_id: string;

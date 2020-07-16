@@ -30,7 +30,7 @@ export const resetPassword = wrap<Request, Response>(async (req, res) => {
 	);
 
 	if (!existedUser) {
-		logger.error(`[reset password] User by email ${credentials.email} did not found`);
+		logger.error(`[reset password] user by email ${credentials.email} did not found`);
 		throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
 	}
 
@@ -40,7 +40,7 @@ export const resetPassword = wrap<Request, Response>(async (req, res) => {
 	);
 
 	if (!user) {
-		logger.error(`[reset password] User by email ${credentials.email} did not updated`);
+		logger.error(`[reset password] user by email ${credentials.email} did not updated`);
 		throw Boom.badRequest();
 	}
 
@@ -58,7 +58,7 @@ export const forgotPassword = wrap<Request, Response>(async (req, res) => {
 
 	const user = await UserDbProvider.getUserByEmail(email);
 	if (!user) {
-		logger.error(`[forgot password] User by email ${email} did not found`);
+		logger.error(`[forgot password] user by email ${email} did not found`);
 		throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
 	}
 

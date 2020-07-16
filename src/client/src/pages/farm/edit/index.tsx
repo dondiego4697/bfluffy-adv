@@ -6,7 +6,9 @@ import {
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
 import {Store, RuleRender} from 'rc-field-form/lib/interface';
-import {Form, Input, Select, Button, Spin} from 'antd';
+import {
+	Form, Input, Select, Button, Spin
+} from 'antd';
 import {FormInstance} from 'antd/lib/form';
 
 import {FarmEditModel} from 'client/models/farm/edit';
@@ -15,7 +17,9 @@ import {RoutePaths} from 'client/lib/routes';
 import bevis from 'client/lib/bevis';
 import {ModalMessage} from 'client/components/modal-message';
 import {NotFoundPage} from 'client/pages/not-found';
-import {FORM_VALIDATE_MESSAGES, FORM_ITEM_REQUIRED, NEW_ITEM, DataState} from 'client/consts';
+import {
+	FORM_VALIDATE_MESSAGES, FORM_ITEM_REQUIRED, NEW_ITEM, DataState
+} from 'client/consts';
 
 import './index.scss';
 

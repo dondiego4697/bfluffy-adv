@@ -1,10 +1,11 @@
 import * as Knex from 'knex';
 import {dbManager} from 'server/lib/db-manager';
-import {DbTable} from 'server/types/consts';
+import {DbTable, FarmType} from 'server/types/consts';
 import {DBTableFarm} from 'server/types/db/farm';
 
 interface Params {
-    cityId: number;
+	cityId: number;
+	type: FarmType;
     ownerId: number;
 	contacts: DBTableFarm.FieldContacts;
 	name: string;
@@ -18,7 +19,9 @@ const knex = Knex({client: 'pg'});
 
 export async function createFarm(params: Params): Promise<PublicId> {
 	const {
-		cityId, ownerId, contacts, name, description, address
+		cityId, ownerId, contacts,
+		name, description, address,
+		type
 	} = params;
 
 	const query = knex(DbTable.FARM)
@@ -26,6 +29,7 @@ export async function createFarm(params: Params): Promise<PublicId> {
 			city_id: cityId,
 			owner_id: ownerId,
 			contacts: JSON.stringify(contacts),
+			type,
 			name,
 			description,
 			address

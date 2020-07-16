@@ -55,7 +55,7 @@ async function loginByAuthToken(authToken: string): Promise<UserResponse> {
 	);
 
 	if (!user) {
-		logger.error(`[login by auth token] User by email ${credentials.email} did not found`);
+		logger.error(`[login by auth token] user by email ${credentials.email} did not found`);
 		throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
 	}
 
@@ -77,7 +77,7 @@ async function loginByCredentials(credentials: Credentials): Promise<UserRespons
 	);
 
 	if (!user) {
-		logger.error(`[login by credentials] User by email ${credentials.email} did not found`);
+		logger.error(`[login by credentials] user by email ${credentials.email} did not found`);
 		throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
 	}
 

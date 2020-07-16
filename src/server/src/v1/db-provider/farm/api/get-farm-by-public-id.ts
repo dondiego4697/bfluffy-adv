@@ -12,7 +12,7 @@ interface Farm {
 	description: DBTableFarm.Schema['description'];
 	address: DBTableFarm.Schema['address'];
 	rating: DBTableFarm.Schema['rating'];
-	archive: DBTableFarm.Schema['archive'];
+	isArchive: DBTableFarm.Schema['is_archive'];
 	createdAt: DBTableFarm.Schema['created_at'];
 	updatedAt: DBTableFarm.Schema['updated_at'];
 	farmPublicId: DBTableFarm.Schema['public_id'];
@@ -31,7 +31,7 @@ export async function getFarmByPublicId(publicId: string): Promise<Farm | undefi
 			description: `${DbTable.FARM}.description`,
 			address: `${DbTable.FARM}.address`,
 			rating: `${DbTable.FARM}.rating`,
-			archive: `${DbTable.FARM}.archive`,
+			isArchive: `${DbTable.FARM}.is_archive`,
 			createdAt: `${DbTable.FARM}.created_at`,
 			updatedAt: `${DbTable.FARM}.updated_at`,
 			farmPublicId: `${DbTable.FARM}.public_id`,

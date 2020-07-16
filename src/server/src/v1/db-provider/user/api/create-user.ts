@@ -52,7 +52,7 @@ export async function createUser(params: Params): Promise<User> {
 	const {rows: [user]} = await dbManager.executeModifyQuery(query.toString());
 
 	if (!user) {
-		logger.error(`[create user] User did not create: ${JSON.stringify(omit(params, 'password'))}`);
+		logger.error(`[create user] user did not create: ${JSON.stringify(omit(params, 'password'))}`);
 		throw Boom.badRequest();
 	}
 

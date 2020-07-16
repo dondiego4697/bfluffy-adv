@@ -17,30 +17,30 @@ export const updateFarm = wrap<Request, Response>(async (req, res) => {
 		cityCode,
 		contacts,
 		name,
+		type,
 		description,
 		address
 	} = req.body as Body;
 
 	const city = await GeoDbProvider.getCityByCityCode(cityCode);
 	if (!city) {
-		logger.error(`Invalid city code: ${cityCode}`);
+		logger.error(`invalid city code: ${cityCode}`);
 		throw Boom.badRequest();
 	}
 
 	const farm = await FarmDbProvider.getFarmByPublicId(publicId);
 	if (!farm) {
-		throw Boom.notFound(`Farm with id ${publicId} did not found`);
+		throw Boom.notFound(`farm with id ${publicId} did not found`);
 	}
 
 	if (req.userData.id !== farm.ownerId) {
 		throw Boom.forbidden(ClientStatusCode.EDIT_FARM_FORBIDDEN);
 	}
 
-	// TODO если адрес изменился -> по адресу добавлять координаты
-
 	await FarmDbProvider.updateFarm(publicId, {
 		cityId: city.id,
 		contacts,
+		type,
 		name,
 		description,
 		address

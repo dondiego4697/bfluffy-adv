@@ -61,7 +61,7 @@ server-dev:
 tests: build-server
 	@ENVIRONMENT=tests \
 		DISABLE_LOGGING=1 \
-		node_modules/.bin/jest --config=jest.config.json --runInBand --forceExit
+		node_modules/.bin/jest --config=jest.config.json --runInBand --forceExit ${TEST_PATTERN}
 
 .PHONY: migrate-db
 migrate-db: build-server

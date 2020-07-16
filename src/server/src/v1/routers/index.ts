@@ -4,6 +4,6 @@ import {router as editRouter} from 'server/v1/routers/edit';
 import {requestEmulator} from 'server/middlewares/request-emulator';
 
 export const router = express.Router()
-    .use(requestEmulator)
-    .use('/public', publicRouter)
-    .use('/edit', editRouter);
+	.use(requestEmulator)
+	.use('/public', publicRouter)
+	.use('/edit', editRouter);

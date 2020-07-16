@@ -7,7 +7,7 @@ const knex = Knex({client: 'pg'});
 export async function archiveFarm(publicId: string): Promise<void> {
 	const query = knex(DbTable.FARM)
 		.update({
-			archive: true
+			is_archive: true
 		})
 		.where({
 			public_id: publicId

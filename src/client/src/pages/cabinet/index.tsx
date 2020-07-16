@@ -37,31 +37,31 @@ export class CabinetPage extends React.Component<Props> {
   				<div className={b('container')}>
 				  	<Skeleton
 						loading={this.props.clientDataModel.state === DataState.LOADING}
-						active={true}
-					>
+						active
+				  	>
     				{
-						this.props.cabinetModel.farmList.map((farm) => (
-							<Card
-								key={`farm-item-${farm.createdAt}`}
-								style={{width: 300}}
-								actions={[
-									<EditOutlined
-										key='edit'
-										onClick={() => {
-											this.props.history.push(
-												RoutePaths.FARM_EDIT.replace(':id', farm.farmPublicId)
-											);
-										}}
+							this.props.cabinetModel.farmList.map((farm) => (
+								<Card
+									key={`farm-item-${farm.createdAt}`}
+									style={{width: 300}}
+									actions={[
+										<EditOutlined
+											key='edit'
+											onClick={() => {
+												this.props.history.push(
+													RoutePaths.FARM_EDIT.replace(':id', farm.farmPublicId)
+												);
+											}}
+										/>
+									]}
+								>
+									<Meta
+										title={farm.name}
+										description={farm.description}
 									/>
-								]}
-							>
-								<Meta
-									title={farm.name}
-									description={farm.description}
-								/>
-							</Card>
-						))
-					}
+								</Card>
+							))
+						}
 					</Skeleton>
     			</div>
     		</div>

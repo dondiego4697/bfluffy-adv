@@ -4,9 +4,11 @@ import {wrap} from 'async-middleware';
 import {FarmDbProvider} from 'server/v1/db-provider/farm';
 import {GeoDbProvider} from 'server/v1/db-provider/geo';
 import {logger} from 'server/lib/logger';
+import {FarmType} from 'server/types/consts';
 
 export interface Body {
-    cityCode: string;
+	cityCode: string;
+	type: FarmType;
 	contacts: {
         email?: string;
         phone?: string;
@@ -21,21 +23,22 @@ export const createFarm = wrap<Request, Response>(async (req, res) => {
 		cityCode,
 		contacts,
 		name,
+		type,
 		description,
 		address
 	} = req.body as Body;
 
 	const city = await GeoDbProvider.getCityByCityCode(cityCode);
 	if (!city) {
-		logger.error(`Invalid city code: ${cityCode}`);
+		logger.error(`invalid city code: ${cityCode}`);
 		throw Boom.badRequest();
 	}
 
-	// TODO по адресу добавлять координаты
 	const publicId = await FarmDbProvider.createFarm({
 		cityId: city.id,
 		ownerId: req.userData.id,
 		contacts,
+		type,
 		name,
 		description,
 		address

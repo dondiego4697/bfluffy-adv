@@ -13,7 +13,7 @@ export const deleteFarm = wrap<Request, Response>(async (req, res) => {
 
 	const farm = await FarmDbProvider.getFarmByPublicId(publicId);
 	if (!farm) {
-		throw Boom.notFound(`Farm with id ${publicId} did not found`);
+		throw Boom.notFound(`farm with id ${publicId} did not found`);
 	}
 
 	if (req.userData.id !== farm.ownerId) {
