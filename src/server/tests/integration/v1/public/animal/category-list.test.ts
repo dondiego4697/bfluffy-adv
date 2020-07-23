@@ -4,8 +4,8 @@ import * as http from 'http';
 import * as nock from 'nock';
 import {app} from 'server/app';
 import {TestDb} from 'tests/test-db';
-import {fixtures} from 'tests/fixtures/db';
 import {startServer, stopServer} from 'tests/test-server';
+import {TestFactory} from 'tests/test-factory';
 
 const client = got.extend({
 	throwHttpErrors: false,
@@ -17,7 +17,6 @@ const client = got.extend({
 const REQUEST_PATH = '/api/v1/public/animal/category_list';
 
 describe(REQUEST_PATH, () => {
-	const testDb = new TestDb();
 	let server: http.Server;
 	let url: string;
 
@@ -25,8 +24,6 @@ describe(REQUEST_PATH, () => {
 		[server, url] = await startServer(app);
 		nock.disableNetConnect();
 		nock.enableNetConnect(/localhost/);
-
-		await testDb.loadFixtures(fixtures);
 	});
 
 	afterAll(async () => {
@@ -34,16 +31,23 @@ describe(REQUEST_PATH, () => {
 		nock.enableNetConnect();
 	});
 
+	beforeEach(async () => {
+		await TestDb.clean();
+	});
+
 	it('should return correct category list', async () => {
+		const animalCategory1 = await TestFactory.createAnimaCategory();
+		const animalCategory2 = await TestFactory.createAnimaCategory();
+
 		const {body, statusCode} = await client.get<any[]>(`${url}${REQUEST_PATH}`);
 
 		expect(statusCode).toEqual(200);
 		expect(body).toEqual([{
-			code: 'cats',
-		    displayName: 'Кошки'
+			code: animalCategory1.code,
+		    displayName: animalCategory1.displayName
 		}, {
-			code: 'dogs',
-			displayName: 'Собаки'
+			code: animalCategory2.code,
+			displayName: animalCategory2.displayName
 		}]);
 	});
 });

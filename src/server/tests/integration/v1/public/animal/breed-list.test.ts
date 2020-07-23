@@ -4,8 +4,8 @@ import * as http from 'http';
 import * as nock from 'nock';
 import {app} from 'server/app';
 import {TestDb} from 'tests/test-db';
-import {fixtures} from 'tests/fixtures/db';
 import {startServer, stopServer} from 'tests/test-server';
+import {TestFactory} from 'tests/test-factory';
 
 const client = got.extend({
 	throwHttpErrors: false,
@@ -17,7 +17,6 @@ const client = got.extend({
 const REQUEST_PATH = '/api/v1/public/animal/breed_list';
 
 describe(REQUEST_PATH, () => {
-	const testDb = new TestDb();
 	let server: http.Server;
 	let url: string;
 
@@ -25,8 +24,6 @@ describe(REQUEST_PATH, () => {
 		[server, url] = await startServer(app);
 		nock.disableNetConnect();
 		nock.enableNetConnect(/localhost/);
-
-		await testDb.loadFixtures(fixtures);
 	});
 
 	afterAll(async () => {
@@ -34,31 +31,34 @@ describe(REQUEST_PATH, () => {
 		nock.enableNetConnect();
 	});
 
+	beforeEach(async () => {
+		await TestDb.clean();
+	});
+
 	it('should return correct breed list by categoty', async () => {
+		const animalCategory1 = await TestFactory.createAnimaCategory();
+		const animalCategory2 = await TestFactory.createAnimaCategory();
+
+		const animalBreed1 = await TestFactory.createAnimalBreed(animalCategory1.id);
+		const animalBreed2 = await TestFactory.createAnimalBreed(animalCategory1.id);
+		await TestFactory.createAnimalBreed(animalCategory2.id);
+
 		const {body, statusCode} = await client.get<any[]>(`${url}${REQUEST_PATH}`, {
 			searchParams: {
-				category_code: 'cats'
+				category_code: animalCategory1.code
 			}
 		});
 
 		expect(statusCode).toEqual(200);
 		expect(body).toEqual([
 			{
-				code: 'cat-1',
-				displayName: 'Кошка 1'
+				code: animalBreed1.code,
+				displayName: animalBreed1.displayName
 			},
 			{
-				code: 'cat-2',
-				displayName: 'Кошка 1'
+				code: animalBreed2.code,
+				displayName: animalBreed2.displayName
 			}
 		]);
-	});
-
-	it('should throw error on bad request parameters', async () => {
-		const {statusCode} = await client.get<any[]>(`${url}${REQUEST_PATH}`, {
-			searchParams: {}
-		});
-
-		expect(statusCode).toEqual(400);
 	});
 });

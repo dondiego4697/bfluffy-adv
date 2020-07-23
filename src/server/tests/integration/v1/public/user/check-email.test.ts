@@ -4,7 +4,6 @@ import * as http from 'http';
 import * as nock from 'nock';
 import {app} from 'server/app';
 import {TestDb} from 'tests/test-db';
-import {fixtures} from 'tests/fixtures/db';
 import {startServer, stopServer} from 'tests/test-server';
 import {SignUpType} from 'server/types/consts';
 import {TestFactory} from 'tests/test-factory';
@@ -19,7 +18,6 @@ const client = got.extend({
 const REQUEST_PATH = '/api/v1/public/user/check_email';
 
 describe(REQUEST_PATH, () => {
-	const testDb = new TestDb();
 	let server: http.Server;
 	let url: string;
 
@@ -27,13 +25,15 @@ describe(REQUEST_PATH, () => {
 		[server, url] = await startServer(app);
 		nock.disableNetConnect();
 		nock.enableNetConnect(/localhost/);
-
-		await testDb.loadFixtures(fixtures);
 	});
 
 	afterAll(async () => {
 		await stopServer(server);
 		nock.enableNetConnect();
+	});
+
+	beforeEach(async () => {
+		await TestDb.clean();
 	});
 
 	it('should return correct response on free email', async () => {
@@ -66,13 +66,5 @@ describe(REQUEST_PATH, () => {
 
 		expect(statusCode).toEqual(200);
 		expect(body).toEqual({exist: true});
-	});
-
-	it('should return error bad request', async () => {
-		const {statusCode} = await client.get<any[]>(`${url}${REQUEST_PATH}`, {
-			searchParams: {}
-		});
-
-		expect(statusCode).toEqual(400);
 	});
 });

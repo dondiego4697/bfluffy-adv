@@ -4,9 +4,8 @@ import * as http from 'http';
 import * as nock from 'nock';
 import * as Boom from '@hapi/boom';
 import {app} from 'server/app';
-import {TestDb} from 'tests/test-db';
-import {fixtures} from 'tests/fixtures/db';
 import {startServer, stopServer} from 'tests/test-server';
+import {TestDb} from 'tests/test-db';
 import {SignUpType} from 'server/types/consts';
 import {TestFactory} from 'tests/test-factory';
 import {AuthToken} from 'server/lib/auth-token';
@@ -21,7 +20,6 @@ const client = got.extend({
 const REQUEST_PATH = '/api/v1/public/user/login';
 
 describe(REQUEST_PATH, () => {
-	const testDb = new TestDb();
 	let server: http.Server;
 	let url: string;
 
@@ -29,13 +27,15 @@ describe(REQUEST_PATH, () => {
 		[server, url] = await startServer(app);
 		nock.disableNetConnect();
 		nock.enableNetConnect(/localhost/);
-
-		await testDb.loadFixtures(fixtures);
 	});
 
 	afterAll(async () => {
 		await stopServer(server);
 		nock.enableNetConnect();
+	});
+
+	beforeEach(async () => {
+		await TestDb.clean();
 	});
 
 	describe('by authToken', () => {
@@ -222,13 +222,5 @@ describe(REQUEST_PATH, () => {
 			expect(statusCode).toEqual(400);
 			expect(body.message).toEqual('USER_NOT_VERIFIED');
 		});
-	});
-
-	it('should throw error on bad request parameters', async () => {
-		const {statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
-			json: {}
-		});
-
-		expect(statusCode).toEqual(400);
 	});
 });

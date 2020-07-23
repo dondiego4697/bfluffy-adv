@@ -4,16 +4,17 @@ import * as http from 'http';
 import * as nock from 'nock';
 import {app} from 'server/app';
 import {TestDb} from 'tests/test-db';
-import {fixtures} from 'tests/fixtures/db';
 import {startServer, stopServer} from 'tests/test-server';
 import {TestFactory} from 'tests/test-factory';
 import {AuthToken} from 'server/lib/auth-token';
 import {SignUpType, FarmType} from 'server/types/consts';
 
-const authToken = AuthToken.encode({
+const BASE_USER = {
 	email: 'test@mail.ru',
 	password: 'password'
-});
+};
+
+const AUTH_TOKEN = AuthToken.encode(BASE_USER);
 
 const client = got.extend({
 	throwHttpErrors: false,
@@ -21,14 +22,13 @@ const client = got.extend({
 	timeout: 2000,
 	responseType: 'json',
 	headers: {
-		cookie: `auth_token=${authToken}`
+		cookie: `auth_token=${AUTH_TOKEN}`
 	}
 });
 
 const REQUEST_PATH = '/api/v1/edit/farm/list';
 
 describe(REQUEST_PATH, () => {
-	const testDb = new TestDb();
 	let server: http.Server;
 	let url: string;
 
@@ -44,11 +44,19 @@ describe(REQUEST_PATH, () => {
 	});
 
 	beforeEach(async () => {
-		await testDb.loadFixtures(fixtures);
+		await TestDb.clean();
+		await TestFactory.createUser({
+			signUpType: SignUpType.EMAIL,
+			...BASE_USER
+		});
 	});
 
 	it('should return farm list', async () => {
-		const [city1, city2] = await TestFactory.getAllCities();
+		const region = await TestFactory.createRegion();
+		const [city1, city2] = await Promise.all([
+			TestFactory.createCity(region.id),
+			TestFactory.createCity(region.id)
+		]);
 
 		const farm1 = await TestFactory.createFarm({
 			cityId: city1.id,

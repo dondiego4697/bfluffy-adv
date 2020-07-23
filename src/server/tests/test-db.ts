@@ -12,12 +12,8 @@ const knex = Knex({client: 'pg'});
 export class TestDb {
     private static readonly schema = 'public';
 
-    async query(text: string) {
-    	return dbManager.executeReadQuery(text);
-    }
-
     async loadFixtures(fixtures: Fixture[]) {
-    	await this.clean();
+    	await TestDb.clean();
 
     	return dbManager.executeInTransaction(async (client) => {
     		// Insert tables in the given order for satisfy constraints.
@@ -30,7 +26,7 @@ export class TestDb {
     	});
     }
 
-    async clean(): Promise<void> {
+    static async clean(): Promise<void> {
     	const tableNamesQuery = knex(knex.raw('information_schema.tables'))
     		.select({tableName: 'table_name'})
     		.whereRaw(`table_schema='${TestDb.schema}'`)

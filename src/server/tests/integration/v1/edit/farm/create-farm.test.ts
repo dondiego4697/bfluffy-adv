@@ -5,16 +5,17 @@ import * as nock from 'nock';
 import {omit} from 'lodash';
 import {app} from 'server/app';
 import {TestDb} from 'tests/test-db';
-import {fixtures} from 'tests/fixtures/db';
 import {startServer, stopServer} from 'tests/test-server';
 import {TestFactory} from 'tests/test-factory';
 import {AuthToken} from 'server/lib/auth-token';
-import {FarmType} from 'server/types/consts';
+import {FarmType, SignUpType} from 'server/types/consts';
 
-const authToken = AuthToken.encode({
+const BASE_USER = {
 	email: 'test@mail.ru',
 	password: 'password'
-});
+};
+
+const AUTH_TOKEN = AuthToken.encode(BASE_USER);
 
 const client = got.extend({
 	throwHttpErrors: false,
@@ -22,14 +23,13 @@ const client = got.extend({
 	timeout: 2000,
 	responseType: 'json',
 	headers: {
-		cookie: `auth_token=${authToken}`
+		cookie: `auth_token=${AUTH_TOKEN}`
 	}
 });
 
 const REQUEST_PATH = '/api/v1/edit/farm/create';
 
 describe(REQUEST_PATH, () => {
-	const testDb = new TestDb();
 	let server: http.Server;
 	let url: string;
 
@@ -45,11 +45,16 @@ describe(REQUEST_PATH, () => {
 	});
 
 	beforeEach(async () => {
-		await testDb.loadFixtures(fixtures);
+		await TestDb.clean();
+		await TestFactory.createUser({
+			signUpType: SignUpType.EMAIL,
+			...BASE_USER
+		});
 	});
 
 	it('should create farm', async () => {
-		const [city] = await TestFactory.getAllCities();
+		const region = await TestFactory.createRegion();
+		const city = await TestFactory.createCity(region.id);
 
 		const {body, statusCode} = await client.post<any>(
 			`${url}${REQUEST_PATH}`,

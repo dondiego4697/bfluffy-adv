@@ -5,7 +5,6 @@ import * as nock from 'nock';
 import * as Boom from '@hapi/boom';
 import {app} from 'server/app';
 import {TestDb} from 'tests/test-db';
-import {fixtures} from 'tests/fixtures/db';
 import {startServer, stopServer} from 'tests/test-server';
 import {SignUpType} from 'server/types/consts';
 import {TestFactory} from 'tests/test-factory';
@@ -23,7 +22,6 @@ const client = got.extend({
 const REQUEST_PATH = '/api/v1/public/user/signup';
 
 describe(REQUEST_PATH, () => {
-	const testDb = new TestDb();
 	let server: http.Server;
 	let url: string;
 
@@ -39,7 +37,7 @@ describe(REQUEST_PATH, () => {
 	});
 
 	beforeEach(async () => {
-		await testDb.loadFixtures(fixtures);
+		await TestDb.clean();
 	});
 
 	it('should sign up by email', async () => {
@@ -73,7 +71,7 @@ describe(REQUEST_PATH, () => {
 			...user,
 			createdAt: formatCreatedDate(user.createdAt),
 		}).toEqual({
-			id: 2,
+			id: user.id,
 			email: 'new_test@mail.ru',
 			displayName: 'Test Test',
 			password: getPasswordHash('password'),
@@ -84,11 +82,15 @@ describe(REQUEST_PATH, () => {
 	});
 
 	it('should throw error on existed email', async () => {
+		const user = await TestFactory.createUser({
+			signUpType: SignUpType.EMAIL
+		});
+
 		const {statusCode, body} = await client.post<Boom.Payload>(
 			`${url}${REQUEST_PATH}`,
 			{
 				json: {
-					email: 'test@mail.ru',
+					email: user.email,
 	                type: SignUpType.EMAIL,
 	                name: 'Test Test',
 	                password: 'password'
@@ -98,13 +100,5 @@ describe(REQUEST_PATH, () => {
 
 		expect(statusCode).toEqual(400);
 		expect(body.message).toEqual('USER_EMAIL_EXIST');
-	});
-
-	it('should throw error on bad request parameters', async () => {
-		const {statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
-			json: {}
-		});
-
-		expect(statusCode).toEqual(400);
 	});
 });
