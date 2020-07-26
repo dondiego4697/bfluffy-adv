@@ -1,6 +1,6 @@
 import {FarmType} from 'server/types/consts';
 
-export namespace DBTableFarm {
+export namespace DBTableUserCard {
 
     export interface FieldContacts {
         phone?: string;
@@ -9,17 +9,16 @@ export namespace DBTableFarm {
 
     export interface Schema {
         id: number;
+        public_id: string;
+        user_id: number;
         city_id: number;
         contacts: FieldContacts;
-        name: string;
         type: FarmType;
+        name: string;
         description?: string;
+        address?: string;
         owner_id: number;
-        address: string;
-        rating: number;
-        is_archive: boolean;
         created_at: Date;
         updated_at: Date;
-        public_id: string;
     }
 }

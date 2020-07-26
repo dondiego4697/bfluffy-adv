@@ -27,7 +27,7 @@ const client = got.extend({
 	}
 });
 
-const REQUEST_PATH = '/api/v1/edit/farm/update';
+const REQUEST_PATH = '/api/v1/edit/user_card/update';
 
 describe(REQUEST_PATH, () => {
 	let server: http.Server;
@@ -52,16 +52,16 @@ describe(REQUEST_PATH, () => {
 		});
 	});
 
-	it('should update farm', async () => {
+	it('should update user card', async () => {
 		const region = await TestFactory.createRegion();
 		const [cityBefore, cityAfter] = await Promise.all([
 			TestFactory.createCity(region.id),
 			TestFactory.createCity(region.id)
 		]);
 
-		const farm = await TestFactory.createFarm({
+		const userCard = await TestFactory.createUserCard({
 			cityId: cityBefore.id,
-			ownerId: 1,
+			userId: 1,
 			type: FarmType.FARM
 		});
 
@@ -80,18 +80,18 @@ describe(REQUEST_PATH, () => {
 	                address: 'address updated'
 				},
 				searchParams: {
-					publicId: farm.publicId
+					publicId: userCard.publicId
 				}
 			}
 		);
 
 		expect(statusCode).toEqual(200);
-		expect(body).toEqual({publicId: farm.publicId});
+		expect(body).toEqual({});
 
-		const farms = await TestFactory.getAllFarms();
-		const updatedFarm = farms.find((item) => item.publicId === body.publicId);
+		const userCards = await TestFactory.getAllUserCards();
+		const updatedUserCard = userCards.find((item) => item.publicId === userCard.publicId);
 
-		expect(omit(updatedFarm, ['createdAt', 'updatedAt'])).toEqual({
+		expect(omit(updatedUserCard, ['createdAt', 'updatedAt'])).toEqual({
 			id: 1,
 			cityId: 2,
 			contacts: {
@@ -101,52 +101,10 @@ describe(REQUEST_PATH, () => {
 			name: 'name updated',
 			type: FarmType.BREEDER,
 			description: 'description updated',
-			ownerId: 1,
+			userId: 1,
 			address: 'address updated',
-			rating: 0,
-			isArchive: false,
-			publicId: body.publicId
+			publicId: userCard.publicId
 		});
-	});
-
-	it('should throw error if owner id not equal with request user id', async () => {
-		const region = await TestFactory.createRegion();
-		const city = await TestFactory.createCity(region.id);
-
-		const farm = await TestFactory.createFarm({
-			cityId: city.id,
-			ownerId: 1,
-			type: FarmType.FARM
-		});
-
-		const {authToken: token} = await TestFactory.createUserWithToken({
-			signUpType: SignUpType.EMAIL
-		});
-
-		const {statusCode} = await client.post<any>(
-			`${url}${REQUEST_PATH}`,
-			{
-				json: {
-					cityCode: city.code,
-	                contacts: {
-						email: 'some@mail.ru',
-						phone: '70000000000'
-					},
-					name: 'name',
-					type: FarmType.FARM,
-	                description: 'description',
-	                address: 'address'
-				},
-				searchParams: {
-					publicId: farm.publicId
-				},
-				headers: {
-					cookie: `auth_token=${token}`
-				}
-			}
-		);
-
-		expect(statusCode).toEqual(403);
 	});
 
 	it('should throw error if public id does not exist', async () => {

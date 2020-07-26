@@ -8,7 +8,7 @@ import {TestDb} from 'tests/test-db';
 import {startServer, stopServer} from 'tests/test-server';
 import {TestFactory} from 'tests/test-factory';
 import {AuthToken} from 'server/lib/auth-token';
-import {FarmType, SignUpType} from 'server/types/consts';
+import {SignUpType} from 'server/types/consts';
 
 const BASE_USER = {
 	email: 'test@mail.ru',
@@ -27,7 +27,7 @@ const client = got.extend({
 	}
 });
 
-const REQUEST_PATH = '/api/v1/edit/farm/create';
+const REQUEST_PATH = '/api/v1/edit/animal_ad/create';
 
 describe(REQUEST_PATH, () => {
 	let server: http.Server;
@@ -52,47 +52,45 @@ describe(REQUEST_PATH, () => {
 		});
 	});
 
-	it('should create farm', async () => {
-		const region = await TestFactory.createRegion();
-		const city = await TestFactory.createCity(region.id);
+	it('should create animal ad', async () => {
+		const animalCategory = await TestFactory.createAnimaCategory();
+		const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
 
 		const {body, statusCode} = await client.post<any>(
 			`${url}${REQUEST_PATH}`,
 			{
 				json: {
-					cityCode: city.code,
-	                contacts: {
-						email: 'some@mail.ru',
-						phone: '79870001212'
-					},
-					type: FarmType.FARM,
-	                name: 'farm name',
-	                description: 'farm description',
-	                address: 'farm address'
+					name: 'animal ad name',
+					cost: 0.00,
+					sex: true,
+					animalBreedCode: animalBreed.code,
+					documents: {
+						genericMark: true
+					}
 				}
 			}
 		);
 
 		expect(statusCode).toEqual(200);
 
-		const farms = await TestFactory.getAllFarms();
-		const farm = farms.find((item) => item.publicId === body.publicId);
+		const animalAds = await TestFactory.getAllAnimalAds();
+		const animalAd = animalAds.find((item) => item.publicId === body.publicId);
 
-		expect(omit(farm, ['createdAt', 'updatedAt'])).toEqual({
+		expect(omit(animalAd, ['createdAt', 'updatedAt'])).toEqual({
+			animalBreedId: animalBreed.id,
+			cost: '0.00',
+			description: null,
+			name: 'animal ad name',
 			id: 1,
-			cityId: 1,
-			contacts: {
-				email: 'some@mail.ru',
-				phone: '79870001212'
-			},
-			name: 'farm name',
-			type: FarmType.FARM,
-			description: 'farm description',
-			ownerId: 1,
-			address: 'farm address',
-			rating: 0,
 			isArchive: false,
-			publicId: body.publicId
+			isBasicVaccinations: false,
+			ownerId: 1,
+			publicId: body.publicId,
+			sex: true,
+			viewsCount: 0,
+			documents: {
+				genericMark: true
+			}
 		});
 	});
 });

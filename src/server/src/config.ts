@@ -86,12 +86,12 @@ const env = process.env.ENVIRONMENT || 'development';
 const configForEnv = configs.get(env);
 export const config = configForEnv!;
 
-assert(config, `There is no configuration for environment "${env}"`);
+assert(config, `there is no configuration for environment "${env}"`);
 
-assert(config['db.user'], 'There is no db user');
-assert(config['db.password'], 'There is no db password');
-assert(config['db.database'], 'There is no db database');
+assert(config['db.user'], 'there is no db user');
+assert(config['db.password'], 'there is no db password');
+assert(config['db.database'], 'there is no db database');
 
-assert(config['auth.privateKey'], 'There is no auth private key');
+assert(config['auth.privateKey'], 'there is no auth private key');
 
-assert(config['email.password'], 'There is no email password');
+assert(config['email.password'], 'there is no email password');

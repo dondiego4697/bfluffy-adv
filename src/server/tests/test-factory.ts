@@ -5,12 +5,13 @@ import {dbManager} from 'server/lib/db-manager';
 import {AuthToken} from 'server/lib/auth-token';
 import {getPasswordHash} from 'server/lib/crypto';
 import {SignUpType, DbTable, FarmType} from 'server/types/consts';
-import {DBTableFarm} from 'server/types/db/farm';
+import {DBTableUserCard} from 'server/types/db/user-card';
 import {DBTableUsers} from 'server/types/db/users';
 import {DBTableCity} from 'server/types/db/city';
 import {DBTableRegion} from 'server/types/db/region';
 import {DBTableAnimalCategory} from 'server/types/db/animal-category';
 import {DBTableAnimalBreed} from 'server/types/db/animal-breed';
+import {DBTableAnimalAd} from 'server/types/db/animal-ad';
 
 const knex = Knex({client: 'pg'});
 
@@ -144,54 +145,49 @@ async function createUser(params: CreateUserParams): Promise<User> {
 
 // ####################################################################################################################
 
-interface Farm {
-	id: DBTableFarm.Schema['id'];
-	cityId: DBTableFarm.Schema['city_id'];
-	contacts: DBTableFarm.Schema['contacts'];
-	name: DBTableFarm.Schema['name'];
-	type: DBTableFarm.Schema['type'];
-	description: DBTableFarm.Schema['description'];
-	ownerId: DBTableFarm.Schema['owner_id'];
-	address: DBTableFarm.Schema['address'];
-	rating: DBTableFarm.Schema['rating'];
-	isArchive: DBTableFarm.Schema['is_archive'];
-	createdAt: DBTableFarm.Schema['created_at'];
-	updatedAt: DBTableFarm.Schema['updated_at'];
-	publicId: DBTableFarm.Schema['public_id'];
+interface UserCard {
+	id: DBTableUserCard.Schema['id'];
+	userId: DBTableUserCard.Schema['user_id'];
+	publicId: DBTableUserCard.Schema['public_id'];
+	cityId: DBTableUserCard.Schema['city_id'];
+	contacts: DBTableUserCard.Schema['contacts'];
+	name: DBTableUserCard.Schema['name'];
+	description: DBTableUserCard.Schema['description'];
+	type: DBTableUserCard.Schema['type'];
+	address: DBTableUserCard.Schema['address'];
+	createdAt: DBTableUserCard.Schema['created_at'];
+	updatedAt: DBTableUserCard.Schema['updated_at'];
 }
 
-interface CreateFarmParams {
+interface CreateUserCardParams {
 	cityId: number;
-	ownerId: number;
+	userId: number;
 	type: FarmType;
-	isArchive?: boolean;
 }
 
-async function getAllFarms(): Promise<Farm[]> {
+async function getAllUserCards(): Promise<UserCard[]> {
 	const query = knex
 		.select([
 			knex.raw('id'),
 			knex.raw('city_id as "cityId"'),
+			knex.raw('user_id as "userId"'),
+			knex.raw('public_id as "publicId"'),
 			knex.raw('contacts'),
 			knex.raw('name'),
-			knex.raw('type'),
 			knex.raw('description'),
-			knex.raw('owner_id as "ownerId"'),
+			knex.raw('type'),
 			knex.raw('address'),
-			knex.raw('rating'),
-			knex.raw('is_archive as "isArchive"'),
 			knex.raw('created_at as "createdAt"'),
-			knex.raw('updated_at as "updatedAt"'),
-			knex.raw('public_id as "publicId"')
+			knex.raw('updated_at as "updatedAt"')
 		])
-		.from(DbTable.FARM);
+		.from(DbTable.USER_CARD);
 
 	const {rows} = await dbManager.executeReadQuery(query.toString());
 	return rows;
 }
 
-async function createFarm(params: CreateFarmParams): Promise<Farm> {
-	const query = knex(DbTable.FARM)
+async function createUserCard(params: CreateUserCardParams): Promise<UserCard> {
+	const query = knex(DbTable.USER_CARD)
 		.insert({
 			city_id: params.cityId,
 	        contacts: JSON.stringify({
@@ -199,8 +195,7 @@ async function createFarm(params: CreateFarmParams): Promise<Farm> {
 				phone: faker.phone.phoneNumber()
 			}),
 			type: params.type,
-			owner_id: params.ownerId,
-			is_archive: params.isArchive,
+			user_id: params.userId,
 	        name: faker.company.companyName(),
 	        description: faker.company.catchPhrase(),
 			address: faker.address.streetAddress()
@@ -208,16 +203,15 @@ async function createFarm(params: CreateFarmParams): Promise<Farm> {
 		.returning([
 			'id',
 			'city_id as cityId',
+			'user_id as userId',
+			'public_id as publicId',
 			'contacts',
 			'name',
 			'description',
-			'owner_id as ownerId',
+			'type',
 			'address',
-			'rating',
-			'is_archive as isArchive',
 			'created_at as createdAt',
-			'updated_at as updatedAt',
-			'public_id as publicId'
+			'updated_at as updatedAt'
 		]);
 
 	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
@@ -305,6 +299,93 @@ async function createAnimaCategory(): Promise<AnimalCategory> {
 
 // ####################################################################################################################
 
+interface CreateAnimalAdParams {
+	breedId: number;
+	ownerId: number;
+	isArchive?: boolean;
+	isBasicVaccinations?: boolean;
+}
+
+interface AnimalAd {
+	id: DBTableAnimalAd.Schema['id'];
+	publicId: DBTableAnimalAd.Schema['public_id'];
+	animalBreedId: DBTableAnimalAd.Schema['animal_breed_id'];
+	sex: DBTableAnimalAd.Schema['sex'];
+	cost: DBTableAnimalAd.Schema['cost'];
+	name: DBTableAnimalAd.Schema['name'];
+	description: DBTableAnimalAd.Schema['description'];
+	documents: DBTableAnimalAd.Schema['documents'];
+	isArchive: DBTableAnimalAd.Schema['is_archive'];
+	isBasicVaccinations: DBTableAnimalAd.Schema['is_basic_vaccinations'];
+	viewsCount: DBTableAnimalAd.Schema['views_count'];
+	ownerId: DBTableAnimalAd.Schema['owner_id'];
+	createdAt: DBTableAnimalAd.Schema['created_at'];
+	updatedAt: DBTableAnimalAd.Schema['updated_at'];
+}
+
+async function getAllAnimalAds(): Promise<AnimalAd[]> {
+	const query = knex
+		.select([
+			knex.raw('id'),
+			knex.raw('public_id as "publicId"'),
+			knex.raw('animal_breed_id as "animalBreedId"'),
+			knex.raw('sex'),
+			knex.raw('cost'),
+			knex.raw('name'),
+			knex.raw('description'),
+			knex.raw('is_archive as "isArchive"'),
+			knex.raw('is_basic_vaccinations as "isBasicVaccinations"'),
+			knex.raw('documents'),
+			knex.raw('views_count as "viewsCount"'),
+			knex.raw('owner_id as "ownerId"'),
+			knex.raw('created_at as "createdAt"'),
+			knex.raw('updated_at as "updatedAt"')
+		])
+		.from(DbTable.ANIMAL_AD);
+
+	const {rows} = await dbManager.executeReadQuery(query.toString());
+	return rows;
+}
+
+async function createAnimalAd(params: CreateAnimalAdParams): Promise<AnimalAd> {
+	const {
+		breedId, ownerId, isBasicVaccinations, isArchive
+	} = params;
+
+	const query = knex(DbTable.ANIMAL_AD)
+		.insert({
+			animal_breed_id: breedId,
+			sex: faker.random.boolean(),
+			cost: faker.commerce.price(),
+			name: faker.company.companyName(),
+			description: faker.company.catchPhrase(),
+			is_archive: 'isArchive' in params ? isArchive : false,
+			is_basic_vaccinations: 'isBasicVaccinations' in params ? isBasicVaccinations : false,
+			owner_id: ownerId
+		})
+		.returning([
+			'id',
+			'public_id as publicId',
+			'animal_breed_id as animalBreedId',
+			'sex',
+			'cost',
+			'name',
+			'description',
+			'is_archive as isArchive',
+			'is_basic_vaccinations as isBasicVaccinations',
+			'documents',
+			'views_count as viewsCount',
+			'owner_id as ownerId',
+			'created_at as createdAt',
+			'updated_at as updatedAt'
+		]);
+
+	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
+	return row;
+}
+
+// ####################################################################################################################
+
 export const TestFactory = {
 	createUser,
 	createUserWithToken,
@@ -320,6 +401,9 @@ export const TestFactory = {
 	// ----
 	createAnimaCategory,
 	// ----
-	createFarm,
-	getAllFarms
+	createUserCard,
+	getAllUserCards,
+	// ----
+	createAnimalAd,
+	getAllAnimalAds
 };

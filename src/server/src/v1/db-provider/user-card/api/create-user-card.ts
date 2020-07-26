@@ -1,33 +1,33 @@
 import * as Knex from 'knex';
 import {dbManager} from 'server/lib/db-manager';
 import {DbTable, FarmType} from 'server/types/consts';
-import {DBTableFarm} from 'server/types/db/farm';
+import {DBTableUserCard} from 'server/types/db/user-card';
 
 interface Params {
 	cityId: number;
 	type: FarmType;
-    ownerId: number;
-	contacts: DBTableFarm.FieldContacts;
+    userId: number;
+	contacts: DBTableUserCard.FieldContacts;
 	name: string;
 	description?: string;
-	address: string;
+	address?: string;
 }
 
 type PublicId = string;
 
 const knex = Knex({client: 'pg'});
 
-export async function createFarm(params: Params): Promise<PublicId> {
+export async function createUserCard(params: Params): Promise<PublicId> {
 	const {
-		cityId, ownerId, contacts,
+		cityId, userId, contacts,
 		name, description, address,
 		type
 	} = params;
 
-	const query = knex(DbTable.FARM)
+	const query = knex(DbTable.USER_CARD)
 		.insert({
 			city_id: cityId,
-			owner_id: ownerId,
+			user_id: userId,
 			contacts: JSON.stringify(contacts),
 			type,
 			name,

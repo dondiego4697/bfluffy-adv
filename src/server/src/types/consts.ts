@@ -19,7 +19,8 @@ export enum DbTable {
     ANIMAL_BREED = 'animal_breed',
     CITY = 'city',
     REGION = 'region',
-    FARM = 'farm'
+    USER_CARD = 'user_card',
+    ANIMAL_AD = 'animal_ad'
 }
 
 export enum ClientStatusCode {
@@ -28,5 +29,6 @@ export enum ClientStatusCode {
     USER_NOT_VERIFIED = 'USER_NOT_VERIFIED',
     USER_INVALID_TOKEN = 'USER_INVALID_TOKEN',
     USER_NOT_AUTHORIZED = 'USER_NOT_AUTHORIZED',
-    EDIT_FARM_FORBIDDEN = 'EDIT_FARM_FORBIDDEN'
+    USER_CARD_FORBIDDEN = 'USER_CARD_FORBIDDEN',
+    ANIMAL_AD_FORBIDDEN = 'ANIMAL_AD_FORBIDDEN'
 }

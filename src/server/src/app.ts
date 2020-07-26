@@ -26,7 +26,7 @@ export const app = express()
 	.use(staticRouter)
 	.use('/api/v1', v1)
 	.use('/', renderPage)
-	.use((_req, _res, next) => next(Boom.notFound('Endpoint not found')))
+	.use((_req, _res, next) => next(Boom.notFound('endpoint not found')))
 	// eslint-disable-next-line
     .use((error: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
 		if (error.isBoom) {
@@ -44,9 +44,9 @@ function sendError(res: express.Response, error: Boom.Boom): void {
 if (!module.parent) {
 	const port = process.env.NODEJS_PORT || 8080;
 
-	assert(port, 'No port provided for the application to listen to');
+	assert(port, 'no port provided for the application to listen to');
 
 	app.listen(port, () => {
-		logger.info(`Application started on port ${port}`);
+		logger.info(`application started on port ${port}`);
 	});
 }

@@ -1,7 +1,7 @@
 import * as Boom from '@hapi/boom';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
-import {FarmDbProvider} from 'server/v1/db-provider/farm';
+import {UserCardDbProvider} from 'server/v1/db-provider/user-card';
 import {GeoDbProvider} from 'server/v1/db-provider/geo';
 import {logger} from 'server/lib/logger';
 import {FarmType} from 'server/types/consts';
@@ -15,10 +15,10 @@ export interface Body {
     };
 	name: string;
 	description?: string;
-	address: string;
+	address?: string;
 }
 
-export const createFarm = wrap<Request, Response>(async (req, res) => {
+export const createUserCard = wrap<Request, Response>(async (req, res) => {
 	const {
 		cityCode,
 		contacts,
@@ -34,9 +34,9 @@ export const createFarm = wrap<Request, Response>(async (req, res) => {
 		throw Boom.badRequest();
 	}
 
-	const publicId = await FarmDbProvider.createFarm({
+	const publicId = await UserCardDbProvider.createUserCard({
 		cityId: city.id,
-		ownerId: req.userData.id,
+		userId: req.userData.id,
 		contacts,
 		type,
 		name,

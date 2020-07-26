@@ -1,26 +1,26 @@
 import * as Knex from 'knex';
 import {dbManager} from 'server/lib/db-manager';
 import {DbTable, FarmType} from 'server/types/consts';
-import {DBTableFarm} from 'server/types/db/farm';
+import {DBTableUserCard} from 'server/types/db/user-card';
 
 interface Params {
     cityId: number;
-	contacts: DBTableFarm.FieldContacts;
+	contacts: DBTableUserCard.FieldContacts;
 	name: string;
 	description?: string;
-	address: string;
+	address?: string;
 	type: FarmType;
 }
 
 const knex = Knex({client: 'pg'});
 
-export async function updateFarm(publicId: string, params: Params): Promise<void> {
+export async function updateUserCard(userId: number, params: Params): Promise<void> {
 	const {
 		cityId, contacts, name,
 		description, address, type
 	} = params;
 
-	const query = knex(DbTable.FARM)
+	const query = knex(DbTable.USER_CARD)
 		.update({
 			city_id: cityId,
 			contacts: JSON.stringify(contacts),
@@ -30,7 +30,7 @@ export async function updateFarm(publicId: string, params: Params): Promise<void
 			address
 		})
 		.where({
-			public_id: publicId
+			user_id: userId
 		});
 
 	await dbManager.executeModifyQuery(query.toString());
