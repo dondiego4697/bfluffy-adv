@@ -14,6 +14,7 @@ function showError(content: string) {
 }
 
 function showSuccess(params: ShowSuccessParams) {
+	// TODO сделать свой стиль
 	const {title, content, onOk} = params;
 
 	Modal.success({

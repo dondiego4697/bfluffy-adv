@@ -23,6 +23,7 @@ export interface Config {
 	'email.password': string;
 	'client.bundlesRootFolder': string;
 	'emulation.request': boolean;
+	'validate.checkEmail.ttl': number;
 }
 
 const production: Config = {
@@ -42,11 +43,12 @@ const production: Config = {
 	'auth.privateKey': process.env.AUTH_PRIVATE_KEY!,
 	'email.mock': false,
 	'email.enable': true,
-	'email.login': 'be.fluffy@yandex.ru',
+	'email.login': 'support@bfluffy.ru',
 	'email.password': process.env.EMAIL_PASSWORD!,
 	'host.app': 'TODO',
 	'client.bundlesRootFolder': '/bundles/',
-	'emulation.request': false
+	'emulation.request': false,
+	'validate.checkEmail.ttl': 30 * 60 * 1000 // 30m
 };
 
 const testing: Config = {
@@ -61,7 +63,8 @@ const development: Config = {
 	'db.useCert': false,
 	'auth.token.ttl': 10 * 60 * 1000, // 10m
 	'host.app': 'http://localhost:8080',
-	'emulation.request': true
+	'emulation.request': true,
+	'validate.checkEmail.ttl': -1
 };
 
 const tests: Config = {

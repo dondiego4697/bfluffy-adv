@@ -1,7 +1,7 @@
-$background-color: #F5F9FB;
+$background-color: #FDF9F6;
 $surface-color: #F5F9FB;
 
-$primary-color: #050831;
+$primary-color: #F85F59;
 $primary-variant-color: #050831;
 $secondary-color: #396BFF;
 $secondary-variant-color: #396BFF;
@@ -21,4 +21,39 @@ $text-s: 11px;
 @font-face {
     font-family: MontserratBold;
     src: url('/fonts/Montserrat/Montserrat-Bold.ttf');
+}
+
+.bfluffy-button-simple {
+    min-width: 190px;
+    height: 35px;
+    padding: 7px 20px 9px 20px;
+    background-color: $primary-color;
+    font-family: MontserratRegular;
+    color: white;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.15s linear;
+    border: unset;
+    outline: none;
+
+    &:hover, &:focus {
+        background-color: $primary-color;
+        color: white;
+        opacity: 0.85;
+    }
+}
+
+.bfluffy-button-link {
+    border: none;
+    height: unset;
+    font-size: 12px;
+    padding: 0;
+    font-family: MontserratRegular;
+    color: $primary-color;
+    box-shadow: unset;
+
+    &:hover, &:focus {
+        color: $primary-color;
+        opacity: 0.85;
+    }
 }

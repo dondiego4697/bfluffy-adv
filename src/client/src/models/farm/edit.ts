@@ -7,7 +7,6 @@ import {
 	CreateFarmParams
 } from 'client/lib/request-book/v1/farm';
 import {City} from 'client/lib/request-book/v1/geo';
-import {geoModel} from 'client/models';
 
 export class FarmEditModel extends BasePageModel {
     @observable public farm: FarmInfo | null = null;
@@ -54,7 +53,7 @@ export class FarmEditModel extends BasePageModel {
     		return [];
     	}
 
-		this.foundCities = geoModel.findCityByName(cityDisplayName);
+		// this.foundCities = geoModel.findCityByName(cityDisplayName);
 	}
 
 	@computed public get isNew() {
@@ -66,7 +65,7 @@ export class FarmEditModel extends BasePageModel {
     		return [];
     	}
 
-		const city = geoModel.findCityByCode(this.farm.cityCode);
+		// const city = geoModel.findCityByCode(this.farm.cityCode);
     	return [
     		{
     			name: ['farmName'],
@@ -91,8 +90,8 @@ export class FarmEditModel extends BasePageModel {
 			{
 				name: ['cityCode'],
 				value: {
-					value: city?.cityCode,
-					label: city?.cityDisplayName
+					// value: city?.cityCode,
+					// label: city?.cityDisplayName
 				}
     		}
     	];

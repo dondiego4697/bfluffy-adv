@@ -1,19 +1,88 @@
+@import '../../consts.scss';
+
 .navbar {
-    padding: 16px 40px 0 40px;
+    padding: 40px 8%;
 
     &__container {
         display: grid;
-        grid-template-columns: auto 20% 20%;
+        grid-template-columns: auto auto;
 
-        & .ant-divider-vertical {
-            border-left: 2px solid black;
-            margin: 0px 16px;
+    }
+
+    &__controls-container {
+        display: flex;
+        flex-direction: row;
+        justify-self: end;
+
+        & button {
+            height: 35px;
+            border-radius: 4px;
+            box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+            color: #BFBFBF;
+            border-color: unset;
+            border-width: 0;
+            transition: all 0.15s linear;
+
+            &:focus, &:hover {
+                outline: none !important;
+                color: rgb(165, 162, 162);
+            }
+        }
+    }
+
+    &__modal {
+        & .ant-modal-content {
+            border-radius: 6px;
+        }
+    }
+
+    &__login-footer {
+        padding-top: 24px;
+        padding-bottom: 24px;
+        display: flex;
+        flex-direction: column;
+
+        & button {
+            margin: auto;
+            font-size: 14px;
+        }
+
+        & p {
+            text-align: center;
+            font-family: Montserrat;
+            margin-bottom: 6px;
+        }
+    }
+
+    &__login-button {
+        margin-right: 16px;
+        height: 35px;
+
+        & img {
+            margin-right: 16px;
+        }
+
+        & span {
+            line-height: 27px;
         }
     }
 
     &__logo-container {
-        font-family: MontserratBold;
-        font-size: 32px;
-        color: black;
+        display: flex;
+        flex-direction: row;
+        user-select: none;
+
+        & h2 {
+            margin: 5px 0 0 8px;
+            font-family: MontserratBold;
+            font-size: 22px;
+            height: 30px;
+            color: black;
+        }
+
+        & img {
+            width: 35px;
+            height: 35px;
+        }
     }
 }

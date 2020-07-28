@@ -18,12 +18,23 @@ const b = bevis('root');
 @inject('clientDataModel')
 @observer
 class App extends React.Component<Props> {
+	private getAuthTokenFromQuery() {
+		const {location} = this.props;
+
+    	const query = new URLSearchParams(location.search);
+    	return query.get('auth_token');
+	}
+
 	public render(): React.ReactNode {
 		const {children} = this.props;
+		const authToken = this.getAuthTokenFromQuery();
 
 		return (
   			<div className={b()}>
-				<Navbar />
+				<Navbar
+					authToken={authToken}
+					onHistoryChangeHandler={(path) => this.props.history.push(path)}
+				/>
   				<div className={b('container')}>
   					{children}
 				</div>

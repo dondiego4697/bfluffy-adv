@@ -1,5 +1,5 @@
 import * as express from 'express';
-import {cities} from 'server/v1/routers/public/geo/providers/cities';
+import {cityList} from 'server/v1/routers/public/geo/providers/city-list';
 
 export const router = express.Router()
-	.get('/cities', cities);
+	.get('/city_list', cityList);

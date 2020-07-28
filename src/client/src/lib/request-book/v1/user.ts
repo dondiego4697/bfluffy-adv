@@ -30,7 +30,7 @@ async function signUpByEmail(params: SignUpByEmailParams) {
 	const {email, name, password} = params;
 
 	return postRequest<{}>(
-		'/api/v1/user/signup',
+		'/api/v1/public/user/signup',
 		{
 			email,
 			name,
@@ -45,7 +45,7 @@ async function signUpByEmail(params: SignUpByEmailParams) {
 
 async function loginByAuthToken(authToken: string) {
 	return postRequest<LoginResponse>(
-		'/api/v1/user/login',
+		'/api/v1/public/user/login',
 		{
 			authToken
 		},
@@ -59,7 +59,7 @@ async function logInByCredentials(params: LogInByCredentialsParams) {
 	const {email, password} = params;
 
 	return postRequest<LoginResponse>(
-		'/api/v1/user/login',
+		'/api/v1/public/user/login',
 		{
 			credentials: {email, password}
 		},
@@ -71,7 +71,7 @@ async function logInByCredentials(params: LogInByCredentialsParams) {
 
 async function forgotPassword(email: string) {
 	return postRequest<{}>(
-		'/api/v1/user/forgot_password',
+		'/api/v1/public/user/forgot_password',
 		{
 			email
 		},
@@ -85,7 +85,7 @@ async function resetPassword(params: ResetPasswordParams) {
 	const {authToken, newPassword} = params;
 
 	return postRequest<{}>(
-		'/api/v1/user/reset_password',
+		'/api/v1/public/user/reset_password',
 		{
 			authToken,
 			newPassword
@@ -97,7 +97,7 @@ async function resetPassword(params: ResetPasswordParams) {
 }
 
 async function checkEmail(email: string) {
-	return getRequest<CheckEmailResponse>('/api/v1/user/check_email', {
+	return getRequest<CheckEmailResponse>('/api/v1/public/user/check_email', {
 		params: {email},
 		responseType: 'json'
 	});

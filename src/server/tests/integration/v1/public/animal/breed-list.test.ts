@@ -41,23 +41,29 @@ describe(REQUEST_PATH, () => {
 
 		const animalBreed1 = await TestFactory.createAnimalBreed(animalCategory1.id);
 		const animalBreed2 = await TestFactory.createAnimalBreed(animalCategory1.id);
-		await TestFactory.createAnimalBreed(animalCategory2.id);
+		const animalBreed3 = await TestFactory.createAnimalBreed(animalCategory2.id);
 
-		const {body, statusCode} = await client.get<any[]>(`${url}${REQUEST_PATH}`, {
-			searchParams: {
-				category_code: animalCategory1.code
-			}
-		});
+		const {body, statusCode} = await client.get<any[]>(`${url}${REQUEST_PATH}`);
 
 		expect(statusCode).toEqual(200);
 		expect(body).toEqual([
 			{
-				code: animalBreed1.code,
-				displayName: animalBreed1.displayName
+				breedCode: animalBreed1.code,
+				breedDisplayName: animalBreed1.displayName,
+				categoryCode: animalCategory1.code,
+				categoryDisplayName: animalCategory1.displayName
 			},
 			{
-				code: animalBreed2.code,
-				displayName: animalBreed2.displayName
+				breedCode: animalBreed2.code,
+				breedDisplayName: animalBreed2.displayName,
+				categoryCode: animalCategory1.code,
+				categoryDisplayName: animalCategory1.displayName
+			},
+			{
+				breedCode: animalBreed3.code,
+				breedDisplayName: animalBreed3.displayName,
+				categoryCode: animalCategory2.code,
+				categoryDisplayName: animalCategory2.displayName
 			}
 		]);
 	});

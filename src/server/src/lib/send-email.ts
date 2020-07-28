@@ -29,7 +29,7 @@ export async function getTransporter() {
 		});
 	} else {
 		transporterBase = nodemailer.createTransport({
-			host: 'smtp.yandex.ru',
+			host: 'smtp-pulse.com',
 			port: 465,
 			secure: true,
 			auth: {
@@ -47,14 +47,18 @@ export async function sendEmail(email: string, params: Params) {
 		return;
 	}
 
-	const transporter = await getTransporter();
-	const info = await transporter.sendMail({
-		from: `BFluffy ${config['email.login']}`,
-		to: email,
-		subject: params.subject,
-		text: params.text,
-		html: params.html
-	});
+	try {
+		const transporter = await getTransporter();
+		const info = await transporter.sendMail({
+			from: `Be Fluffy ${config['email.login']}`,
+			to: email,
+			subject: params.subject,
+			text: params.text,
+			html: params.html
+		});
 
-	logger.info(`Send email message: ${JSON.stringify(info)}`);
+		logger.info(`send email message: ${JSON.stringify(info)}`);
+	} catch (error) {
+		logger.error(`send email message: ${error}`);
+	}
 }

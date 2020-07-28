@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import * as NodeCache from 'node-cache';
 import {UserDbProvider} from 'server/v1/db-provider/user';
+import {config} from 'server/config';
 
 const cache = new NodeCache();
 
@@ -20,7 +21,7 @@ export const checkEmail = wrap<Request, Response>(async (req, res) => {
 
 	const user = await UserDbProvider.getUserByEmail(email);
 	if (user) {
-		cache.set(user.email, true, 60);
+		cache.set(user.email, true, config['validate.checkEmail.ttl']);
 	}
 
 	res.json({exist: Boolean(user)});

@@ -31,7 +31,7 @@ export class ClientDataModel {
 	@action public initClientDataModel() {
     	const authToken = this.getUserAuthToken();
     	if (authToken) {
-    		this.loginByAuthToken(authToken);
+    		return this.loginByAuthToken(authToken);
     	}
     }
 

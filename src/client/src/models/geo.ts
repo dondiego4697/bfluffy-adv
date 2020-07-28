@@ -1,32 +1,57 @@
 import {observable, action} from 'mobx';
-import {flatten} from 'lodash';
+import {uniqBy} from 'lodash';
 
-import {GeoRequestBookV1, RegionsHash, City} from 'client/lib/request-book/v1/geo';
+import {GeoRequestBookV1, City} from 'client/lib/request-book/v1/geo';
+
+interface GeoObject {
+	type: 'region' | 'city';
+	code: string;
+	displayName: string;
+}
 
 export class GeoModel {
-    @observable public regionsHash: RegionsHash = {};
-
     @observable public cityList: City[] = [];
 
+    @observable public geoObjectList: GeoObject[] = [];
+
     constructor() {
-    	this.initRegionsHash();
+    	this.init();
     }
 
-	@action public initRegionsHash() {
-    	return GeoRequestBookV1.getRegionsHash()
+	@action public init() {
+    	return GeoRequestBookV1.getCityList()
     		.then((response) => {
-    			this.regionsHash = response;
-    			this.cityList = flatten(Object.values(response));
+    			this.cityList = response;
+
+    			const regionsRaw: GeoObject[] = [];
+    			const cities = this.cityList.map<GeoObject>((item) => {
+    				regionsRaw.push({
+    					type: 'region',
+    					code: item.regionCode,
+    					displayName: item.regionDisplayName
+    				});
+
+    				return {
+    					type: 'city',
+    					code: item.cityCode,
+    					displayName: item.cityDisplayName
+    				};
+    			});
+
+    			this.geoObjectList = [
+    				...cities,
+    				...uniqBy(regionsRaw, 'code').filter((item) => !['moskva'].includes(item.code))
+    			];
     		});
     }
 
-	public findCityByName(subtext: string) {
-		return this.cityList.filter(
-			(city) => city.cityDisplayName.toLowerCase().includes(subtext.toLowerCase())
-		);
-	}
+	public findGeoObjectsByName(subtext?: string) {
+		if (!subtext) {
+			return this.geoObjectList;
+		}
 
-	public findCityByCode(code: string) {
-		return this.cityList.find((city) => city.cityCode === code);
+		return this.geoObjectList.filter(
+			(item) => item.displayName.toLowerCase().includes(subtext.toLowerCase())
+		);
 	}
 }

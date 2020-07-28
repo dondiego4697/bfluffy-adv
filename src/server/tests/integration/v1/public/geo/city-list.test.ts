@@ -14,7 +14,7 @@ const client = got.extend({
 	responseType: 'json'
 });
 
-const REQUEST_PATH = '/api/v1/public/geo/cities';
+const REQUEST_PATH = '/api/v1/public/geo/city_list';
 
 describe(REQUEST_PATH, () => {
 	let server: http.Server;
