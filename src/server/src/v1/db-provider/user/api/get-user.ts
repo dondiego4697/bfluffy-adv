@@ -6,10 +6,9 @@ import {DBTableUsers} from 'server/types/db/users';
 interface User {
 	id: DBTableUsers.Schema['id'];
     email: DBTableUsers.Schema['email'];
-    displayName: DBTableUsers.Schema['display_name'];
-    password: DBTableUsers.Schema['password'];
-    signUpType: DBTableUsers.Schema['sign_up_type'];
+    verifiedCode: DBTableUsers.Schema['verified_code'];
     createdAt: DBTableUsers.Schema['created_at'];
+    updatedAt: DBTableUsers.Schema['updated_at'];
     verified: DBTableUsers.Schema['verified'];
 }
 
@@ -20,35 +19,13 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 		.select([
 			knex.raw('id'),
 			knex.raw('email'),
-			knex.raw('display_name as "displayName"'),
-			knex.raw('password'),
-			knex.raw('sign_up_type as "signUpType"'),
+			knex.raw('verified_code as "verifiedCode"'),
 			knex.raw('created_at as "createdAt"'),
+			knex.raw('updated_at as "updatedAt"'),
 			knex.raw('verified')
 		])
 		.from(DbTable.USERS)
 		.where({email});
-
-	const {rows: [row]} = await dbManager.executeReadQuery(query.toString());
-	return row;
-}
-
-export async function getUserByCredentials(email: string, password: string): Promise<User | undefined> {
-	const query = knex
-		.select([
-			knex.raw('id'),
-			knex.raw('email'),
-			knex.raw('display_name as "displayName"'),
-			knex.raw('password'),
-			knex.raw('sign_up_type as "signUpType"'),
-			knex.raw('created_at as "createdAt"'),
-			knex.raw('verified')
-		])
-		.from(DbTable.USERS)
-		.where({
-			email,
-			password
-		});
 
 	const {rows: [row]} = await dbManager.executeReadQuery(query.toString());
 	return row;

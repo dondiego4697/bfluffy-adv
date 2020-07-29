@@ -10,7 +10,7 @@ interface UserCard {
 	name: DBTableUserCard.Schema['name'];
 	description: DBTableUserCard.Schema['description'];
 	address: DBTableUserCard.Schema['address'];
-	type: DBTableUserCard.Schema['type'];
+	farmType: DBTableUserCard.Schema['farm_type'];
 	createdAt: DBTableUserCard.Schema['created_at'];
 	updatedAt: DBTableUserCard.Schema['updated_at'];
 	cityCode: DBTableCity.Schema['code'];
@@ -27,7 +27,7 @@ export async function getUserCardByUserId(userId: number): Promise<UserCard | un
 			name: `${DbTable.USER_CARD}.name`,
 			description: `${DbTable.USER_CARD}.description`,
 			address: `${DbTable.USER_CARD}.address`,
-			type: `${DbTable.USER_CARD}.type`,
+			farmType: `${DbTable.USER_CARD}.farm_type`,
 			createdAt: `${DbTable.USER_CARD}.created_at`,
 			updatedAt: `${DbTable.USER_CARD}.updated_at`,
 			cityCode: `${DbTable.CITY}.code`,

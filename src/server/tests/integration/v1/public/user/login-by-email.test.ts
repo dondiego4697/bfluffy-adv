@@ -2,14 +2,10 @@
 import got from 'got';
 import * as http from 'http';
 import * as nock from 'nock';
-import * as Boom from '@hapi/boom';
-import mockdate from 'mockdate';
 import {app} from 'server/app';
-import {TestDb} from 'tests/test-db';
 import {startServer, stopServer} from 'tests/test-server';
-import {SignUpType} from 'server/types/consts';
+import {TestDb} from 'tests/test-db';
 import {TestFactory} from 'tests/test-factory';
-import {AuthToken} from 'server/lib/auth-token';
 
 const client = got.extend({
 	throwHttpErrors: false,
@@ -18,7 +14,7 @@ const client = got.extend({
 	responseType: 'json'
 });
 
-const REQUEST_PATH = '/api/v1/public/user/forgot_password';
+const REQUEST_PATH = '/api/v1/public/user/login_by_email';
 
 describe(REQUEST_PATH, () => {
 	let server: http.Server;
@@ -39,10 +35,8 @@ describe(REQUEST_PATH, () => {
 		await TestDb.clean();
 	});
 
-	it('should make token with hashed password', async () => {
-		const user = await TestFactory.createUser({
-			signUpType: SignUpType.EMAIL
-		});
+	it('should update verified code if user exist', async () => {
+		const {user} = await TestFactory.createUser();
 
 		const {body, statusCode} = await client.post<any>(
 			`${url}${REQUEST_PATH}`,
@@ -54,26 +48,35 @@ describe(REQUEST_PATH, () => {
 		);
 
 		expect(statusCode).toEqual(200);
-		expect(AuthToken.decode(body.authToken)).toEqual({
-			email: user.email,
-			password: user.password
-		});
+		expect(body).toEqual({});
 
-		mockdate.set(Date.now() + 24 * 60 * 60 * 1000 + 60 * 1000);
-		expect(() => AuthToken.decode(body.authToken)).toThrow();
+		const updatedUser = await TestFactory.getUserByEmail(user.email);
+
+		expect(updatedUser?.verifiedCode).not.toBeFalsy();
+		expect(user.verifiedCode).not.toBeFalsy();
+
+		expect(updatedUser?.verifiedCode).not.toEqual(user.verifiedCode);
 	});
 
-	it('should throw error if user not exist', async () => {
-		const {body, statusCode} = await client.post<Boom.Payload>(
+	it('should create user if user does not exist', async () => {
+		const email = 'some_new_email@mail.ru';
+		const userBefore = await TestFactory.getUserByEmail(email);
+		expect(userBefore).toBeFalsy();
+
+		const {body, statusCode} = await client.post<any>(
 			`${url}${REQUEST_PATH}`,
 			{
 				json: {
-					email: 'unknown@mail.ru'
+					email
 				}
 			}
 		);
 
-		expect(statusCode).toEqual(400);
-		expect(body.message).toEqual('USER_NOT_EXIST');
+		expect(statusCode).toEqual(200);
+		expect(body).toEqual({});
+
+		const userAfter = await TestFactory.getUserByEmail(email);
+		expect(userAfter).not.toBeFalsy();
+		expect(userAfter?.verified).toEqual(false);
 	});
 });

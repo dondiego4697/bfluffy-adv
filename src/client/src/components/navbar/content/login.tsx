@@ -24,7 +24,7 @@ const b = bevis('login-content');
 @observer
 export class LoginContent extends React.Component<Props> {
     private onFinishLoginHandler = (values: Store) => {
-		this.props.onLoadingHandler(true);
+    	this.props.onLoadingHandler(true);
 
     	return UserRequestBookV1.logInByCredentials({
     		email: values.email,

@@ -11,7 +11,7 @@ export const updateUserCard = wrap<Request, Response>(async (req, res) => {
 		cityCode,
 		contacts,
 		name,
-		type,
+		farmType,
 		description,
 		address
 	} = req.body as Body;
@@ -24,13 +24,14 @@ export const updateUserCard = wrap<Request, Response>(async (req, res) => {
 
 	const userCard = await UserCardDbProvider.getUserCardByUserId(req.userData.id);
 	if (!userCard) {
-		throw Boom.notFound('user card did not found');
+		logger.error(`user card did not found: ${req.userData.id}`);
+		throw Boom.notFound();
 	}
 
 	await UserCardDbProvider.updateUserCard(req.userData.id, {
 		cityId: city.id,
 		contacts,
-		type,
+		farmType,
 		name,
 		description,
 		address

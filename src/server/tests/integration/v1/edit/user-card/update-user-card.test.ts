@@ -8,11 +8,11 @@ import {TestDb} from 'tests/test-db';
 import {startServer, stopServer} from 'tests/test-server';
 import {TestFactory} from 'tests/test-factory';
 import {AuthToken} from 'server/lib/auth-token';
-import {SignUpType, FarmType} from 'server/types/consts';
+import {FarmType} from 'server/types/consts';
 
 const BASE_USER = {
 	email: 'test@mail.ru',
-	password: 'password'
+	verifiedCode: 'code'
 };
 
 const AUTH_TOKEN = AuthToken.encode(BASE_USER);
@@ -46,10 +46,7 @@ describe(REQUEST_PATH, () => {
 
 	beforeEach(async () => {
 		await TestDb.clean();
-		await TestFactory.createUser({
-			signUpType: SignUpType.EMAIL,
-			...BASE_USER
-		});
+		await TestFactory.createUser(BASE_USER);
 	});
 
 	it('should update user card', async () => {
@@ -62,7 +59,7 @@ describe(REQUEST_PATH, () => {
 		const userCard = await TestFactory.createUserCard({
 			cityId: cityBefore.id,
 			userId: 1,
-			type: FarmType.FARM
+			farmType: FarmType.FARM
 		});
 
 		const {body, statusCode} = await client.post<any>(
@@ -74,7 +71,7 @@ describe(REQUEST_PATH, () => {
 						email: 'updated@mail.ru',
 						phone: '70000000000'
 					},
-					type: FarmType.BREEDER,
+					farmType: FarmType.BREEDER,
 	                name: 'name updated',
 	                description: 'description updated',
 	                address: 'address updated'
@@ -99,7 +96,7 @@ describe(REQUEST_PATH, () => {
 				phone: '70000000000'
 			},
 			name: 'name updated',
-			type: FarmType.BREEDER,
+			farmType: FarmType.BREEDER,
 			description: 'description updated',
 			userId: 1,
 			address: 'address updated',
@@ -120,7 +117,7 @@ describe(REQUEST_PATH, () => {
 						email: 'some@mail.ru',
 						phone: '70000000000'
 					},
-					type: FarmType.FARM,
+					farmType: FarmType.FARM,
 	                name: 'name',
 	                description: 'description',
 	                address: 'address'

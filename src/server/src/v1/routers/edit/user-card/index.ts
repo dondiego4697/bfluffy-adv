@@ -9,7 +9,7 @@ import {getUserCardInfo} from 'server/v1/routers/edit/user-card/providers/get-us
 const createSchema = {
 	body: Joi.object({
 		cityCode: Joi.string().required(),
-		type: Joi.string().valid(...Object.values(FarmType)).required(),
+		farmType: Joi.string().valid(...Object.values(FarmType)).required(),
 		contacts: Joi.object({
 			email: Joi.string().email().empty('').allow(null),
 			phone: Joi.string().empty('').allow(null),

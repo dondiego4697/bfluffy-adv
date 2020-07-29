@@ -8,11 +8,11 @@ import {TestDb} from 'tests/test-db';
 import {startServer, stopServer} from 'tests/test-server';
 import {TestFactory} from 'tests/test-factory';
 import {AuthToken} from 'server/lib/auth-token';
-import {SignUpType, ClientStatusCode} from 'server/types/consts';
+import {ClientStatusCode} from 'server/types/consts';
 
 const BASE_USER = {
 	email: 'test@mail.ru',
-	password: 'password'
+	verifiedCode: 'code'
 };
 
 const AUTH_TOKEN = AuthToken.encode(BASE_USER);
@@ -46,10 +46,7 @@ describe(REQUEST_PATH, () => {
 
 	beforeEach(async () => {
 		await TestDb.clean();
-		await TestFactory.createUser({
-			signUpType: SignUpType.EMAIL,
-			...BASE_USER
-		});
+		await TestFactory.createUser(BASE_USER);
 	});
 
 	it('should update animal ad', async () => {
@@ -108,9 +105,7 @@ describe(REQUEST_PATH, () => {
 	it('should throw error if owner id not equal with request user id', async () => {
 		const animalCategory = await TestFactory.createAnimaCategory();
 		const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
-		const user = await TestFactory.createUser({
-			signUpType: SignUpType.EMAIL
-		});
+		const {user} = await TestFactory.createUser();
 		const animalAd = await TestFactory.createAnimalAd({
 			ownerId: user.id,
 			breedId: animalBreed.id

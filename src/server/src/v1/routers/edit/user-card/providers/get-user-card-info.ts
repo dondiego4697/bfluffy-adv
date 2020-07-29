@@ -3,6 +3,7 @@ import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import {UserCardDbProvider} from 'server/v1/db-provider/user-card';
 import {ClientStatusCode} from 'server/types/consts';
+import {logger} from 'server/lib/logger';
 
 export const getUserCardInfo = wrap<Request, Response>(async (req, res) => {
 	if (!req.userData.id) {
@@ -11,7 +12,8 @@ export const getUserCardInfo = wrap<Request, Response>(async (req, res) => {
 
 	const userCard = await UserCardDbProvider.getUserCardByUserId(req.userData.id);
 	if (!userCard) {
-		throw Boom.notFound('user card did not found');
+		logger.error(`user card did not found: ${req.userData.id}`);
+		throw Boom.notFound();
 	}
 
 	res.json({
@@ -20,7 +22,7 @@ export const getUserCardInfo = wrap<Request, Response>(async (req, res) => {
 		name: userCard.name,
 		description: userCard.description,
 		address: userCard.address,
-		type: userCard.type,
+		farmType: userCard.farmType,
 		createdAt: userCard.createdAt,
 		updatedAt: userCard.updatedAt,
 		cityCode: userCard.cityCode

@@ -43,7 +43,7 @@ const production: Config = {
 	'auth.privateKey': process.env.AUTH_PRIVATE_KEY!,
 	'email.mock': false,
 	'email.enable': true,
-	'email.login': 'support@bfluffy.ru',
+	'email.login': 'team@bfluffy.ru',
 	'email.password': process.env.EMAIL_PASSWORD!,
 	'host.app': 'TODO',
 	'client.bundlesRootFolder': '/bundles/',

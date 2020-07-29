@@ -6,11 +6,15 @@ import {DBTableUsers} from 'server/types/db/users';
 interface User {
 	id: DBTableUsers.Schema['id'];
     email: DBTableUsers.Schema['email'];
-    displayName: DBTableUsers.Schema['display_name'];
-    password: DBTableUsers.Schema['password'];
-    signUpType: DBTableUsers.Schema['sign_up_type'];
+    verifiedCode: DBTableUsers.Schema['verified_code'];
     createdAt: DBTableUsers.Schema['created_at'];
+    updatedAt: DBTableUsers.Schema['updated_at'];
     verified: DBTableUsers.Schema['verified'];
+}
+
+interface UpdateVerifiedCodeByEmailParams {
+	email: string;
+	verifiedCode: string;
 }
 
 const knex = Knex({client: 'pg'});
@@ -23,20 +27,20 @@ export async function verifiedUser(email: string): Promise<void> {
 	await dbManager.executeModifyQuery(query.toString());
 }
 
-export async function updatePasswordByEmail(email: string, password: string): Promise<User> {
+export async function updateVerifiedCodeByEmail(params: UpdateVerifiedCodeByEmailParams): Promise<User> {
+	const {email, verifiedCode} = params;
+
 	const query = knex(DbTable.USERS)
 		.update({
-			password,
-			verified: true
+			verified_code: verifiedCode
 		})
 		.where({email})
 		.returning([
 			'id',
 			'email',
-			'display_name as displayName',
-			'password',
-			'sign_up_type as signUpType',
+			'verified_code as verifiedCode',
 			'created_at as createdAt',
+			'updated_at as updatedAt',
 			'verified'
 		]);
 

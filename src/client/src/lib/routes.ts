@@ -1,6 +1,6 @@
 export enum RoutePaths {
     MAIN = '/',
     CABINET = '/cabinet',
-    FARM_EDIT = '/farm/edit/:id',
+    SEARCH_AD = '/search_ad',
     AD_EDIT = '/ad/edit/:id'
 }

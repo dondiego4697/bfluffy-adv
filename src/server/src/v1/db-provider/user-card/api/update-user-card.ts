@@ -9,7 +9,7 @@ interface Params {
 	name: string;
 	description?: string;
 	address?: string;
-	type: FarmType;
+	farmType: FarmType;
 }
 
 const knex = Knex({client: 'pg'});
@@ -17,7 +17,7 @@ const knex = Knex({client: 'pg'});
 export async function updateUserCard(userId: number, params: Params): Promise<void> {
 	const {
 		cityId, contacts, name,
-		description, address, type
+		description, address, farmType
 	} = params;
 
 	const query = knex(DbTable.USER_CARD)
@@ -25,7 +25,7 @@ export async function updateUserCard(userId: number, params: Params): Promise<vo
 			city_id: cityId,
 			contacts: JSON.stringify(contacts),
 			name,
-			type,
+			farm_type: farmType,
 			description,
 			address
 		})

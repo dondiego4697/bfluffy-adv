@@ -5,7 +5,7 @@ import {DBTableUserCard} from 'server/types/db/user-card';
 
 interface Params {
 	cityId: number;
-	type: FarmType;
+	farmType: FarmType;
     userId: number;
 	contacts: DBTableUserCard.FieldContacts;
 	name: string;
@@ -21,7 +21,7 @@ export async function createUserCard(params: Params): Promise<PublicId> {
 	const {
 		cityId, userId, contacts,
 		name, description, address,
-		type
+		farmType
 	} = params;
 
 	const query = knex(DbTable.USER_CARD)
@@ -29,7 +29,7 @@ export async function createUserCard(params: Params): Promise<PublicId> {
 			city_id: cityId,
 			user_id: userId,
 			contacts: JSON.stringify(contacts),
-			type,
+			farm_type: farmType,
 			name,
 			description,
 			address

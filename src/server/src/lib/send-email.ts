@@ -5,7 +5,6 @@ import {logger} from 'server/lib/logger';
 
 interface Params {
     subject: string;
-    text: string;
     html: string;
 }
 
@@ -53,7 +52,7 @@ export async function sendEmail(email: string, params: Params) {
 			from: `Be Fluffy ${config['email.login']}`,
 			to: email,
 			subject: params.subject,
-			text: params.text,
+			text: params.html,
 			html: params.html
 		});
 

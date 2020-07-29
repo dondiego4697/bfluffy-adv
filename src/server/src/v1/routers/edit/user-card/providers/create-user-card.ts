@@ -8,7 +8,7 @@ import {FarmType} from 'server/types/consts';
 
 export interface Body {
 	cityCode: string;
-	type: FarmType;
+	farmType: FarmType;
 	contacts: {
         email?: string;
         phone?: string;
@@ -23,7 +23,7 @@ export const createUserCard = wrap<Request, Response>(async (req, res) => {
 		cityCode,
 		contacts,
 		name,
-		type,
+		farmType,
 		description,
 		address
 	} = req.body as Body;
@@ -38,7 +38,7 @@ export const createUserCard = wrap<Request, Response>(async (req, res) => {
 		cityId: city.id,
 		userId: req.userData.id,
 		contacts,
-		type,
+		farmType,
 		name,
 		description,
 		address

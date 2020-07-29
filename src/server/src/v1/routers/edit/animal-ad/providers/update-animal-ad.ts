@@ -30,7 +30,8 @@ export const updateAnimalAd = wrap<Request, Response>(async (req, res) => {
 	]);
 
 	if (!animalAd) {
-		throw Boom.notFound(`animal ad with id ${publicId} did not found`);
+		logger.error(`animal ad with id ${publicId} did not found`);
+		throw Boom.notFound();
 	}
 
 	if (req.userData.id !== animalAd.ownerId) {

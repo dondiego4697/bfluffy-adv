@@ -8,11 +8,11 @@ import {TestDb} from 'tests/test-db';
 import {startServer, stopServer} from 'tests/test-server';
 import {TestFactory} from 'tests/test-factory';
 import {AuthToken} from 'server/lib/auth-token';
-import {SignUpType, FarmType} from 'server/types/consts';
+import {FarmType} from 'server/types/consts';
 
 const BASE_USER = {
 	email: 'test@mail.ru',
-	password: 'password'
+	verifiedCode: 'code'
 };
 
 const AUTH_TOKEN = AuthToken.encode(BASE_USER);
@@ -46,10 +46,7 @@ describe(REQUEST_PATH, () => {
 
 	beforeEach(async () => {
 		await TestDb.clean();
-		await TestFactory.createUser({
-			signUpType: SignUpType.EMAIL,
-			...BASE_USER
-		});
+		await TestFactory.createUser(BASE_USER);
 	});
 
 	it('should return user card info', async () => {
@@ -59,7 +56,7 @@ describe(REQUEST_PATH, () => {
 		const userCard = await TestFactory.createUserCard({
 			cityId: city.id,
 			userId: 1,
-			type: FarmType.FARM
+			farmType: FarmType.FARM
 		});
 
 		const {body, statusCode} = await client.get<any>(
@@ -79,7 +76,7 @@ describe(REQUEST_PATH, () => {
 			description: userCard.description,
 			publicId: userCard.publicId,
 			name: userCard.name,
-			type: FarmType.FARM
+			farmType: FarmType.FARM
 		});
 	});
 });

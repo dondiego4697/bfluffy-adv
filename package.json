@@ -72,6 +72,7 @@
     "@types/node": "10.17.26",
     "@types/nodemailer": "6.4.0",
     "@types/pg": "7.14.3",
+    "@types/pug": "2.0.4",
     "@types/react": "16.9.36",
     "@types/react-dom": "16.9.8",
     "@types/react-router-dom": "5.1.5",

@@ -8,11 +8,10 @@ import {TestDb} from 'tests/test-db';
 import {startServer, stopServer} from 'tests/test-server';
 import {TestFactory} from 'tests/test-factory';
 import {AuthToken} from 'server/lib/auth-token';
-import {SignUpType} from 'server/types/consts';
 
 const BASE_USER = {
 	email: 'test@mail.ru',
-	password: 'password'
+	verifiedCode: 'code'
 };
 
 const AUTH_TOKEN = AuthToken.encode(BASE_USER);
@@ -46,10 +45,7 @@ describe(REQUEST_PATH, () => {
 
 	beforeEach(async () => {
 		await TestDb.clean();
-		await TestFactory.createUser({
-			signUpType: SignUpType.EMAIL,
-			...BASE_USER
-		});
+		await TestFactory.createUser(BASE_USER);
 	});
 
 	it('should create animal ad', async () => {

@@ -1,11 +1,3 @@
-CREATE OR REPLACE FUNCTION updated_at_column_f()
-    RETURNS TRIGGER AS $$
-    BEGIN
-        NEW.updated_at = now();
-        RETURN NEW;
-    END;
-    $$ language 'plpgsql';
-
 CREATE TABLE user_card (
     id BIGSERIAL NOT NULL,
     user_id BIGINT NOT NULL,
@@ -15,7 +7,7 @@ CREATE TABLE user_card (
     name TEXT NOT NULL,
     description TEXT,
     address TEXT,
-    type TEXT NOT NULL,
+    farm_type TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     CONSTRAINT pk_user_card PRIMARY KEY (id),

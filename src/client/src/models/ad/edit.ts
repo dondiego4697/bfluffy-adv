@@ -8,7 +8,7 @@ import {
 } from 'client/lib/request-book/v1/farm';
 import {City} from 'client/lib/request-book/v1/geo';
 
-export class FarmEditModel extends BasePageModel {
+export class AdEditPageModel extends BasePageModel {
     @observable public farm: FarmInfo | null = null;
 
     @observable public notFound: boolean = false;

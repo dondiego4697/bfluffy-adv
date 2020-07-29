@@ -3,8 +3,7 @@ import * as Knex from 'knex';
 import * as faker from 'faker';
 import {dbManager} from 'server/lib/db-manager';
 import {AuthToken} from 'server/lib/auth-token';
-import {getPasswordHash} from 'server/lib/crypto';
-import {SignUpType, DbTable, FarmType} from 'server/types/consts';
+import {DbTable, FarmType} from 'server/types/consts';
 import {DBTableUserCard} from 'server/types/db/user-card';
 import {DBTableUsers} from 'server/types/db/users';
 import {DBTableCity} from 'server/types/db/city';
@@ -61,29 +60,26 @@ async function createCity(regionId: number): Promise<City> {
 // ####################################################################################################################
 
 interface CreateUserParams {
-    signUpType: SignUpType;
-    password?: string;
     verified?: boolean;
-    email?: string;
+	email?: string;
+	verifiedCode?: string;
 }
 
 interface User {
     id: DBTableUsers.Schema['id'];
     email: DBTableUsers.Schema['email'];
-    displayName: DBTableUsers.Schema['display_name'];
-    password: DBTableUsers.Schema['password'];
-    signUpType: DBTableUsers.Schema['sign_up_type'];
+    verifiedCode: DBTableUsers.Schema['verified_code'];
     createdAt: DBTableUsers.Schema['created_at'];
+    updatedAt: DBTableUsers.Schema['updated_at'];
     verified: DBTableUsers.Schema['verified'];
 }
 
 const USER_COLUMNS = [
 	knex.raw('id'),
 	knex.raw('email'),
-	knex.raw('display_name as "displayName"'),
-	knex.raw('password'),
-	knex.raw('sign_up_type as "signUpType"'),
+	knex.raw('verified_code as "verifiedCode"'),
 	knex.raw('created_at as "createdAt"'),
+	knex.raw('updated_at as "updatedAt"'),
 	knex.raw('verified')
 ];
 
@@ -96,51 +92,43 @@ async function getAllUsers(): Promise<User[]> {
 	return rows;
 }
 
-async function getUserByCredentials(email: string, password: string): Promise<User> {
+async function getUserByEmail(email: string): Promise<User | undefined> {
 	const query = knex
 		.select(USER_COLUMNS)
 		.from(DbTable.USERS)
-		.where({email, password});
+		.where({email});
 
 	const {rows: [row]} = await dbManager.executeReadQuery(query.toString());
 	return row;
 }
 
-async function createUserWithToken(params: CreateUserParams) {
-	const user = await createUser({
-		...params,
-		password: params.password || 'password'
-	});
-
-	const authToken = AuthToken.encode({
-		email: user.email,
-		password: 'password'
-	});
-
-	return {user, authToken};
-}
-
-async function createUser(params: CreateUserParams): Promise<User> {
+async function createUser(params: CreateUserParams = {}): Promise<{
+	user: User,
+	authToken: string
+}> {
 	const query = knex(DbTable.USERS)
 		.insert({
 			email: params.email || faker.internet.email(),
-			display_name: faker.name.findName(),
-			password: getPasswordHash(params.password || faker.internet.password()),
-			sign_up_type: params.signUpType,
+			verified_code: params.verifiedCode || String(faker.random.number()),
 			verified: params.verified
 		})
 		.returning([
 			'id',
 			'email',
-			'display_name as displayName',
-			'password',
-			'sign_up_type as signUpType',
+			'verified_code as verifiedCode',
 			'created_at as createdAt',
+			'updated_at as updatedAt',
 			'verified'
 		]);
 
 	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
-	return row;
+	return {
+		user: row,
+		authToken: AuthToken.encode({
+			email: row.email,
+			verifiedCode: row.verifiedCode
+		})
+	};
 }
 
 // ####################################################################################################################
@@ -153,7 +141,7 @@ interface UserCard {
 	contacts: DBTableUserCard.Schema['contacts'];
 	name: DBTableUserCard.Schema['name'];
 	description: DBTableUserCard.Schema['description'];
-	type: DBTableUserCard.Schema['type'];
+	farmType: DBTableUserCard.Schema['farm_type'];
 	address: DBTableUserCard.Schema['address'];
 	createdAt: DBTableUserCard.Schema['created_at'];
 	updatedAt: DBTableUserCard.Schema['updated_at'];
@@ -162,7 +150,7 @@ interface UserCard {
 interface CreateUserCardParams {
 	cityId: number;
 	userId: number;
-	type: FarmType;
+	farmType: FarmType;
 }
 
 async function getAllUserCards(): Promise<UserCard[]> {
@@ -175,7 +163,7 @@ async function getAllUserCards(): Promise<UserCard[]> {
 			knex.raw('contacts'),
 			knex.raw('name'),
 			knex.raw('description'),
-			knex.raw('type'),
+			knex.raw('farm_type as "farmType"'),
 			knex.raw('address'),
 			knex.raw('created_at as "createdAt"'),
 			knex.raw('updated_at as "updatedAt"')
@@ -194,7 +182,7 @@ async function createUserCard(params: CreateUserCardParams): Promise<UserCard> {
 				email: faker.internet.email(),
 				phone: faker.phone.phoneNumber()
 			}),
-			type: params.type,
+			farm_type: params.farmType,
 			user_id: params.userId,
 	        name: faker.company.companyName(),
 	        description: faker.company.catchPhrase(),
@@ -208,7 +196,7 @@ async function createUserCard(params: CreateUserCardParams): Promise<UserCard> {
 			'contacts',
 			'name',
 			'description',
-			'type',
+			'farm_type as farmType',
 			'address',
 			'created_at as createdAt',
 			'updated_at as updatedAt'
@@ -388,8 +376,7 @@ async function createAnimalAd(params: CreateAnimalAdParams): Promise<AnimalAd> {
 
 export const TestFactory = {
 	createUser,
-	createUserWithToken,
-	getUserByCredentials,
+	getUserByEmail,
 	getAllUsers,
 	// ----
 	createRegion,

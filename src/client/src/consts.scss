@@ -27,7 +27,7 @@ $text-s: 11px;
     min-width: 190px;
     height: 35px;
     padding: 7px 20px 9px 20px;
-    background-color: $primary-color;
+    background-color: $primary-color !important;
     font-family: MontserratRegular;
     color: white;
     font-size: 14px;
@@ -37,7 +37,7 @@ $text-s: 11px;
     outline: none;
 
     &:hover, &:focus {
-        background-color: $primary-color;
+        background-color: $primary-color !important;
         color: white;
         opacity: 0.85;
     }

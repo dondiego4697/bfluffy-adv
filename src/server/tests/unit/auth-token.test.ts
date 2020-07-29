@@ -2,8 +2,8 @@
 import {AuthToken} from 'server/lib/auth-token';
 
 const CREDENTIALS = {
-	password: 'password',
-	email: 'email'
+	email: 'email',
+	verifiedCode: 'verifiedCode'
 };
 
 describe('auth token methods', () => {

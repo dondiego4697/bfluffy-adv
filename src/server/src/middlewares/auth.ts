@@ -3,7 +3,6 @@ import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import {AuthToken} from 'server/lib/auth-token';
 import {UserDbProvider} from 'server/v1/db-provider/user';
-import {getPasswordHash} from 'server/lib/crypto';
 import {ClientStatusCode} from 'server/types/consts';
 import {config} from 'server/config';
 
@@ -37,10 +36,7 @@ export const auth = wrap<Request, Response>(async (req, res, next) => {
 	req.userData.isAuth = true;
 
 	const credentials = AuthToken.decode(authToken);
-	const user = await UserDbProvider.getUserByCredentials(
-		credentials.email,
-		getPasswordHash(credentials.password)
-	);
+	const user = await UserDbProvider.getUserByEmail(credentials.email);
 
 	if (!user) {
 		throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);

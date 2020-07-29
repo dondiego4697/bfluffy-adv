@@ -20,6 +20,7 @@ interface Props {
 	clientDataModel?: ClientDataModel;
 	onHistoryChangeHandler: (path: RoutePaths) => void;
 	authToken: string | null;
+	processType: string | null;
 }
 
 interface State {
@@ -40,12 +41,17 @@ export class Navbar extends React.Component<Props, State> {
 	};
 
 	componentWillMount() {
-		const {authToken} = this.props;
-		if (authToken) {
+		const {authToken, processType} = this.props;
+
+		if (authToken && processType === 'reset_password') {
 			this.setState({
 				modalVisible: true,
 				showType: 'reset_password'
 			});
+		}
+
+		if (authToken && processType === 'signup') {
+			// TODO с authToken авторизоваться и все
 		}
 	}
 
@@ -178,32 +184,43 @@ export class Navbar extends React.Component<Props, State> {
 						</div>
 					</Link>
 					<div className={b('controls-container')}>
-						{
-							clientDataModel?.user
-								? (
-									<div className={b('login-button')}>
+						<div className={b('login-button')}>
+							{
+								clientDataModel?.user
+									? (
 										<Button
 											icon={<img src='/image/user-icon.svg' alt='user-icon' />}
 											onClick={this.onCabinetClickHandler}
 										>
 											{clientDataModel.user.name}
 										</Button>
-									</div>
-								)
-								: (
-									<div className={b('login-button')}>
+									)
+									: (
 										<Button onClick={this.onLoginClickHandler}>
 											Вход и регистрация
 										</Button>
-									</div>
+									)
+							}
+						</div>
+						{
+							clientDataModel?.user
+								? (
+									<Link
+										className={classnames(b('create-ad-button'), 'bfluffy-button-simple')}
+										to={RoutePaths.AD_EDIT.replace(':id', NEW_ITEM)}
+									>
+										Подать объявление
+									</Link>
+								)
+								: (
+									<Button
+										onClick={this.onLoginClickHandler}
+										className={classnames(b('create-ad-button'), 'bfluffy-button-simple')}
+									>
+										Подать объявление
+									</Button>
 								)
 						}
-						<Link
-							className={classnames(b('create-ad-button'), 'bfluffy-button-simple')}
-							to={RoutePaths.AD_EDIT.replace(':id', NEW_ITEM)}
-						>
-							Подать объявление
-						</Link>
 					</div>
 					<Modal
 						className={b('modal')}

@@ -23,7 +23,7 @@ const b = bevis('login-content');
 @observer
 export class ForgotPasswordContent extends React.Component<Props> {
     private onFinishForgotPasswordHandler = (values: Store) => {
-		this.props.onLoadingHandler(true);
+    	this.props.onLoadingHandler(true);
 
     	return UserRequestBookV1.forgotPassword(values.email)
     		.then(() => ModalMessage.showSuccess({

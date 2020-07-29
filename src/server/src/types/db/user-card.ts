@@ -13,7 +13,7 @@ export namespace DBTableUserCard {
         user_id: number;
         city_id: number;
         contacts: FieldContacts;
-        type: FarmType;
+        farm_type: FarmType;
         name: string;
         description?: string;
         address?: string;
