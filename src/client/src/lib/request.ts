@@ -6,7 +6,9 @@ const VALID_ERRORS: Record<string, string> = {
 	USER_NOT_VERIFIED: 'Пользователь не подтвердил регистрацию',
 	USER_INVALID_TOKEN: 'Неверный пользовательский токен',
 	USER_NOT_AUTHORIZED: 'Пользователь не авторизован',
-	EDIT_FARM_FORBIDDEN: 'Доступ на редактирование закрыт'
+	USER_WRONG_VERIFIED_CODE: 'Неправильной код для авторизации',
+	USER_CARD_FORBIDDEN: 'Редактирование пользовательской страницы недоступно',
+	ANIMAL_AD_FORBIDDEN: 'Редактирование объявление недоступно'
 };
 
 export function getRequest<T>(url: string, config?: AxiosRequestConfig): Promise<T> {

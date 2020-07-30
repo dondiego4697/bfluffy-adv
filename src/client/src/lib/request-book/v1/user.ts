@@ -1,113 +1,37 @@
-import {postRequest, getRequest} from 'client/lib/request';
+import {postRequest} from 'client/lib/request';
 
-interface SignUpByEmailParams {
+interface CheckVerifiedCodeResponse {
     email: string;
-    name: string;
-    password: string;
-}
-
-interface LogInByCredentialsParams {
-    email: string;
-    password: string;
-}
-
-interface ResetPasswordParams {
-    authToken: string;
-    newPassword: string;
-}
-
-interface LoginResponse {
-    email: string;
-    name: string;
+    verified: boolean;
     authToken: string;
 }
 
-interface CheckEmailResponse {
-    exist: boolean;
-}
-
-async function signUpByEmail(params: SignUpByEmailParams) {
-	const {email, name, password} = params;
-
+async function loginByEmail(email: string) {
 	return postRequest<{}>(
-		'/api/v1/public/user/signup',
-		{
-			email,
-			name,
-			password,
-			type: 'email'
-		},
-		{
-			responseType: 'json'
-		}
+		'/api/v1/public/user/login_by_email',
+		{email},
+		{responseType: 'json'}
 	);
 }
 
-async function loginByAuthToken(authToken: string) {
-	return postRequest<LoginResponse>(
-		'/api/v1/public/user/login',
-		{
-			authToken
-		},
-		{
-			responseType: 'json'
-		}
+async function checkVerifiedCode(email: string, verifiedCode: string) {
+	return postRequest<CheckVerifiedCodeResponse>(
+		'/api/v1/public/user/check_verified_code',
+		{email, verifiedCode},
+		{responseType: 'json'}
 	);
 }
 
-async function logInByCredentials(params: LogInByCredentialsParams) {
-	const {email, password} = params;
-
-	return postRequest<LoginResponse>(
-		'/api/v1/public/user/login',
-		{
-			credentials: {email, password}
-		},
-		{
-			responseType: 'json'
-		}
+async function checkAuthToken() {
+	return postRequest<CheckVerifiedCodeResponse>(
+		'/api/v1/public/user/check_auth_token',
+		{},
+		{responseType: 'json'}
 	);
-}
-
-async function forgotPassword(email: string) {
-	return postRequest<{}>(
-		'/api/v1/public/user/forgot_password',
-		{
-			email
-		},
-		{
-			responseType: 'json'
-		}
-	);
-}
-
-async function resetPassword(params: ResetPasswordParams) {
-	const {authToken, newPassword} = params;
-
-	return postRequest<{}>(
-		'/api/v1/public/user/reset_password',
-		{
-			authToken,
-			newPassword
-		},
-		{
-			responseType: 'json'
-		}
-	);
-}
-
-async function checkEmail(email: string) {
-	return getRequest<CheckEmailResponse>('/api/v1/public/user/check_email', {
-		params: {email},
-		responseType: 'json'
-	});
 }
 
 export const UserRequestBookV1 = {
-	checkEmail,
-	loginByAuthToken,
-	logInByCredentials,
-	signUpByEmail,
-	forgotPassword,
-	resetPassword
+	loginByEmail,
+	checkVerifiedCode,
+	checkAuthToken
 };

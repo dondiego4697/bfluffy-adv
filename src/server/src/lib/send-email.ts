@@ -41,6 +41,7 @@ export async function getTransporter() {
 	return transporterBase;
 }
 
+// Поднять свой smtp сервер
 export async function sendEmail(email: string, params: Params) {
 	if (!config['email.enable']) {
 		return;

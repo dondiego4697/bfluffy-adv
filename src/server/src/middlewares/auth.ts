@@ -39,7 +39,7 @@ export const auth = wrap<Request, Response>(async (req, res, next) => {
 	const user = await UserDbProvider.getUserByEmail(credentials.email);
 
 	if (!user) {
-		throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
+		throw Boom.unauthorized(ClientStatusCode.USER_NOT_EXIST);
 	}
 
 	req.userData.id = user.id;

@@ -7,15 +7,15 @@ import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
 import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
 import {ModalMessage} from 'client/components/modal-message';
-import {FORM_VALIDATE_MESSAGES, FORM_ITEM_REQUIRED, FORM_EMAIL_REQUIRED} from 'client/consts';
+import {FORM_VALIDATE_MESSAGES, FORM_EMAIL_REQUIRED} from 'client/consts';
 
 import './index.scss';
 
 interface Props {
     clientDataModel?: ClientDataModel;
-    onForgotPasswordClickHandler: () => void;
     onCloseModalHandler: () => void;
     onLoadingHandler: (isLoading: boolean) => void;
+    onVerifiedCodeHandler: (email: string) => void;
 }
 
 const b = bevis('login-content');
@@ -26,12 +26,8 @@ export class LoginContent extends React.Component<Props> {
     private onFinishLoginHandler = (values: Store) => {
     	this.props.onLoadingHandler(true);
 
-    	return UserRequestBookV1.logInByCredentials({
-    		email: values.email,
-    		password: values.password
-    	})
-    		.then(() => this.props.clientDataModel?.initClientDataModel())
-    		.then(() => this.props.onCloseModalHandler())
+    	return UserRequestBookV1.loginByEmail(values.email)
+    		.then(() => this.props.onVerifiedCodeHandler(values.email))
     		.catch((error) => ModalMessage.showError(error.response.data.message))
     		.finally(() => this.props.onLoadingHandler(false));
     }
@@ -44,9 +40,7 @@ export class LoginContent extends React.Component<Props> {
     			onFinish={this.onFinishLoginHandler}
     			validateMessages={FORM_VALIDATE_MESSAGES}
     		>
-    			<h2
-    				className={b('header')}
-    			>
+    			<h2 className={b('header')}>
                     Вход
     			</h2>
     			<Form.Item
@@ -60,27 +54,6 @@ export class LoginContent extends React.Component<Props> {
     					placeholder='Адрес электронной почты'
     				/>
     			</Form.Item>
-    			<Form.Item
-    				name='password'
-    				rules={[
-    					FORM_ITEM_REQUIRED
-    				]}
-    			>
-    				<Input.Password
-    					className={b('input')}
-    					placeholder='Пароль'
-    				/>
-    			</Form.Item>
-    			<div
-    				className={b('forgot-password')}
-    			>
-    				<Button
-    					className='bfluffy-button-link'
-    					onClick={this.props.onForgotPasswordClickHandler}
-    				>
-                        Забыли пароль?
-    				</Button>
-    			</div>
     			<Form.Item
     				className={b('login-button')}
     			>

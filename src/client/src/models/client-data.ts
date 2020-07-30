@@ -8,7 +8,7 @@ interface ClientConfig {}
 
 interface User {
 	email: string;
-	name: string;
+	verified: boolean;
 }
 
 export class ClientDataModel {
@@ -31,15 +31,15 @@ export class ClientDataModel {
 	@action public initClientDataModel() {
     	const authToken = this.getUserAuthToken();
     	if (authToken) {
-    		return this.loginByAuthToken(authToken);
+    		return this.loginByAuthToken();
     	}
     }
 
-	@action public loginByAuthToken(authToken: string) {
-		return UserRequestBookV1.loginByAuthToken(authToken)
+	@action public loginByAuthToken() {
+		return UserRequestBookV1.checkAuthToken()
 			.then((response) => this.saveUser({
-				name: response.name,
-				email: response.email
+				email: response.email,
+				verified: response.verified
 			}));
 	}
 

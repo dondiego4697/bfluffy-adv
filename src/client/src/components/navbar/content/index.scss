@@ -14,6 +14,21 @@
         margin-bottom: 60px;
     }
 
+    &__verified-code-field {
+        margin-bottom: 8px !important;
+    }
+
+    &__info {
+        font-size: 12px;
+        text-align: left;
+        font-family: MontserratRegular;
+
+        & .bold {
+            font-family: MontserratBold;
+            display: inline-block;
+        }
+    }
+
     &__forgot-password-info {
         font-family: MontserratRegular;
     }

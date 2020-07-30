@@ -8,16 +8,17 @@ interface ShowSuccessParams {
 
 function showError(content: string) {
 	Modal.error({
+		className: 'bfluffy-modal-error',
 		title: 'Ошибка',
 		content
 	});
 }
 
 function showSuccess(params: ShowSuccessParams) {
-	// TODO сделать свой стиль
 	const {title, content, onOk} = params;
 
 	Modal.success({
+		className: 'bfluffy-modal-success',
 		title,
 		content,
 		...(onOk ? {onOk} : {})

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
+import {cloneDeep} from 'lodash';
 import {inject, observer} from 'mobx-react';
 import {Link} from 'react-router-dom';
 import {Button, Modal, Spin} from 'antd';
@@ -8,9 +9,7 @@ import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
 import {RoutePaths} from 'client/lib/routes';
 import {LoginContent} from 'client/components/navbar/content/login';
-import {SignupContent} from 'client/components/navbar/content/signup';
-import {ForgotPasswordContent} from 'client/components/navbar/content/forgot-password';
-import {ResetPasswordContent} from 'client/components/navbar/content/reset-password';
+import {VerifiedCodeContent} from 'client/components/navbar/content/verified-code';
 import {NEW_ITEM} from 'client/consts';
 
 import './index.scss';
@@ -19,14 +18,14 @@ import 'antd/dist/antd.css';
 interface Props {
 	clientDataModel?: ClientDataModel;
 	onHistoryChangeHandler: (path: RoutePaths) => void;
-	authToken: string | null;
-	processType: string | null;
 }
 
 interface State {
 	modalVisible: boolean;
 	modalLoading: boolean;
-	showType?: 'login' | 'signup' | 'forgot_password' | 'reset_password';
+	currentEmail?: string;
+	nextAddress?: string;
+	showType?: 'login' | 'verified_code';
 }
 
 const b = bevis('navbar');
@@ -37,35 +36,16 @@ export class Navbar extends React.Component<Props, State> {
 	state = {
 		modalVisible: false,
 		modalLoading: false,
-		showType: undefined
+		showType: undefined,
+		currentEmail: undefined,
+		nextAddress: undefined
 	};
 
-	componentWillMount() {
-		const {authToken, processType} = this.props;
-
-		if (authToken && processType === 'reset_password') {
-			this.setState({
-				modalVisible: true,
-				showType: 'reset_password'
-			});
-		}
-
-		if (authToken && processType === 'signup') {
-			// TODO с authToken авторизоваться и все
-		}
-	}
-
-	private onLoginClickHandler = () => {
+	private onLoginClickHandler = (nextAddress?: string) => {
 		this.setState({
 			modalVisible: true,
-			showType: 'login'
-		});
-	}
-
-	private onForgotPasswordClickHandler = () => {
-		this.setState({
-			modalVisible: true,
-			showType: 'forgot_password'
+			showType: 'login',
+			nextAddress
 		});
 	}
 
@@ -74,8 +54,23 @@ export class Navbar extends React.Component<Props, State> {
 	}
 
 	private onCloseModalHandler = () => {
+		const nextAddress = cloneDeep(this.state.nextAddress);
+
 		this.setState({
-			modalVisible: false
+			modalVisible: false,
+			nextAddress: undefined
+		});
+
+		if (nextAddress) {
+			this.props.onHistoryChangeHandler(nextAddress);
+		}
+	}
+
+	private onVerifiedCodeHandler = (email: string) => {
+		this.setState({
+			modalVisible: true,
+			showType: 'verified_code',
+			currentEmail: email
 		});
 	}
 
@@ -84,40 +79,18 @@ export class Navbar extends React.Component<Props, State> {
 	}
 
 	private renderModalFooter(): React.ReactNode {
-		if (this.state.showType === 'login') {
+		if (this.state.showType === 'verified_code') {
 			return (
 				<div className={b('login-footer')}>
 					<Button
 						className='bfluffy-button-link'
 						onClick={() => this.setState({
 							modalVisible: true,
-							showType: 'signup'
+							showType: 'login',
+							currentEmail: undefined
 						})}
 					>
-						Зарегистрироваться
-					</Button>
-				</div>
-			);
-		}
-
-		if (
-			this.state.showType === 'signup'
-			|| this.state.showType === 'forgot_password'
-		) {
-			return (
-				<div className={b('login-footer')}>
-					{
-						this.state.showType === 'signup'
-							&& <p>У вас уже есть учетная запись?</p>
-					}
-					<Button
-						className='bfluffy-button-link'
-						onClick={() => this.setState({
-							modalVisible: true,
-							showType: 'login'
-						})}
-					>
-						Войти в систему
+						Ввести другой email
 					</Button>
 				</div>
 			);
@@ -127,44 +100,30 @@ export class Navbar extends React.Component<Props, State> {
 	}
 
 	private renderModalContent(): React.ReactNode {
-		const {authToken} = this.props;
-
 		return (
-			// TODO сделать свой спинер
-			<Spin spinning={this.state.modalLoading}>
+			<Spin
+				spinning={this.state.modalLoading}
+				className='bfluffy-spinner'
+			>
 				<div className={b('modal-content')}>
 					{
 						this.state.showType === 'login'
 							? (
 								<LoginContent
-									onForgotPasswordClickHandler={this.onForgotPasswordClickHandler}
-									onLoadingHandler={this.onModalLoadingHandler}
 									onCloseModalHandler={this.onCloseModalHandler}
+									onLoadingHandler={this.onModalLoadingHandler}
+									onVerifiedCodeHandler={this.onVerifiedCodeHandler}
 								/>
 							)
-							: this.state.showType === 'signup'
+							: this.state.showType === 'verified_code'
 								? (
-									<SignupContent
+									<VerifiedCodeContent
 										onCloseModalHandler={this.onCloseModalHandler}
 										onLoadingHandler={this.onModalLoadingHandler}
+										email={this.state.currentEmail!}
 									/>
 								)
-								: this.state.showType === 'forgot_password'
-									? (
-										<ForgotPasswordContent
-											onCloseModalHandler={this.onCloseModalHandler}
-											onLoadingHandler={this.onModalLoadingHandler}
-										/>
-									)
-									: this.state.showType === 'reset_password' && authToken
-										? (
-											<ResetPasswordContent
-												authToken={authToken}
-												onCloseModalHandler={this.onCloseModalHandler}
-												onLoadingHandler={this.onModalLoadingHandler}
-											/>
-										)
-										: <div />
+								: <div />
 					}
 				</div>
 			</Spin>
@@ -192,11 +151,11 @@ export class Navbar extends React.Component<Props, State> {
 											icon={<img src='/image/user-icon.svg' alt='user-icon' />}
 											onClick={this.onCabinetClickHandler}
 										>
-											{clientDataModel.user.name}
+											{clientDataModel.user.email}
 										</Button>
 									)
 									: (
-										<Button onClick={this.onLoginClickHandler}>
+										<Button onClick={() => this.onLoginClickHandler()}>
 											Вход и регистрация
 										</Button>
 									)
@@ -214,7 +173,9 @@ export class Navbar extends React.Component<Props, State> {
 								)
 								: (
 									<Button
-										onClick={this.onLoginClickHandler}
+										onClick={() => this.onLoginClickHandler(
+											RoutePaths.AD_EDIT.replace(':id', NEW_ITEM)
+										)}
 										className={classnames(b('create-ad-button'), 'bfluffy-button-simple')}
 									>
 										Подать объявление
