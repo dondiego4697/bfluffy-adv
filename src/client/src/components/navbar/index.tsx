@@ -17,7 +17,12 @@ import 'antd/dist/antd.css';
 
 interface Props {
 	clientDataModel?: ClientDataModel;
-	onHistoryChangeHandler: (path: RoutePaths) => void;
+	onHistoryChangeHandler: (path: string) => void;
+}
+
+enum ShowType {
+	LOGIN = 'login',
+	VERIFIED_CODE = 'verified_code'
 }
 
 interface State {
@@ -25,7 +30,7 @@ interface State {
 	modalLoading: boolean;
 	currentEmail?: string;
 	nextAddress?: string;
-	showType?: 'login' | 'verified_code';
+	showType?: ShowType;
 }
 
 const b = bevis('navbar');
@@ -33,7 +38,7 @@ const b = bevis('navbar');
 @inject('clientDataModel')
 @observer
 export class Navbar extends React.Component<Props, State> {
-	state = {
+	state: State = {
 		modalVisible: false,
 		modalLoading: false,
 		showType: undefined,
@@ -44,7 +49,7 @@ export class Navbar extends React.Component<Props, State> {
 	private onLoginClickHandler = (nextAddress?: string) => {
 		this.setState({
 			modalVisible: true,
-			showType: 'login',
+			showType: ShowType.LOGIN,
 			nextAddress
 		});
 	}
@@ -69,7 +74,7 @@ export class Navbar extends React.Component<Props, State> {
 	private onVerifiedCodeHandler = (email: string) => {
 		this.setState({
 			modalVisible: true,
-			showType: 'verified_code',
+			showType: ShowType.VERIFIED_CODE,
 			currentEmail: email
 		});
 	}
@@ -79,14 +84,14 @@ export class Navbar extends React.Component<Props, State> {
 	}
 
 	private renderModalFooter(): React.ReactNode {
-		if (this.state.showType === 'verified_code') {
+		if (this.state.showType === ShowType.VERIFIED_CODE) {
 			return (
 				<div className={b('login-footer')}>
 					<Button
 						className='bfluffy-button-link'
 						onClick={() => this.setState({
 							modalVisible: true,
-							showType: 'login',
+							showType: ShowType.LOGIN,
 							currentEmail: undefined
 						})}
 					>
@@ -107,7 +112,7 @@ export class Navbar extends React.Component<Props, State> {
 			>
 				<div className={b('modal-content')}>
 					{
-						this.state.showType === 'login'
+						this.state.showType === ShowType.LOGIN
 							? (
 								<LoginContent
 									onCloseModalHandler={this.onCloseModalHandler}
@@ -115,7 +120,7 @@ export class Navbar extends React.Component<Props, State> {
 									onVerifiedCodeHandler={this.onVerifiedCodeHandler}
 								/>
 							)
-							: this.state.showType === 'verified_code'
+							: this.state.showType === ShowType.VERIFIED_CODE
 								? (
 									<VerifiedCodeContent
 										onCloseModalHandler={this.onCloseModalHandler}
@@ -138,8 +143,9 @@ export class Navbar extends React.Component<Props, State> {
 				<div className={b('container')}>
 					<Link to={RoutePaths.MAIN}>
 						<div className={b('logo-container')}>
-							<img src='/image/logo.svg' alt='logo' />
+							<img className='logo' src='/image/logo.svg' alt='logo' />
 							<h2>bfluffy.ru</h2>
+							<img className='beta' src='https://img.icons8.com/windows/96/000000/beta.png'/>
 						</div>
 					</Link>
 					<div className={b('controls-container')}>
@@ -155,7 +161,7 @@ export class Navbar extends React.Component<Props, State> {
 										</Button>
 									)
 									: (
-										<Button onClick={() => this.onLoginClickHandler()}>
+										<Button onClick={() => this.onLoginClickHandler(RoutePaths.CABINET)}>
 											Вход и регистрация
 										</Button>
 									)
