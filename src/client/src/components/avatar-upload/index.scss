@@ -5,7 +5,7 @@
     &__container {
         .ant-upload-select-picture-card {
             &:hover {
-                border-color: $primary-color;
+                border-color: $primary-color !important;
             }
         }
     }

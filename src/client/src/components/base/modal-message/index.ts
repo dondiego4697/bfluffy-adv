@@ -1,5 +1,7 @@
 import {Modal} from 'antd';
 
+import './index.scss';
+
 interface ShowSuccessParams {
     title: string;
     content: string;

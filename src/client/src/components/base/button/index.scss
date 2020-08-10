@@ -1,0 +1,53 @@
+@import '../../../consts.scss';
+
+.bfluffy-button {
+    min-width: 190px !important;
+    height: 35px !important;
+    padding: 7px 20px 9px 20px !important;
+    font-family: MontserratRegular !important;
+    font-size: 14px !important;
+    border-radius: 4px !important;
+    transition: all 0.15s linear !important;
+    border: unset !important;
+    outline: none !important;
+}
+
+.bfluffy-button-type {
+
+    &__link {
+        border: none !important;
+        height: unset !important;
+        font-size: 12px !important;
+        padding: 0 !important;
+        font-family: MontserratRegular !important;
+        color: $primary-color !important;
+        box-shadow: unset !important;
+
+        &:hover, &:focus {
+            color: $primary-color !important;
+            opacity: 0.85 !important;
+        }
+    }
+
+    &__primary {
+        background-color: $primary-color !important;
+        color: white !important;
+
+        &:hover, &:focus {
+            background-color: $primary-color !important;
+            color: white !important;
+            opacity: 0.85 !important;
+        }
+    }
+
+    &__base {
+        color: $gray-color !important;
+        background-color: white !important;
+
+        &:hover, &:focus {
+            background-color: white !important;
+            color: $gray-color !important;
+            opacity: 0.85 !important;
+        }
+    }
+}

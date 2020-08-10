@@ -1,0 +1,24 @@
+@import '../../../consts.scss';
+@import '../button/index.scss';
+
+.bfluffy-modal-error {
+    & .ant-modal-confirm-title {
+        font-family: MontserratBold;
+    }
+
+    & .ant-modal-confirm-content {
+        font-family: MontserratRegular;
+    }
+
+    & .ant-modal-confirm-btns {
+        & button {
+            @extend .bfluffy-button;
+            @extend .bfluffy-button-type__primary;
+            min-width: unset;
+        }
+    }
+}
+
+.bfluffy-modal-success {
+    @extend .bfluffy-modal-error;
+}

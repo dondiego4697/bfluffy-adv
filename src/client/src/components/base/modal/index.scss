@@ -1,0 +1,8 @@
+@import '../../../consts.scss';
+
+.bfluffy-modal {
+    & .ant-modal-content {
+        border-radius: 6px;
+    }
+}
+

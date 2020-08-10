@@ -4,8 +4,7 @@ import {Upload} from 'antd';
 import {ImgCropProps} from 'antd-img-crop';
 import {
 	UploadFile,
-	UploadChangeParam as UploadChangeParams,
-	RcFile
+	UploadChangeParam as UploadChangeParams
 } from 'antd/lib/upload/interface';
 
 import bevis from 'client/lib/bevis';

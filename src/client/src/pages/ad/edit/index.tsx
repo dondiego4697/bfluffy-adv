@@ -15,7 +15,7 @@ import {AdEditPageModel} from 'client/models/ad/edit';
 import {ClientDataModel} from 'client/models/client-data';
 import {RoutePaths} from 'client/lib/routes';
 import bevis from 'client/lib/bevis';
-import {ModalMessage} from 'client/components/modal-message';
+import {ModalMessage} from 'client/components/base/modal-message';
 import {NotFoundPage} from 'client/pages/not-found';
 import {
 	FORM_VALIDATE_MESSAGES, FORM_ITEM_REQUIRED, NEW_ITEM, DataState

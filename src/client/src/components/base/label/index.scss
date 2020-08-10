@@ -1,0 +1,45 @@
+@import '../../../consts.scss';
+
+.bfluffy-label-size {
+    &__small {
+        font-size: 12px;
+        font-family: MontserratRegular;
+    }
+
+    &__regular {
+        font-size: 14px;
+        font-family: MontserratRegular;
+    }
+
+    &__large {
+        font-size: 20px;
+        font-family: MontserratBold;
+    }
+
+    &__header {
+        font-size: 28px;
+        font-family: MontserratBold;
+    }
+}
+
+.bfluffy-label-color {
+    &__black {
+        color: black;
+    }
+
+    &__white {
+        color: white;
+    }
+
+    &__gray {
+        color: $gray-color;
+    }
+
+    &__primary {
+        color: $primary-color;
+    }
+
+    &__secondary {
+        color: $secondary-color;
+    }
+}

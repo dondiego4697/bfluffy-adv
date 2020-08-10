@@ -1,12 +1,14 @@
 import * as React from 'react';
 import {inject, observer} from 'mobx-react';
 import {Store} from 'rc-field-form/lib/interface';
-import {Form, Input, Button} from 'antd';
+import {Form, Input} from 'antd';
 
 import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
 import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
-import {ModalMessage} from 'client/components/modal-message';
+import {ModalMessage} from 'client/components/base/modal-message';
+import {Button} from 'client/components/base/button';
+import {Label} from 'client/components/base/label';
 import {FORM_VALIDATE_MESSAGES, FORM_EMAIL_REQUIRED} from 'client/consts';
 
 import './index.scss';
@@ -40,9 +42,11 @@ export class LoginContent extends React.Component<Props> {
     			onFinish={this.onFinishLoginHandler}
     			validateMessages={FORM_VALIDATE_MESSAGES}
     		>
-    			<h2 className={b('header')}>
-                    Вход
-    			</h2>
+    			<Label
+    				text='Вход'
+    				size='header'
+    				className={b('header')}
+    			/>
     			<Form.Item
     				name='email'
     				rules={[
@@ -59,11 +63,9 @@ export class LoginContent extends React.Component<Props> {
     			>
     				<Button
     					type='primary'
+    					text='Войти'
     					htmlType='submit'
-    					className='bfluffy-button-simple'
-    				>
-						Войти
-    				</Button>
+    				/>
     			</Form.Item>
     		</Form>
     	);

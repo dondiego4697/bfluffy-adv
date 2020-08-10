@@ -5,7 +5,8 @@ import {Menu} from 'antd';
 
 import {CabinetPageModel} from 'client/models/cabinet';
 import {ClientDataModel} from 'client/models/client-data';
-import {Paper} from 'client/components/paper';
+import {Paper} from 'client/components/base/paper';
+import {Label} from 'client/components/base/label';
 import {AvatarUpload} from 'client/components/avatar-upload';
 import bevis from 'client/lib/bevis';
 
@@ -82,13 +83,15 @@ export class CabinetPage extends React.Component<Props, State> {
 	private renderMainPanel(): React.ReactNode {
 		return (
 			<div className={b('main-panel')}>
-				<h1 className='title'>
-					{
+				<Label
+					className='title'
+					size='header'
+					text={
 						this.state.menuItemSelected === MenuItemSelected.SETTINGS
 							? 'Настройки'
 							: 'Мои объявления'
 					}
-				</h1>
+				/>
 				{
 					this.state.menuItemSelected === MenuItemSelected.SETTINGS
 						? this.renderSettingsPanel()

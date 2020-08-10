@@ -1,14 +1,15 @@
 import * as React from 'react';
-import * as classnames from 'classnames';
 import {cloneDeep} from 'lodash';
 import {inject, observer} from 'mobx-react';
 import {Link} from 'react-router-dom';
-import {Button, Modal, Spin} from 'antd';
 
 import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
 import {RoutePaths} from 'client/lib/routes';
 import {LoginContent} from 'client/components/navbar/content/login';
+import {Button} from 'client/components/base/button';
+import {Spinner} from 'client/components/base/spinner';
+import {Modal} from 'client/components/base/modal';
 import {VerifiedCodeContent} from 'client/components/navbar/content/verified-code';
 import {NEW_ITEM} from 'client/consts';
 
@@ -88,15 +89,14 @@ export class Navbar extends React.Component<Props, State> {
 			return (
 				<div className={b('login-footer')}>
 					<Button
-						className='bfluffy-button-link'
-						onClick={() => this.setState({
+						type='link'
+						text='Ввести другой email'
+						onClickHandler={() => this.setState({
 							modalVisible: true,
 							showType: ShowType.LOGIN,
 							currentEmail: undefined
 						})}
-					>
-						Ввести другой email
-					</Button>
+					/>
 				</div>
 			);
 		}
@@ -106,10 +106,7 @@ export class Navbar extends React.Component<Props, State> {
 
 	private renderModalContent(): React.ReactNode {
 		return (
-			<Spin
-				spinning={this.state.modalLoading}
-				className='bfluffy-spinner'
-			>
+			<Spinner spinning={this.state.modalLoading}>
 				<div className={b('modal-content')}>
 					{
 						this.state.showType === ShowType.LOGIN
@@ -131,7 +128,7 @@ export class Navbar extends React.Component<Props, State> {
 								: <div />
 					}
 				</div>
-			</Spin>
+			</Spinner>
 		);
 	}
 
@@ -159,48 +156,38 @@ export class Navbar extends React.Component<Props, State> {
 									? (
 										<Button
 											icon={<img src='/image/user-icon.svg' alt='user-icon' />}
-											onClick={this.onCabinetClickHandler}
-										>
-											{clientDataModel.user.email}
-										</Button>
+											text={clientDataModel.user.email}
+											type='base'
+											onClickHandler={this.onCabinetClickHandler}
+										/>
 									)
 									: (
-										<Button onClick={() => this.onLoginClickHandler(RoutePaths.CABINET)}>
-											Вход и регистрация
-										</Button>
+										<Button
+											text='Вход и регистрация'
+											type='base'
+											onClickHandler={() => this.onLoginClickHandler(RoutePaths.CABINET)}
+										/>
 									)
 							}
 						</div>
-						{
-							clientDataModel?.user
-								? (
-									<Link
-										className={classnames(b('create-ad-button'), 'bfluffy-button-simple')}
-										to={RoutePaths.AD_EDIT.replace(':id', NEW_ITEM)}
-									>
-										Подать объявление
-									</Link>
-								)
-								: (
-									<Button
-										onClick={() => this.onLoginClickHandler(
+						<Button
+							type='primary'
+							text='Подать объявление'
+							onClickHandler={
+									clientDataModel?.user
+										? () => this.props.onHistoryChangeHandler(
 											RoutePaths.AD_EDIT.replace(':id', NEW_ITEM)
-										)}
-										className={classnames(b('create-ad-button'), 'bfluffy-button-simple')}
-									>
-										Подать объявление
-									</Button>
-								)
-						}
+										)
+										: () => this.onLoginClickHandler(
+											RoutePaths.AD_EDIT.replace(':id', NEW_ITEM)
+										)
+							}
+						/>
 					</div>
 					<Modal
-						className={b('modal')}
 						visible={this.state.modalVisible}
-						closable={false}
-						centered
 						footer={this.renderModalFooter()}
-						onCancel={() => this.setState({modalVisible: false})}
-						closeIcon={null}
+						onCancelHandler={() => this.setState({modalVisible: false})}
 					>
 						{this.renderModalContent()}
         			</Modal>
