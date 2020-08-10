@@ -46,3 +46,50 @@ export class TestDb {
     	await dbManager.executeModifyQuery(`TRUNCATE TABLE ${tableNames} RESTART IDENTITY`);
     }
 }
+
+// TODO распараллелить тесты
+// export interface TestDbClient {
+// 	dbClient: pg.PoolClient,
+// 	cancelTransaction: () => void;
+// }
+
+// export async function getTestDbClient(): Promise<TestDbClient> {
+// 	return new Promise((resolve) => dbManager.executeInTransaction(async (client) => {
+// 		const transaction = new TestTransaction(client);
+// 	 	await transaction.clean();
+
+// 		await new Promise((cancelTransaction) => resolve({
+// 	  		dbClient: client,
+// 	  		cancelTransaction
+// 	 	}));
+// 	}));
+// }
+
+// class TestTransaction {
+// 	private static readonly schema = 'public';
+// 	private readonly client: pg.PoolClient;
+
+// 	constructor(client: pg.PoolClient) {
+// 		this.client = client;
+// 	}
+
+// 	async clean(): Promise<void> {
+// 		const tableNamesQuery = knex(knex.raw('information_schema.tables'))
+// 			.select({tableName: 'table_name'})
+// 		 	.whereRaw(`table_schema='${TestTransaction.schema}'`)
+// 		 	.andWhereRaw('table_type = \'BASE TABLE\'');
+
+// 		const tableNamesResult = await this.client.query(tableNamesQuery.toString());
+
+// 		if (tableNamesResult.rowCount === 0) {
+// 			return;
+// 		}
+
+// 		const tableNames = tableNamesResult.rows
+// 		 	.filter(({tableName}) => tableName !== DbTable.ALEMBIC_VERSION)
+// 		 	.map(({tableName}) => `${TestTransaction.schema}."${tableName}"`)
+// 		 	.join(', ');
+
+// 	 	await this.client.query(`TRUNCATE TABLE ${tableNames} RESTART IDENTITY`);
+// 	}
+// }

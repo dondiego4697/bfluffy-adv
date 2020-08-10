@@ -10,6 +10,7 @@ interface User {
     createdAt: DBTableUsers.Schema['created_at'];
     updatedAt: DBTableUsers.Schema['updated_at'];
     verified: DBTableUsers.Schema['verified'];
+    avatar: DBTableUsers.Schema['avatar'];
 }
 
 const knex = Knex({client: 'pg'});
@@ -22,7 +23,8 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 			knex.raw('verified_code as "verifiedCode"'),
 			knex.raw('created_at as "createdAt"'),
 			knex.raw('updated_at as "updatedAt"'),
-			knex.raw('verified')
+			knex.raw('verified'),
+			knex.raw('avatar')
 		])
 		.from(DbTable.USERS)
 		.where({email});

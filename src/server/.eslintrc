@@ -25,6 +25,7 @@
         "no-restricted-syntax": "off",
         "camelcase": "off",
         "import/no-extraneous-dependencies": "off",
-        "consistent-return": "off"
+        "consistent-return": "off",
+        "no-unused-expressions": "off"
     }
 }

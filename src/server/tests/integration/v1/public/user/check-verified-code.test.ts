@@ -55,7 +55,8 @@ describe(REQUEST_PATH, () => {
 		expect(body).toEqual({
 			authToken,
 			email: user.email,
-			verified: true
+			verified: true,
+			avatar: null
 		});
 
 		const updatedUser = await TestFactory.getUserByEmail(user.email);

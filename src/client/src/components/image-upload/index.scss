@@ -1,6 +1,13 @@
+@import '../../consts.scss';
+
 .image-upload {
 
     &__container {
-        
+
+        .ant-upload-select-picture-card {
+            &:hover {
+                border-color: $primary-color;
+            }
+        }
     }
 }

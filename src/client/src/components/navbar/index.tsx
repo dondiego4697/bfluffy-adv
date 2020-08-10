@@ -145,7 +145,11 @@ export class Navbar extends React.Component<Props, State> {
 						<div className={b('logo-container')}>
 							<img className='logo' src='/image/logo.svg' alt='logo' />
 							<h2>bfluffy.ru</h2>
-							<img className='beta' src='https://img.icons8.com/windows/96/000000/beta.png'/>
+							<img
+								className='beta'
+								alt='beta'
+								src='https://img.icons8.com/windows/96/000000/beta.png'
+							/>
 						</div>
 					</Link>
 					<div className={b('controls-container')}>

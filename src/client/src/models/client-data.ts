@@ -9,6 +9,7 @@ interface ClientConfig {}
 interface User {
 	email: string;
 	verified: boolean;
+	avatar?: string;
 }
 
 export class ClientDataModel {
@@ -39,7 +40,8 @@ export class ClientDataModel {
 		return UserRequestBookV1.checkAuthToken()
 			.then((response) => this.saveUser({
 				email: response.email,
-				verified: response.verified
+				verified: response.verified,
+				avatar: response.avatar
 			}));
 	}
 

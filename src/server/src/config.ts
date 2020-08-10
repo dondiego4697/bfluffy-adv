@@ -24,6 +24,10 @@ export interface Config {
 	'client.bundlesRootFolder': string;
 	'emulation.request': boolean;
 	'validate.checkEmail.ttl': number;
+	's3.key': string;
+	's3.secret': string;
+	's3.bucketName': string;
+	's3.host': string;
 }
 
 const production: Config = {
@@ -48,7 +52,11 @@ const production: Config = {
 	'host.app': 'TODO',
 	'client.bundlesRootFolder': '/bundles/',
 	'emulation.request': false,
-	'validate.checkEmail.ttl': 30 * 60 * 1000 // 30m
+	'validate.checkEmail.ttl': 30 * 60 * 1000, // 30m
+	's3.key': process.env.S3_KEY!,
+	's3.secret': process.env.S3_SECRET!,
+	's3.bucketName': 'bfluffy-resources',
+	's3.host': 'storage.yandexcloud.net'
 };
 
 const testing: Config = {
@@ -75,7 +83,9 @@ const tests: Config = {
 	'auth.privateKey': 'some_value',
 	'email.password': 'password',
 	'email.enable': false,
-	'emulation.request': false
+	'emulation.request': false,
+	's3.key': 's3_key',
+	's3.secret': 's3_secret',
 };
 
 const configs = new Map<string, Readonly<Config>>([
@@ -98,3 +108,6 @@ assert(config['db.database'], 'there is no db database');
 assert(config['auth.privateKey'], 'there is no auth private key');
 
 assert(config['email.password'], 'there is no email password');
+
+assert(config['s3.key'], 'there is no s3 key');
+assert(config['s3.secret'], 'there is no s3 secret');

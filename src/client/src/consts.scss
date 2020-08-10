@@ -76,3 +76,36 @@ $secondary-color: #80CFE0;
 .bfluffy-modal-success {
     @extend .bfluffy-modal-error;
 }
+
+.ant-modal-content {
+    font-family: MontserratBold;
+    border-radius: 6px;
+
+    & .ant-modal-close-x {
+        display: flex;
+
+        & span {
+            margin: auto;
+        }
+    }
+
+    & .ant-modal-footer {
+        font-family: MontserratRegular;
+
+        & .ant-btn {
+            &:hover {
+                color: $primary-color !important;
+                border-color: $primary-color !important;
+            }
+        }
+
+        & .ant-btn-primary {
+            background-color: $primary-color;
+            border-color: $primary-color;
+            &:hover {
+                color: white !important;
+                opacity: 0.8;
+            }
+        }
+    }
+}

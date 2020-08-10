@@ -3,7 +3,8 @@ import {postRequest} from 'client/lib/request';
 interface CheckVerifiedCodeResponse {
     email: string;
     verified: boolean;
-    authToken: string;
+	authToken: string;
+	avatar?: string;
 }
 
 async function loginByEmail(email: string) {

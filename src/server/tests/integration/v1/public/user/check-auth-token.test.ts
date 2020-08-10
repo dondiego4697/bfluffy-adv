@@ -55,7 +55,8 @@ describe(REQUEST_PATH, () => {
 		expect(body).toEqual({
 			authToken: AUTH_TOKEN,
 			email: BASE_USER.email,
-			verified: false
+			verified: false,
+			avatar: null
 		});
 
 		const cookie = headers['set-cookie']![0];

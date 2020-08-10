@@ -32,6 +32,7 @@
         "react/destructuring-assignment": "off",
         "jsx-quotes": ["error", "prefer-single"],
         "react/state-in-constructor": "off",
-        "react/no-deprecated": "off"
+        "react/no-deprecated": "off",
+        "react/prefer-stateless-function": "off"
     }
 }

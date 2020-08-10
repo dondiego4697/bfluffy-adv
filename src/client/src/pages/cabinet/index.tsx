@@ -6,7 +6,7 @@ import {Menu} from 'antd';
 import {CabinetPageModel} from 'client/models/cabinet';
 import {ClientDataModel} from 'client/models/client-data';
 import {Paper} from 'client/components/paper';
-import {UploadImage} from 'client/components/upload-image';
+import {AvatarUpload} from 'client/components/avatar-upload';
 import bevis from 'client/lib/bevis';
 
 import './index.scss';
@@ -45,7 +45,12 @@ export class CabinetPage extends React.Component<Props, State> {
 	private renderControlPanel(): React.ReactNode {
 		return (
 			<div className={b('control-panel')}>
-				<UploadImage size={64}/>
+				<AvatarUpload
+					size={64}
+					cropTitle='Загрузить изображение'
+					cropShape='round'
+					imageUrl={this.props.clientDataModel.user?.avatar}
+				/>
 				<h2 className='display-name'>Антонина Грибкова</h2>
 				<p className='farm-type'>Частное лицо</p>
 				<Menu
@@ -64,40 +69,44 @@ export class CabinetPage extends React.Component<Props, State> {
 
 	private renderMyAdsPanel(): React.ReactNode {
 		return (
-			<div className={b('my-ads-panel')}>
-
-			</div>
+			<div className={b('my-ads-panel')} />
 		);
 	}
 
 	private renderSettingsPanel(): React.ReactNode {
 		return (
-			<div className={b('settings-panel')}>
-
-			</div>
+			<div className={b('settings-panel')} />
 		);
 	}
 
 	private renderMainPanel(): React.ReactNode {
 		return (
 			<div className={b('main-panel')}>
-				<h1 className={'title'}>
+				<h1 className='title'>
 					{
-						this.state.menuItemSelected === MenuItemSelected.SETTINGS ?
-							'Настройки' :
-							'Мои объявления'
+						this.state.menuItemSelected === MenuItemSelected.SETTINGS
+							? 'Настройки'
+							: 'Мои объявления'
 					}
 				</h1>
 				{
-					this.state.menuItemSelected === MenuItemSelected.SETTINGS ?
-						this.renderSettingsPanel() :
-						this.renderMyAdsPanel()
+					this.state.menuItemSelected === MenuItemSelected.SETTINGS
+						? this.renderSettingsPanel()
+						: this.renderMyAdsPanel()
 				}
 			</div>
 		);
 	}
 
 	public render(): React.ReactNode {
+		const {clientDataModel} = this.props;
+
+		if (!clientDataModel.user) {
+			return (
+				<div className={b()} />
+			);
+		}
+
     	return (
   			<div className={b()}>
 				<Paper>

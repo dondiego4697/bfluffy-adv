@@ -5,6 +5,7 @@ export namespace DBTableUsers {
         email: string;
         verified_code: string;
         verified: boolean;
+        avatar?: string;
         created_at: Date;
         updated_at: Date;
     }

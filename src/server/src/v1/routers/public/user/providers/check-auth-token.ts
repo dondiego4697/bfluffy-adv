@@ -28,6 +28,7 @@ export const checkAuthToken = wrap<Request, Response>(async (req, res) => {
 	res.json({
 		authToken,
 		email: user.email,
-		verified: user.verified
+		verified: user.verified,
+		avatar: user.avatar
 	});
 });
