@@ -9,7 +9,7 @@ import {
 import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 
 import bevis from 'client/lib/bevis';
-import {ImageCrop} from 'client/components/image-crop';
+import {ImageCrop} from 'client/components/base/image-crop';
 import {ModalMessage} from 'client/components/base/modal-message';
 
 import './index.scss';

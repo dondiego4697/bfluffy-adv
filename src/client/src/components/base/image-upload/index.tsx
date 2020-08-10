@@ -8,7 +8,7 @@ import {
 } from 'antd/lib/upload/interface';
 
 import bevis from 'client/lib/bevis';
-import {ImageCrop} from 'client/components/image-crop';
+import {ImageCrop} from 'client/components/base/image-crop';
 
 import './index.scss';
 import 'antd/dist/antd.css';

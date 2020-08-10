@@ -7,7 +7,7 @@ import {CabinetPageModel} from 'client/models/cabinet';
 import {ClientDataModel} from 'client/models/client-data';
 import {Paper} from 'client/components/base/paper';
 import {Label} from 'client/components/base/label';
-import {AvatarUpload} from 'client/components/avatar-upload';
+import {AvatarUpload} from 'client/components/base/avatar-upload';
 import bevis from 'client/lib/bevis';
 
 import './index.scss';
