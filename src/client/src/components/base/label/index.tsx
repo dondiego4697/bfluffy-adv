@@ -12,7 +12,7 @@ interface Props {
     className?: string;
 }
 
-const b = bevis('label');
+const b = bevis('bfluffy-label');
 const bColor = bevis('bfluffy-label-color');
 const bSize = bevis('bfluffy-label-size');
 

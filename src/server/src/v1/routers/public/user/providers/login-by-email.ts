@@ -12,7 +12,7 @@ interface Body {
 export const loginByEmail = wrap<Request, Response>(async (req, res) => {
 	const {email} = req.body as Body;
 
-	// TODO сделать проверку, чтобы не спамили меня
+	// TODO сделать проверку, чтобы не спамили
 
 	const user = await UserDbProvider.getUserByEmail(email);
 	const verifiedCode = String(random(1000, 9999));

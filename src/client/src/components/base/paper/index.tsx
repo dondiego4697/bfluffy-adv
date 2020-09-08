@@ -4,7 +4,7 @@ import bevis from 'client/lib/bevis';
 
 import './index.scss';
 
-const b = bevis('paper');
+const b = bevis('bfluffy-paper');
 
 export class Paper extends React.Component<{}> {
 	public render(): React.ReactNode {

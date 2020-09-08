@@ -18,5 +18,5 @@ render(
 			</>
 		</Provider>
 	),
-	document.getElementById('root') // eslint-disable-line no-undef
+	document.getElementById('root')
 );

@@ -1,24 +1,18 @@
 @import '../../../consts.scss';
-@import '../button/index.scss';
 
-.bfluffy-modal-error {
-    & .ant-modal-confirm-title {
-        font-family: MontserratBold;
+.bfluffy-modal-message {
+
+    &__message {
+        font-size: $font-size-s;
+        font-family: MontserratMedium;
     }
 
-    & .ant-modal-confirm-content {
-        font-family: MontserratRegular;
-    }
+    &__ok-button {
+        display: flex;
+        margin-top: 16px;
 
-    & .ant-modal-confirm-btns {
-        & button {
-            @extend .bfluffy-button;
-            @extend .bfluffy-button-type__primary;
-            min-width: unset;
+        & input {
+            margin-left: auto;
         }
     }
-}
-
-.bfluffy-modal-success {
-    @extend .bfluffy-modal-error;
 }

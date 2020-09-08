@@ -24,7 +24,7 @@ export class MainPage extends React.Component<Props> {
 		);
 
 		this.props.history.push(
-			`${RoutePaths.SEARCH_AD
+			`${RoutePaths.AD_SEARCH
 			}?${searchParams.toString()}`
 		);
 	};

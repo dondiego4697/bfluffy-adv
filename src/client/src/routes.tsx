@@ -7,7 +7,9 @@ import {ClientDataModel} from 'client/models/client-data';
 import {NotFoundPage} from 'client/pages/not-found';
 import {MainPage} from 'client/pages/main-page';
 import {AdEditPage} from 'client/pages/ad/edit';
-import {CabinetPage} from 'client/pages/cabinet';
+import {UserCabinetPage} from 'client/pages/user-cabinet';
+import {LoginPage} from 'client/pages/login/login';
+import {VerifiedPage} from 'client/pages/login/verified';
 
 interface Props {
     clientDataModel?: ClientDataModel;
@@ -18,8 +20,11 @@ export class RoutesApp extends React.Component<Props> {
 		return (
   			<Switch>
 				<Route exact path={RoutePaths.MAIN} component={MainPage} />
-				<Route exact path={RoutePaths.CABINET} component={CabinetPage} />
+				<Route exact path={RoutePaths.USER_CABINET} component={UserCabinetPage} />
 				<Route exact path={RoutePaths.AD_EDIT} component={AdEditPage} />
+				<Route exact path={RoutePaths.LOGIN} component={LoginPage} />
+				<Route exact path={RoutePaths.LOGIN_VERIFIED} component={VerifiedPage} />
+				<Route exact path={RoutePaths.LOGIN_VERIFIED} component={VerifiedPage} />
 				<Route component={NotFoundPage} />
 			</Switch>
 		);

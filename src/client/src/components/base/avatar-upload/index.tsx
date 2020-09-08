@@ -1,132 +1,103 @@
 import * as React from 'react';
-import {Upload} from 'antd';
-import * as classnames from 'classnames';
-import {ImgCropProps} from 'antd-img-crop';
-import {
-	UploadChangeParam as UploadChangeParams,
-	RcFile
-} from 'antd/lib/upload/interface';
-import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 
 import bevis from 'client/lib/bevis';
-import {ImageCrop} from 'client/components/base/image-crop';
+import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
 import {ModalMessage} from 'client/components/base/modal-message';
+import {SpinnerWrapper} from 'client/components/base/spinner/spinner-wrapper';
 
 import './index.scss';
-import 'antd/dist/antd.css';
 
 interface Props {
-    size: number;
-    cropTitle: string;
-    cropRotate?: ImgCropProps['rotate'];
-    cropShape?: ImgCropProps['shape'];
-    imageUrl?: string;
+	url?: string;
 }
 
 interface State {
-    loading: boolean;
-    imageUrl?: string;
+    uploading: boolean;
+	url?: string;
 }
 
-const b = bevis('avatar-upload');
+const b = bevis('bfluffy-avatar-upload');
 
 export class AvatarUpload extends React.Component<Props, State> {
-    state = {
-    	loading: false,
-    	imageUrl: undefined
-    }
+	inputRef = React.createRef<HTMLInputElement>();
 
-    private onChangeHandler = (info: UploadChangeParams) => {
-    	if (info.file.status === 'uploading') {
-    		this.setState({loading: true});
-    		return;
-    	}
+	state: State = {
+    	uploading: false,
+		url: undefined,
+	}
 
-    	if (info.file.status === 'done') {
-    		this.setState({
-    			loading: false,
-    			imageUrl: info.file.response.imageUrl
-    		});
-    	}
-    }
+	private onChangeHandler = () => {
+		const input = this.inputRef.current;
+		if (!input || !input.files) {
+			return;
+		}
 
-    private beforeUploadHandler = (file: RcFile) => {
-    	const isImage = ['image/jpeg', 'image/png'].includes(file.type);
-    	if (!isImage) {
-    		ModalMessage.showError('Неподдерживаемый формат изображения');
-    	}
+		const file = input.files[0];
+		const isValidSize = file.size / 1024 / 1024 < 2; // меньше 2 MB
+		const isImage = ['image/jpeg', 'image/png'].includes(file.type);
 
-    	const isValidSize = file.size / 1024 / 1024 < 2; // less 2 MB
-    	if (!isValidSize) {
-    		ModalMessage.showError('Максимальный размер изображение 2 МБ');
-    	}
+		if (!isImage) {
+			ModalMessage.showError('Неподдерживаемый формат изображения');
+			return;
+		}
 
-    	return isImage && isValidSize;
-    }
+		if (!isValidSize) {
+			ModalMessage.showError('Максимальный размер изображение 2 МБ');
+			return;
+		}
 
-    private onUploadHandler = () => '/api/v1/edit/s3_storage/update_avatar'
+		this.uploadAvatar(file);
+	}
 
-    public render(): React.ReactNode {
-    	const {imageUrl: imageUrlState, loading} = this.state;
-    	const {imageUrl: imageUrlProps} = this.props;
+	private uploadAvatar(file: File) {
+		this.setState({uploading: true});
 
-    	const imageUrl = imageUrlState || imageUrlProps;
+		UserRequestBookV1
+			.uploadAvatar(file)
+			.then(({imageUrl}) => this.setState({
+				url: imageUrl,
+				uploading: false
+			}));
+	}
 
-    	const uploadButton = (
-    		<div className={b('upload-button-container')}>
-    			{
-    				imageUrl
-                        && (
-                        	<img
-                        	src={imageUrl}
-                        	alt='avatar'
-                        	className={b('avatar-preview')}
-                        	/>
-                        )
-    			}
-    			{
-    				!imageUrl && !loading && (
-    					<div className={b('upload-button')}>
-    						<PlusOutlined />
-    						<div className='ant-upload-text'>Загрузить</div>
-    					</div>
-    				)
-    			}
-    			{
-    				loading && (
-    					<div
-    						className={b('upload-button-loading')}
-    					>
-    						<LoadingOutlined />
-    					</div>
-    				)
-    			}
-    		</div>
-    	);
+	public render(): React.ReactNode {
+		const {url: propsUrl} = this.props;
+		const {uploading, url: stateUrl} = this.state;
 
-    	return (
-    		<div className={b()}>
-    			<div className={b('container')}>
-    				<ImageCrop
-    					title={this.props.cropTitle}
-    					rotate={this.props.cropRotate}
-    					shape={this.props.cropShape}
-    				>
-    					<Upload
-    						action={this.onUploadHandler}
-    						listType='picture-card'
-    						showUploadList={false}
-    						onChange={this.onChangeHandler}
-    						beforeUpload={this.beforeUploadHandler}
-    						className={classnames({
-    							[b('round-avatar-selector')]: this.props.cropShape === 'round'
-    						})}
-    					>
-    						{uploadButton}
-    					</Upload>
-    				</ImageCrop>
-    			</div>
-    		</div>
-    	);
-    }
+		const url = stateUrl || propsUrl;
+
+		const uploadButton = (
+			<div className={b('container')}>
+				<SpinnerWrapper spinning={uploading}>
+					<label className={b('button-wrapper')}>
+						{url && (
+                	        	<img
+                	        		src={url}
+                	        		alt='avatar'
+                	        		className={b('avatar-preview')}
+                	        	/>
+                	    	) || (
+    							<span className={b('title')}>
+									Загрузить аватарку
+							</span>
+						)}
+    						<input
+							className={b('upload-button')}
+							ref={this.inputRef}
+							type='file'
+							name='file'
+							accept='image/jpeg,image/png'
+							onChange={this.onChangeHandler}
+    						/>
+					</label>
+				</SpinnerWrapper>
+			</div>
+		);
+
+		return (
+			<div className={b()}>
+				{uploadButton}
+			</div>
+		);
+	}
 }

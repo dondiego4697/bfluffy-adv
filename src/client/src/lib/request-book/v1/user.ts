@@ -1,10 +1,27 @@
 import {postRequest} from 'client/lib/request';
 
 interface CheckVerifiedCodeResponse {
-    email: string;
+	email: string;
+	name: string;
+	contacts: {
+		phone?: string;
+	};
     verified: boolean;
 	authToken: string;
 	avatar?: string;
+}
+
+interface UploadAvatarResponse {
+	imageUrl: string;
+}
+
+interface UpdateUserResponse {}
+
+interface UpdateUserParams {
+	name?: string;
+	contacts: {
+		phone?: string;
+	};
 }
 
 async function loginByEmail(email: string) {
@@ -31,8 +48,36 @@ async function checkAuthToken() {
 	);
 }
 
+async function uploadAvatar(file: File) {
+	const formData = new FormData();
+	formData.append('file', file);
+
+	return postRequest<UploadAvatarResponse>(
+		'/api/v1/edit/s3_storage/update_avatar',
+		formData,
+		{
+			responseType: 'json',
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		}
+	);
+}
+
+async function updateInfo(params: UpdateUserParams) {
+	const {name, contacts} = params;
+
+	return postRequest<UpdateUserResponse>(
+		'/api/v1/edit/user/update',
+		{name, contacts},
+		{responseType: 'json'}
+	);
+}
+
 export const UserRequestBookV1 = {
 	loginByEmail,
 	checkVerifiedCode,
-	checkAuthToken
+	checkAuthToken,
+	uploadAvatar,
+	updateInfo
 };

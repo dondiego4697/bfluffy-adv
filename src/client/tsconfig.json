@@ -8,12 +8,12 @@
             "es2016",
             "es2017"
         ],
+        "jsx": "react",
         "strict": true,
         "esModuleInterop": false,
         "experimentalDecorators": true,
         "noEmitOnError": true,
         "pretty": true,
-        "jsx": "react",
 
         "baseUrl": "./",
         "paths": {

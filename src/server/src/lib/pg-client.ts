@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion,
-	max-classes-per-file,no-underscore-dangle,no-undef,
+	max-classes-per-file,no-underscore-dangle,
 	prefer-promise-reject-errors,no-param-reassign,no-await-in-loop,
 	no-restricted-syntax
 */

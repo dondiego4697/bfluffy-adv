@@ -8,6 +8,10 @@ interface ClientConfig {}
 
 interface User {
 	email: string;
+	name?: string;
+	contacts: {
+		phone?: string;
+	};
 	verified: boolean;
 	avatar?: string;
 }
@@ -17,16 +21,17 @@ export class ClientDataModel {
 
 	@observable public user: User | null = null;
 
-    @observable public state: DataState = DataState.READY;
+    @observable public state: DataState = DataState.LOADING;
 
     constructor() {
-    	// eslint-disable-next-line no-undef
     	const node = window.document.getElementsByClassName('config-view')[0];
     	if (node) {
     		this.clientConfig = node.textContent ? JSON.parse(node.textContent) : null;
     	}
 
-    	this.initClientDataModel();
+    	this.initClientDataModel().finally(() => {
+    		this.state = DataState.READY;
+    	});
     }
 
 	@action public initClientDataModel() {
@@ -34,12 +39,16 @@ export class ClientDataModel {
     	if (authToken) {
     		return this.loginByAuthToken();
     	}
+
+    	return Promise.resolve();
     }
 
 	@action public loginByAuthToken() {
 		return UserRequestBookV1.checkAuthToken()
 			.then((response) => this.saveUser({
 				email: response.email,
+				name: response.name,
+				contacts: response.contacts,
 				verified: response.verified,
 				avatar: response.avatar
 			}));

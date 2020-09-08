@@ -1,50 +1,27 @@
 $background-color: #FDF9F6;
-$surface-color: #F5F9FB;
+$surface-color: #E9EFF6;
 
 $primary-color: #F85F59;
 $secondary-color: #80CFE0;
 $gray-color: #BFBFBF;
-$primary-variant-color: #050831;
 
-@font-face {
-    font-family: MontserratRegular;
-    src: url('/fonts/Montserrat/Montserrat-Regular.ttf');
-}
 
 @font-face {
     font-family: MontserratBold;
     src: url('/fonts/Montserrat/Montserrat-Bold.ttf');
 }
 
-.ant-modal-content {
-    font-family: MontserratBold;
-    border-radius: 6px;
-
-    & .ant-modal-close-x {
-        display: flex;
-
-        & span {
-            margin: auto;
-        }
-    }
-
-    & .ant-modal-footer {
-        font-family: MontserratRegular;
-
-        & .ant-btn {
-            &:hover {
-                color: $primary-color !important;
-                border-color: $primary-color !important;
-            }
-        }
-
-        & .ant-btn-primary {
-            background-color: $primary-color;
-            border-color: $primary-color;
-            &:hover {
-                color: white !important;
-                opacity: 0.8;
-            }
-        }
-    }
+@font-face {
+    font-family: MontserratMedium;
+    src: url('/fonts/Montserrat/Montserrat-Medium.ttf');
 }
+
+$box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+$box-shadow_hover: 0px 0px 5px rgba(0, 0, 0, 0.3);
+
+$border-radius: 6px;
+
+$font-size-xs: 10px;
+$font-size-s: 12px;
+$font-size-m: 16px;
+$font-size-l: 18px;

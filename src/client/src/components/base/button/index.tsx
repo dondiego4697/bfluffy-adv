@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
-import {Button as BaseButton} from 'antd';
+import {Link} from 'react-router-dom';
 
 import bevis from 'client/lib/bevis';
 
@@ -10,9 +10,9 @@ interface Props {
     type: 'primary' | 'link' | 'base';
     text: string;
     onClickHandler?: () => void;
-    icon?: React.ReactNode;
     htmlType?: 'button' | 'submit' | 'reset';
-    className?: string;
+	className?: string;
+	hrefTo?: string;
 }
 
 const b = bevis('bfluffy-button');
@@ -21,22 +21,35 @@ const bType = bevis('bfluffy-button-type');
 export class Button extends React.Component<Props> {
 	public render(): React.ReactNode {
 		const {
-			text, type, onClickHandler, icon, htmlType, className
+			text, type, htmlType, className,
+			onClickHandler, hrefTo
 		} = this.props;
 
 		return (
-			<BaseButton
-				icon={icon}
-				className={classnames({
-					[b()]: true,
-					[bType(type)]: true,
-					...(className ? {[className]: true} : {})
-				})}
-				onClick={onClickHandler}
-				htmlType={htmlType}
+			<div className={classnames({
+				[b()]: true,
+				...(className ? {[className]: true} : {})
+			})}
 			>
-				{text}
-			</BaseButton>
+				{
+					hrefTo && (
+						<Link
+							to={hrefTo}
+							className={bType(type)}
+						>
+							{text}
+						</Link>
+					)
+                	|| (
+                		<input
+                		value={text}
+                		className={bType(type)}
+                		onClick={onClickHandler}
+                		type={htmlType || 'button'}
+                		/>
+                	)
+				}
+			</div>
 		);
 	}
 }

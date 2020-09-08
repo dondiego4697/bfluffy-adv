@@ -1,53 +1,57 @@
 @import '../../../consts.scss';
 
 .bfluffy-button {
-    min-width: 190px !important;
-    height: 35px !important;
-    padding: 7px 20px 9px 20px !important;
-    font-family: MontserratRegular !important;
-    font-size: 14px !important;
-    border-radius: 4px !important;
-    transition: all 0.15s linear !important;
-    border: unset !important;
-    outline: none !important;
+    input, a {
+        line-height: 20px;
+        padding: 10px 16px;
+        font-family: MontserratMedium;
+        font-size: $font-size-s;
+        border-radius: $border-radius;
+        border: unset;
+        outline: none;
+        cursor: pointer;
+        user-select: none;
+        text-decoration: none;
+    }
 }
 
 .bfluffy-button-type {
 
     &__link {
-        border: none !important;
-        height: unset !important;
-        font-size: 12px !important;
+        border: none;
+        height: unset;
+        font-size: $font-size-s;
         padding: 0 !important;
-        font-family: MontserratRegular !important;
-        color: $primary-color !important;
-        box-shadow: unset !important;
+        font-family: MontserratMedium;
+        color: $primary-color;
+        box-shadow: unset;
+        background-color: white;
 
-        &:hover, &:focus {
-            color: $primary-color !important;
-            opacity: 0.85 !important;
+        &:hover {
+            color: $primary-color;
+            opacity: 0.8;
         }
     }
 
     &__primary {
-        background-color: $primary-color !important;
-        color: white !important;
+        background-color: $primary-color;
+        color: white;
 
-        &:hover, &:focus {
-            background-color: $primary-color !important;
-            color: white !important;
-            opacity: 0.85 !important;
+        &:hover {
+            background-color: $primary-color;
+            color: white;
+            opacity: 0.6;
         }
     }
 
     &__base {
-        color: $gray-color !important;
-        background-color: white !important;
+        box-shadow: $box-shadow;
+        color: $gray-color;
+        background-color: white;
 
-        &:hover, &:focus {
-            background-color: white !important;
-            color: $gray-color !important;
-            opacity: 0.85 !important;
+        &:hover {
+            color: $gray-color;
+            box-shadow: $box-shadow_hover;
         }
     }
 }

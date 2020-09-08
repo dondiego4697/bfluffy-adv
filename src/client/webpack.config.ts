@@ -29,7 +29,9 @@ const babelOptions = {
 			isTSX: true
 		}]
 	],
-	plugins: babelPlugins
+	plugins: [
+		...babelPlugins
+	]
 };
 
 const config: webpack.Configuration = {

@@ -3,8 +3,7 @@ import * as Knex from 'knex';
 import * as faker from 'faker';
 import {dbManager} from 'server/lib/db-manager';
 import {AuthToken} from 'server/lib/auth-token';
-import {DbTable, FarmType} from 'server/types/consts';
-import {DBTableUserCard} from 'server/types/db/user-card';
+import {DbTable} from 'server/types/consts';
 import {DBTableUsers} from 'server/types/db/users';
 import {DBTableCity} from 'server/types/db/city';
 import {DBTableRegion} from 'server/types/db/region';
@@ -68,6 +67,8 @@ interface CreateUserParams {
 interface User {
     id: DBTableUsers.Schema['id'];
     email: DBTableUsers.Schema['email'];
+    name: DBTableUsers.Schema['name'];
+    contacts: DBTableUsers.Schema['contacts'];
     verifiedCode: DBTableUsers.Schema['verified_code'];
     createdAt: DBTableUsers.Schema['created_at'];
     updatedAt: DBTableUsers.Schema['updated_at'];
@@ -77,6 +78,8 @@ interface User {
 const USER_COLUMNS = [
 	knex.raw('id'),
 	knex.raw('email'),
+	knex.raw('name'),
+	knex.raw('contacts'),
 	knex.raw('verified_code as "verifiedCode"'),
 	knex.raw('created_at as "createdAt"'),
 	knex.raw('updated_at as "updatedAt"'),
@@ -129,81 +132,6 @@ async function createUser(params: CreateUserParams = {}): Promise<{
 			verifiedCode: row.verifiedCode
 		})
 	};
-}
-
-// ####################################################################################################################
-
-interface UserCard {
-	id: DBTableUserCard.Schema['id'];
-	userId: DBTableUserCard.Schema['user_id'];
-	publicId: DBTableUserCard.Schema['public_id'];
-	cityId: DBTableUserCard.Schema['city_id'];
-	contacts: DBTableUserCard.Schema['contacts'];
-	name: DBTableUserCard.Schema['name'];
-	description: DBTableUserCard.Schema['description'];
-	farmType: DBTableUserCard.Schema['farm_type'];
-	address: DBTableUserCard.Schema['address'];
-	createdAt: DBTableUserCard.Schema['created_at'];
-	updatedAt: DBTableUserCard.Schema['updated_at'];
-}
-
-interface CreateUserCardParams {
-	cityId: number;
-	userId: number;
-	farmType: FarmType;
-}
-
-async function getAllUserCards(): Promise<UserCard[]> {
-	const query = knex
-		.select([
-			knex.raw('id'),
-			knex.raw('city_id as "cityId"'),
-			knex.raw('user_id as "userId"'),
-			knex.raw('public_id as "publicId"'),
-			knex.raw('contacts'),
-			knex.raw('name'),
-			knex.raw('description'),
-			knex.raw('farm_type as "farmType"'),
-			knex.raw('address'),
-			knex.raw('created_at as "createdAt"'),
-			knex.raw('updated_at as "updatedAt"')
-		])
-		.from(DbTable.USER_CARD);
-
-	const {rows} = await dbManager.executeReadQuery(query.toString());
-	return rows;
-}
-
-async function createUserCard(params: CreateUserCardParams): Promise<UserCard> {
-	const query = knex(DbTable.USER_CARD)
-		.insert({
-			city_id: params.cityId,
-	        contacts: JSON.stringify({
-				email: faker.internet.email(),
-				phone: faker.phone.phoneNumber()
-			}),
-			farm_type: params.farmType,
-			user_id: params.userId,
-	        name: faker.company.companyName(),
-	        description: faker.company.catchPhrase(),
-			address: faker.address.streetAddress()
-		})
-		.returning([
-			'id',
-			'city_id as cityId',
-			'user_id as userId',
-			'public_id as publicId',
-			'contacts',
-			'name',
-			'description',
-			'farm_type as farmType',
-			'address',
-			'created_at as createdAt',
-			'updated_at as updatedAt'
-		]);
-
-	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
-	return row;
 }
 
 // ####################################################################################################################
@@ -387,9 +315,6 @@ export const TestFactory = {
 	createAnimalBreed,
 	// ----
 	createAnimaCategory,
-	// ----
-	createUserCard,
-	getAllUserCards,
 	// ----
 	createAnimalAd,
 	getAllAnimalAds

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import {AuthToken} from 'server/lib/auth-token';
 
 const CREDENTIALS = {

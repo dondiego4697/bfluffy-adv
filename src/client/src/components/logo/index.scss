@@ -1,0 +1,23 @@
+.logo {
+    display: flex;
+    flex-direction: row;
+    user-select: none;
+
+    & h2 {
+        margin: 5px 0 0 8px;
+        font-family: MontserratBold;
+        font-size: 22px;
+        height: 30px;
+        color: black;
+    }
+
+    & img.logo {
+        width: 35px;
+        height: 35px;
+    }
+
+    & img.beta {
+        width: 24px;
+        height: 24px;
+    }
+}

@@ -1,0 +1,67 @@
+@import '../../consts.scss';
+
+.user-cabinet {
+
+    &__container {
+        display: grid;
+        grid-column-gap: 32px;
+        grid-template-columns: 30% 70%;
+        width: 100%;
+        padding: 32px;
+    }
+
+    &__control-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & .display-name {
+            font-family: MontserratBold;
+            font-size: $font-size-m;
+            color: $primary-color;
+            margin-bottom: 4px;
+            margin-top: 16px;
+        }
+    }
+
+    &__input-name, &__input-phone {
+        max-width: 300px;
+    }
+
+    &__main-panel {
+        & .title {
+            margin-bottom: 16px;
+        }
+    }
+
+    &__menu {
+        margin-top: 64px !important;
+        border-right: 0 !important;
+
+        & li {
+            text-align: center;
+            color: #BFBFBF;
+        }
+
+        & .ant-menu-item-selected {
+            background-color: unset !important;
+            color: black;
+        }
+
+        & .ant-menu-item-active {
+            color: black;
+        }
+    }
+
+    &__not-authorized {
+        text-align: center;
+    }
+
+    &__my-ads-panel {
+
+    }
+
+    &__settings-panel {
+
+    }
+}

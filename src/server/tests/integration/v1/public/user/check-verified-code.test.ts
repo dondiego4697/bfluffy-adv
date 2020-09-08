@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import got from 'got';
 import * as http from 'http';
 import * as nock from 'nock';

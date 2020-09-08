@@ -1,0 +1,28 @@
+@import '../../../consts.scss';
+
+.bfluffy-edit-text {
+
+    border: 0 !important;
+    padding: 10px 18px !important;
+    border-radius: $border-radius !important;
+    box-shadow: unset !important;
+    background-color: $surface-color !important;
+    font-family: MontserratMedium;
+
+    &:focus {
+        outline: none;
+    }
+
+    &::placeholder {
+        color: $gray-color;
+        font-family: MontserratMedium;
+        font-size: $font-size-s;
+    }
+}
+
+.bfluffy-edit-text-form-item {
+    & .ant-form-item-explain {
+        font-size: $font-size-xs;
+        font-family: MontserratBold
+    }
+}

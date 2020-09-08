@@ -6,6 +6,8 @@ import {DBTableUsers} from 'server/types/db/users';
 interface User {
 	id: DBTableUsers.Schema['id'];
     email: DBTableUsers.Schema['email'];
+    name: DBTableUsers.Schema['name'];
+    contacts: DBTableUsers.Schema['contacts'];
     verifiedCode: DBTableUsers.Schema['verified_code'];
     createdAt: DBTableUsers.Schema['created_at'];
     updatedAt: DBTableUsers.Schema['updated_at'];
@@ -15,6 +17,11 @@ interface User {
 interface UpdateVerifiedCodeByEmailParams {
 	email: string;
 	verifiedCode: string;
+}
+
+interface UpdateUserInfoParams {
+	name: string;
+	contacts: DBTableUsers.FieldContacts;
 }
 
 const knex = Knex({client: 'pg'});
@@ -38,6 +45,32 @@ export async function updateVerifiedCodeByEmail(params: UpdateVerifiedCodeByEmai
 		.returning([
 			'id',
 			'email',
+			'name',
+			'contacts',
+			'verified_code as verifiedCode',
+			'created_at as createdAt',
+			'updated_at as updatedAt',
+			'verified'
+		]);
+
+	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
+	return row;
+}
+
+export async function updateUserInfo(id: number, params: UpdateUserInfoParams): Promise<User> {
+	const {name, contacts} = params;
+
+	const query = knex(DbTable.USERS)
+		.update({
+			name,
+			contacts: JSON.stringify(contacts)
+		})
+		.where({id})
+		.returning([
+			'id',
+			'email',
+			'name',
+			'contacts',
 			'verified_code as verifiedCode',
 			'created_at as createdAt',
 			'updated_at as updatedAt',
