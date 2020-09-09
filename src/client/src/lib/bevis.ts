@@ -6,32 +6,32 @@ export interface ClassNameGenerator {
 }
 
 export default function bevis(blockName: string): ClassNameGenerator {
-	return (elementNameOrState?: string | State, stateRaw?: State): string => {
-		let className = blockName;
-		let state: State = {...stateRaw};
+    return (elementNameOrState?: string | State, stateRaw?: State): string => {
+        let className = blockName;
+        let state: State = {...stateRaw};
 
-		if (elementNameOrState) {
-			if (typeof elementNameOrState === 'string') {
-				className += `__${elementNameOrState}`;
-			} else if (typeof elementNameOrState === 'object') {
-				state = elementNameOrState;
-			}
-		}
+        if (elementNameOrState) {
+            if (typeof elementNameOrState === 'string') {
+                className += `__${elementNameOrState}`;
+            } else if (typeof elementNameOrState === 'object') {
+                state = elementNameOrState;
+            }
+        }
 
-		if (state) {
-			Object.keys(state).forEach((key) => {
-				if (!state) {
-					return;
-				}
+        if (state) {
+            Object.keys(state).forEach((key) => {
+                if (!state) {
+                    return;
+                }
 
-				if (state[key] === true) {
-					className += ` _${key}`;
-				} else if (state[key]) {
-					className += ` _${key}_${state[key]}`;
-				}
-			});
-		}
+                if (state[key] === true) {
+                    className += ` _${key}`;
+                } else if (state[key]) {
+                    className += ` _${key}_${state[key]}`;
+                }
+            });
+        }
 
-		return className;
-	};
+        return className;
+    };
 }

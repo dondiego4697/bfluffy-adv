@@ -6,15 +6,16 @@ import {checkVerifiedCode} from 'server/v1/routers/public/user/providers/check-v
 import {checkAuthToken} from 'server/v1/routers/public/user/providers/check-auth-token';
 
 const loginByEmailSchema = Joi.object({
-	email: Joi.string().email().required()
+    email: Joi.string().email().required()
 });
 
 const checkVerifiedCodeSchema = Joi.object({
-	email: Joi.string().email().required(),
-	verifiedCode: Joi.string().required()
+    email: Joi.string().email().required(),
+    verifiedCode: Joi.string().required()
 });
 
-export const router = express.Router()
-	.post('/login_by_email', bodyValidateMiddleware(loginByEmailSchema), loginByEmail)
-	.post('/check_verified_code', bodyValidateMiddleware(checkVerifiedCodeSchema), checkVerifiedCode)
-	.post('/check_auth_token', checkAuthToken);
+export const router = express
+    .Router()
+    .post('/login_by_email', bodyValidateMiddleware(loginByEmailSchema), loginByEmail)
+    .post('/check_verified_code', bodyValidateMiddleware(checkVerifiedCodeSchema), checkVerifiedCode)
+    .post('/check_auth_token', checkAuthToken);

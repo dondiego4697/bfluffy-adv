@@ -8,14 +8,11 @@ export interface City {
 }
 
 async function getCityList() {
-	return getRequest<City[]>(
-		'/api/v1/public/geo/city_list',
-		{
-			responseType: 'json'
-		}
-	);
+    return getRequest<City[]>('/api/v1/public/geo/city_list', {
+        responseType: 'json'
+    });
 }
 
 export const GeoRequestBookV1 = {
-	getCityList
+    getCityList
 };

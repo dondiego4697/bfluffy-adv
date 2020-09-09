@@ -20,8 +20,8 @@ import {UIGlobal} from 'client/models/ui-global';
 import './verified.scss';
 
 interface Props extends RouteComponentProps {
-	clientDataModel?: ClientDataModel;
-	uiGlobal?: UIGlobal;
+    clientDataModel?: ClientDataModel;
+    uiGlobal?: UIGlobal;
 }
 
 const b = bevis('verified-page');
@@ -29,93 +29,73 @@ const b = bevis('verified-page');
 @inject('clientDataModel', 'uiGlobal')
 @observer
 export class VerifiedPage extends React.Component<Props> {
-	private getEmail() {
-		const params = new URLSearchParams(this.props.location.search || '');
-		return params.get('email');
-	}
+    private getEmail() {
+        const params = new URLSearchParams(this.props.location.search || '');
+        return params.get('email');
+    }
 
-	private onFinishHandler = (values: Store) => {
-		const {uiGlobal} = this.props;
-		const {code} = values;
-		const email = this.getEmail();
+    private onFinishHandler = (values: Store) => {
+        const {uiGlobal} = this.props;
+        const {code} = values;
+        const email = this.getEmail();
 
-		if (!email) {
-			return Promise.resolve();
-		}
+        if (!email) {
+            return Promise.resolve();
+        }
 
-		uiGlobal?.showSpinner();
+        uiGlobal?.showSpinner();
 
-		return UserRequestBookV1.checkVerifiedCode(email, code)
-			.then(() => this.props.clientDataModel?.initClientDataModel())
-			.then(() => this.props.history.replace(RoutePaths.MAIN))
-    		.catch((error) => ModalMessage.showError(error.response.data.message))
-			.finally(() => uiGlobal?.destroySpinner());
-	}
+        return UserRequestBookV1.checkVerifiedCode(email, code)
+            .then(() => this.props.clientDataModel?.initClientDataModel())
+            .then(() => this.props.history.replace(RoutePaths.MAIN))
+            .catch((error) => ModalMessage.showError(error.response.data.message))
+            .finally(() => uiGlobal?.destroySpinner());
+    };
 
-	public render(): React.ReactNode {
-		const email = this.getEmail();
+    public render(): React.ReactNode {
+        const email = this.getEmail();
 
-		// TODO если залогинен перенаправлять на главную страницу
-		// TODO нельзя просто так зайти на страницу эту (а то начнут заходить и подтверждать старым кодом)
+        // TODO если залогинен перенаправлять на главную страницу
+        // TODO нельзя просто так зайти на страницу эту (а то начнут заходить и подтверждать старым кодом)
 
-		if (!email) {
-			// TODO обработать кейс
-		}
+        if (!email) {
+            // TODO обработать кейс
+        }
 
-		return (
-  			<div className={b()}>
-				<Paper>
-					<div className={b('preimage')}>
-						<img className='image' src='/image/animal-category/dog.svg' />
-						<Label
-							size='header'
-							text='Код из письма'
-							className={b('preimage-label')}
-						/>
-					</div>
-					<Form
-						className={b('form')}
-						layout='vertical'
-						onFinish={this.onFinishHandler}
-						validateMessages={FORM_VALIDATE_MESSAGES}
-					>
-						<div className={b('info')}>
-							На почту
-							{' '}
-							<p className='bold'>{email}</p>
-							{' '}
-							отправлено письмо
-						</div>
-						<Form.Item
-							name='code'
-							className={EDIT_TEXT_FORM_ITEM_CLASS_NAME}
-    						rules={[
-    							FORM_ITEM_REQUIRED
-    						]}
-						>
-    						<Input
-								className={classnames(EDIT_TEXT_ROOT_CLASS_NAME, b('input-code'))}
-								placeholder='Код из письма'
-    						/>
-    					</Form.Item>
-						<Form.Item
-							className={b('submit-button')}
-						>
-							<Button
-								type='primary'
-								text='Подтвердить'
-								htmlType='submit'
-							/>
-						</Form.Item>
-					</Form>
-					<Button
-						type='link'
-						className={b('another-email')}
-						text='Ввести другой email'
-						hrefTo={RoutePaths.LOGIN}
-					/>
-				</Paper>
-			</div>
-		);
-	}
+        return (
+            <div className={b()}>
+                <Paper>
+                    <div className={b('preimage')}>
+                        <img className="image" src="/image/animal-category/dog.svg" />
+                        <Label size="header" text="Код из письма" className={b('preimage-label')} />
+                    </div>
+                    <Form
+                        className={b('form')}
+                        layout="vertical"
+                        onFinish={this.onFinishHandler}
+                        validateMessages={FORM_VALIDATE_MESSAGES}
+                    >
+                        <div className={b('info')}>
+                            На почту <p className="bold">{email}</p> отправлено письмо отправлено письмо
+                        </div>
+                        <Form.Item name="code" className={EDIT_TEXT_FORM_ITEM_CLASS_NAME} rules={[FORM_ITEM_REQUIRED]}>
+                            <Input
+                                className={classnames(EDIT_TEXT_ROOT_CLASS_NAME, b('input-code'))}
+                                placeholder="Код из письма"
+                            />
+                        </Form.Item>
+                        <Form.Item className={b('submit-button')}>
+                            <Button type="primary" text="Подтвердить" htmlType="submit" />
+                        </Form.Item>
+                    </Form>
+                    <Button
+                        type="link"
+                        className={b('another-email')}
+                        text="Ввести другой email"
+                        hrefTo={RoutePaths.LOGIN}
+                    />
+                </Paper>
+            </div>
+        );
+    }
 }

@@ -18,24 +18,19 @@ const b = bevis('main-page');
 
 @inject('clientDataModel')
 export class MainPage extends React.Component<Props> {
-	private onSearchHandler = (params: SearchParams) => {
-		const searchParams = new URLSearchParams(
-			pickBy(params, identity) as Record<string, string>
-		);
+    private onSearchHandler = (params: SearchParams) => {
+        const searchParams = new URLSearchParams(pickBy(params, identity) as Record<string, string>);
 
-		this.props.history.push(
-			`${RoutePaths.AD_SEARCH
-			}?${searchParams.toString()}`
-		);
-	};
+        this.props.history.push(`${RoutePaths.AD_SEARCH}?${searchParams.toString()}`);
+    };
 
-	public render(): React.ReactNode {
-		return (
-  			<div className={b()}>
-  				<div className={b('container')}>
-					<AnimalSearchPanel onSearch={this.onSearchHandler} />
-				</div>
-			</div>
-		);
-	}
+    public render(): React.ReactNode {
+        return (
+            <div className={b()}>
+                <div className={b('container')}>
+                    <AnimalSearchPanel onSearch={this.onSearchHandler} />
+                </div>
+            </div>
+        );
+    }
 }

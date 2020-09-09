@@ -17,18 +17,18 @@ export class UIModalMessage {
 
     @observable public message?: string = '';
 
-	@action public show(params: Params) {
-    	this.visible = true;
+    @action public show(params: Params) {
+        this.visible = true;
 
-    	this.header = params.header;
-    	this.type = params.type;
-    	this.message = params.message;
+        this.header = params.header;
+        this.type = params.type;
+        this.message = params.message;
     }
 
     @action public destroy() {
-		this.visible = false;
+        this.visible = false;
 
-		this.header = '';
-		this.message = undefined;
-	}
+        this.header = '';
+        this.message = undefined;
+    }
 }

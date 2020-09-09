@@ -12,22 +12,22 @@ export class UIGlobal {
 
     @observable public modal: Modal = {};
 
-	@action public showSpinner() {
-    	this.spinning = true;
+    @action public showSpinner() {
+        this.spinning = true;
     }
 
     @action public destroySpinner() {
-		this.spinning = false;
-	}
+        this.spinning = false;
+    }
 
     @action public showModal(modal: Modal) {
-    	this.modal = {
-    		...modal,
-    		visible: true
-    	};
+        this.modal = {
+            ...modal,
+            visible: true
+        };
     }
 
     @action public destroyModal() {
-    	this.modal = {};
+        this.modal = {};
     }
 }

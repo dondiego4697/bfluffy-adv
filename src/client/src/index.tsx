@@ -8,15 +8,12 @@ import {RoutesApp} from 'client/routes';
 import {history} from 'client/lib/history';
 
 render(
-	(
-		// eslint-disable-next-line react/jsx-props-no-spreading
-		<Provider {...models}>
-			<>
-				<Router history={history}>
-					<RoutesApp />
-				</Router>
-			</>
-		</Provider>
-	),
-	document.getElementById('root')
+    <Provider {...models}>
+        <>
+            <Router history={history}>
+                <RoutesApp />
+            </Router>
+        </>
+    </Provider>,
+    document.getElementById('root')
 );

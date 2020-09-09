@@ -1,43 +1,20 @@
 {
     "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint"],
-    "extends": ["airbnb"],
+    "plugins": [
+        "@typescript-eslint",
+        "prettier"
+    ],
     "rules": {
-        "import/prefer-default-export": "off",
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": [
-            "error"
-        ],
-        "indent": ["error", "tab"],
-        "no-tabs": "off",
-        "no-mixed-operators": "off",
-        "import/no-unresolved": "off",
-        "no-mixed-spaces-and-tabs": "off",
-        "no-use-before-define": "off",
-        "comma-dangle": "off",
-        "object-curly-spacing": ["error", "never"],
-        "array-bracket-spacing": ["error", "never"],
-        "computed-property-spacing": ["error", "never"],
-        "max-len": ["error", {"code": 120, "tabWidth": 4}],
-        "no-plusplus": "off",
-        "class-methods-use-this": "off",
-        "import/no-extraneous-dependencies": "off",
-        "no-nested-ternary": "off",
-        "consistent-return": "off",
-        "no-unused-expressions": "off",
-        "no-undef": "off",
-
-        "react/jsx-indent": "off",
-        "react/jsx-closing-tag-location": "off",
-        "react/jsx-filename-extension": "off",
-        "react/jsx-indent-props": "off",
-        "react/destructuring-assignment": "off",
-        "jsx-quotes": ["error", "prefer-single"],
-        "react/state-in-constructor": "off",
-        "react/no-deprecated": "off",
-        "react/prefer-stateless-function": "off",
-        "jsx-a11y/alt-text": "off",
-        "jsx-a11y/label-has-associated-control": "off",
-        "jsx-a11y/control-has-associated-label": "off"
+        "prettier/prettier": "error",
+        "quotes": ["error", "single", {"avoidEscape": true}],
+        "max-len": [
+            "error",
+            {
+                "code": 120,
+                "tabWidth": 4,
+                "ignoreUrls": true,
+                "ignorePattern": "^import"
+            }
+        ]
     }
 }

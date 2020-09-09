@@ -10,11 +10,9 @@ interface Params {
 const knex = Knex({client: 'pg'});
 
 export async function updateUserAvatar(params: Params): Promise<void> {
-	const {avatar, userId} = params;
+    const {avatar, userId} = params;
 
-	const query = knex(DbTable.USERS)
-		.update({avatar})
-		.where({id: userId});
+    const query = knex(DbTable.USERS).update({avatar}).where({id: userId});
 
-	await dbManager.executeModifyQuery(query.toString());
+    await dbManager.executeModifyQuery(query.toString());
 }

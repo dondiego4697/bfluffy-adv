@@ -10,80 +10,72 @@ import './index.scss';
 interface Props {
     visible?: boolean;
     loading?: boolean;
-	title?: string;
+    title?: string;
     onCloseHandler?: () => void;
 }
 
 const b = bevis('bfluffy-modal');
 
 function getWidth() {
-	const {clientWidth} = document.body;
+    const {clientWidth} = document.body;
 
-	if (clientWidth < 632) {
-		return clientWidth - 32;
-	}
+    if (clientWidth < 632) {
+        return clientWidth - 32;
+    }
 
-	return 600;
+    return 600;
 }
 
 export class Modal extends React.Component<Props> {
-	public componentDidUpdate() {
-		document.body.style.overflow = this.props.visible ? 'hidden' : 'auto';
-	}
+    public componentDidUpdate() {
+        document.body.style.overflow = this.props.visible ? 'hidden' : 'auto';
+    }
 
-	public render(): React.ReactNode {
-		const {
-			title, onCloseHandler,
-			loading, visible
-		} = this.props;
+    public render(): React.ReactNode {
+        const {title, onCloseHandler, loading, visible} = this.props;
 
-		const children = (
-			<div
-				className={classnames({
-					[b()]: true,
-					[b('visible')]: visible
-				})}
-			>
-				<div
-					role='button'
-					tabIndex={0}
-					className={b('mask')}
-					onClick={onCloseHandler}
-					onKeyPress={onCloseHandler}
-				>
-					<div className={b('container')}>
-						<SpinnerWrapper spinning={loading}>
-							<div
-								role='button'
-								tabIndex={-1}
-								className={b('content')}
-								onClick={(event) => event.stopPropagation()}
-								onKeyPress={(event) => event.stopPropagation()}
-								style={{
-									width: getWidth()
-								}}
-							>
-                        	    <h1 className={b('title')}>
-                        	        {title}
-                        	    </h1>
-								<div
-									role='button'
-									tabIndex={0}
-									className={b('cross')}
-									onClick={onCloseHandler}
-									onKeyPress={onCloseHandler}
-								/>
-								{this.props.children}
-							</div>
-						</SpinnerWrapper>
-					</div>
-				</div>
-			</div>
-		);
+        const children = (
+            <div
+                className={classnames({
+                    [b()]: true,
+                    [b('visible')]: visible
+                })}
+            >
+                <div
+                    role="button"
+                    tabIndex={0}
+                    className={b('mask')}
+                    onClick={onCloseHandler}
+                    onKeyPress={onCloseHandler}
+                >
+                    <div className={b('container')}>
+                        <SpinnerWrapper spinning={loading}>
+                            <div
+                                role="button"
+                                tabIndex={-1}
+                                className={b('content')}
+                                onClick={(event) => event.stopPropagation()}
+                                onKeyPress={(event) => event.stopPropagation()}
+                                style={{
+                                    width: getWidth()
+                                }}
+                            >
+                                <h1 className={b('title')}>{title}</h1>
+                                <div
+                                    role="button"
+                                    tabIndex={0}
+                                    className={b('cross')}
+                                    onClick={onCloseHandler}
+                                    onKeyPress={onCloseHandler}
+                                />
+                                {this.props.children}
+                            </div>
+                        </SpinnerWrapper>
+                    </div>
+                </div>
+            </div>
+        );
 
-		return ReactDOM.createPortal(
-			children,
-			document.body
-		);
-	}
+        return ReactDOM.createPortal(children, document.body);
+    }
 }

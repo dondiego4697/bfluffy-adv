@@ -7,9 +7,9 @@ import {ClientStatusCode} from 'server/types/consts';
 import {config} from 'server/config';
 
 interface UserData {
-	id: number;
-	isAuth: boolean; // Запрос с auth токеном
-	isVerified: boolean;
+    id: number;
+    isAuth: boolean; // Запрос с auth токеном
+    isVerified: boolean;
 }
 
 declare global {
@@ -21,35 +21,35 @@ declare global {
 }
 
 export const auth = wrap<Request, Response>(async (req, res, next) => {
-	req.userData = {
-		id: -1,
-		isAuth: false,
-		isVerified: false
-	};
+    req.userData = {
+        id: -1,
+        isAuth: false,
+        isVerified: false
+    };
 
-	const {auth_token: authToken} = req.cookies;
+    const {auth_token: authToken} = req.cookies;
 
-	if (!authToken) {
-		throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
-	}
+    if (!authToken) {
+        throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
+    }
 
-	req.userData.isAuth = true;
+    req.userData.isAuth = true;
 
-	const credentials = AuthToken.decode(authToken);
-	const user = await UserDbProvider.getUserByEmail(credentials.email);
+    const credentials = AuthToken.decode(authToken);
+    const user = await UserDbProvider.getUserByEmail(credentials.email);
 
-	if (!user) {
-		throw Boom.unauthorized(ClientStatusCode.USER_NOT_EXIST);
-	}
+    if (!user) {
+        throw Boom.unauthorized(ClientStatusCode.USER_NOT_EXIST);
+    }
 
-	req.userData.id = user.id;
-	req.userData.isVerified = user.verified;
+    req.userData.id = user.id;
+    req.userData.isVerified = user.verified;
 
-	setAuthTokenCookie(authToken, res);
+    setAuthTokenCookie(authToken, res);
 
-	next();
+    next();
 });
 
 export function setAuthTokenCookie(authToken: string, res: Response) {
-	res.cookie('auth_token', authToken, {maxAge: config['auth.token.ttl']});
+    res.cookie('auth_token', authToken, {maxAge: config['auth.token.ttl']});
 }

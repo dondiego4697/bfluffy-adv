@@ -4,7 +4,7 @@ import {DbTable} from 'server/types/consts';
 import {DBTableAnimalAd} from 'server/types/db/animal-ad';
 
 interface Params {
-	name: string;
+    name: string;
     description: string;
     isBasicVaccinations: boolean;
     cost: number;
@@ -17,26 +17,22 @@ interface Params {
 const knex = Knex({client: 'pg'});
 
 export async function updateAnimalAd(publicId: string, params: Params) {
-	const {
-		name, description, address, documents,
-		isBasicVaccinations, sex, cost,
-		animalBreedId
-	} = params;
+    const {name, description, address, documents, isBasicVaccinations, sex, cost, animalBreedId} = params;
 
-	const query = knex(DbTable.ANIMAL_AD)
-		.update({
-			name,
-			description,
-			is_basic_vaccinations: isBasicVaccinations,
-			sex,
-			cost,
-			animal_breed_id: animalBreedId,
-			documents: JSON.stringify(documents),
-			address
-		})
-		.where({
-			public_id: publicId
-		});
+    const query = knex(DbTable.ANIMAL_AD)
+        .update({
+            name,
+            description,
+            is_basic_vaccinations: isBasicVaccinations,
+            sex,
+            cost,
+            animal_breed_id: animalBreedId,
+            documents: JSON.stringify(documents),
+            address
+        })
+        .where({
+            public_id: publicId
+        });
 
-	await dbManager.executeModifyQuery(query.toString());
+    await dbManager.executeModifyQuery(query.toString());
 }

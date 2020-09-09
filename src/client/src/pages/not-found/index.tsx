@@ -14,13 +14,13 @@ const b = bevis('not-found-page');
 
 @inject('clientDataModel')
 export class NotFoundPage extends React.Component<Props> {
-	public render(): React.ReactNode {
-		return (
-  			<div className={b()}>
-  				<div className={b('container')}>
-  					<h2>404</h2>
-				</div>
-			</div>
-		);
-	}
+    public render(): React.ReactNode {
+        return (
+            <div className={b()}>
+                <div className={b('container')}>
+                    <h2>404</h2>
+                </div>
+            </div>
+        );
+    }
 }

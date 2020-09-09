@@ -7,30 +7,30 @@ import {ClientStatusCode} from 'server/types/consts';
 import {setAuthTokenCookie} from 'server/middlewares/auth';
 
 export const checkAuthToken = wrap<Request, Response>(async (req, res) => {
-	const {auth_token: authToken} = req.cookies;
+    const {auth_token: authToken} = req.cookies;
 
-	if (!authToken) {
-		throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
-	}
+    if (!authToken) {
+        throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
+    }
 
-	const credentials = AuthToken.decode(authToken);
-	const user = await UserDbProvider.getUserByEmail(credentials.email);
+    const credentials = AuthToken.decode(authToken);
+    const user = await UserDbProvider.getUserByEmail(credentials.email);
 
-	if (!user) {
-		throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
-	}
+    if (!user) {
+        throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
+    }
 
-	if (user.verifiedCode !== credentials.verifiedCode) {
-		throw Boom.badRequest(ClientStatusCode.USER_WRONG_VERIFIED_CODE);
-	}
+    if (user.verifiedCode !== credentials.verifiedCode) {
+        throw Boom.badRequest(ClientStatusCode.USER_WRONG_VERIFIED_CODE);
+    }
 
-	setAuthTokenCookie(authToken, res);
-	res.json({
-		authToken,
-		email: user.email,
-		contacts: user.contacts,
-		name: user.name,
-		verified: user.verified,
-		avatar: user.avatar
-	});
+    setAuthTokenCookie(authToken, res);
+    res.json({
+        authToken,
+        email: user.email,
+        contacts: user.contacts,
+        name: user.name,
+        verified: user.verified,
+        avatar: user.avatar
+    });
 });

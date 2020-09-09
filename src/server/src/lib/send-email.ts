@@ -11,54 +11,54 @@ interface Params {
 let transporterBase: Transporter | null = null;
 
 export async function getTransporter() {
-	if (transporterBase) {
-		return transporterBase;
-	}
+    if (transporterBase) {
+        return transporterBase;
+    }
 
-	if (config['email.mock']) {
-		const account = await nodemailer.createTestAccount();
-		transporterBase = nodemailer.createTransport({
-			host: 'smtp.ethereal.email',
-			port: 587,
-			secure: false,
-			auth: {
-				user: account.user,
-				pass: account.pass
-			}
-		});
-	} else {
-		transporterBase = nodemailer.createTransport({
-			host: 'smtp-pulse.com',
-			port: 465,
-			secure: true,
-			auth: {
-				user: config['email.login'],
-				pass: config['email.password']
-			}
-		});
-	}
+    if (config['email.mock']) {
+        const account = await nodemailer.createTestAccount();
+        transporterBase = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            secure: false,
+            auth: {
+                user: account.user,
+                pass: account.pass
+            }
+        });
+    } else {
+        transporterBase = nodemailer.createTransport({
+            host: 'smtp-pulse.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: config['email.login'],
+                pass: config['email.password']
+            }
+        });
+    }
 
-	return transporterBase;
+    return transporterBase;
 }
 
 // Поднять свой smtp сервер
 export async function sendEmail(email: string, params: Params) {
-	if (!config['email.enable']) {
-		return;
-	}
+    if (!config['email.enable']) {
+        return;
+    }
 
-	try {
-		const transporter = await getTransporter();
-		const info = await transporter.sendMail({
-			from: `Be Fluffy ${config['email.login']}`,
-			to: email,
-			subject: params.subject,
-			text: params.html,
-			html: params.html
-		});
+    try {
+        const transporter = await getTransporter();
+        const info = await transporter.sendMail({
+            from: `Be Fluffy ${config['email.login']}`,
+            to: email,
+            subject: params.subject,
+            text: params.html,
+            html: params.html
+        });
 
-		logger.info(`send email message: ${JSON.stringify(info)}`);
-	} catch (error) {
-		logger.error(`send email message: ${error}`);
-	}
+        logger.info(`send email message: ${JSON.stringify(info)}`);
+    } catch (error) {
+        logger.error(`send email message: ${error}`);
+    }
 }

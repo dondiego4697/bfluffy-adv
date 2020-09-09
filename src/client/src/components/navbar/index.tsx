@@ -12,7 +12,7 @@ import './index.scss';
 import 'antd/dist/antd.css';
 
 interface Props {
-	clientDataModel?: ClientDataModel;
+    clientDataModel?: ClientDataModel;
 }
 
 const b = bevis('navbar');
@@ -20,45 +20,35 @@ const b = bevis('navbar');
 @inject('clientDataModel')
 @observer
 export class Navbar extends React.Component<Props> {
-	public render(): React.ReactNode {
-		const {clientDataModel} = this.props;
+    public render(): React.ReactNode {
+        const {clientDataModel} = this.props;
 
-		return (
-			<div className={b()}>
-				<div className={b('container')}>
-					<Logo />
-					<div className={b('controls-container')}>
-						<div className={b('login-button')}>
-							{
-								clientDataModel?.user
-									? (
-										<Button
-											text={clientDataModel.user.email}
-											type='base'
-											hrefTo={RoutePaths.USER_CABINET}
-										/>
-									)
-									: (
-										<Button
-											text='Вход и регистрация'
-											type='base'
-											hrefTo={RoutePaths.LOGIN}
-										/>
-									)
-							}
-						</div>
-						<Button
-							type='primary'
-							text='Подать объявление'
-							hrefTo={
-								clientDataModel?.user
-									? RoutePaths.AD_EDIT.replace(':id', NEW_ITEM)
-									: RoutePaths.LOGIN
-							}
-						/>
-					</div>
-				</div>
-			</div>
-		);
-	}
+        return (
+            <div className={b()}>
+                <div className={b('container')}>
+                    <Logo />
+                    <div className={b('controls-container')}>
+                        <div className={b('login-button')}>
+                            {clientDataModel?.user ? (
+                                <Button
+                                    text={clientDataModel.user.email}
+                                    type="base"
+                                    hrefTo={RoutePaths.USER_CABINET}
+                                />
+                            ) : (
+                                <Button text="Вход и регистрация" type="base" hrefTo={RoutePaths.LOGIN} />
+                            )}
+                        </div>
+                        <Button
+                            type="primary"
+                            text="Подать объявление"
+                            hrefTo={
+                                clientDataModel?.user ? RoutePaths.AD_EDIT.replace(':id', NEW_ITEM) : RoutePaths.LOGIN
+                            }
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }

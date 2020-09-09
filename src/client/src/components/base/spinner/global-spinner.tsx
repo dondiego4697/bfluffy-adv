@@ -12,22 +12,19 @@ interface Props {
 const b = bevis('bfluffy-global-spinner');
 
 export class GlobalSpinner extends React.Component<Props> {
-	public componentDidUpdate() {
-		document.body.style.overflow = this.props.spinning ? 'hidden' : 'auto';
-	}
+    public componentDidUpdate() {
+        document.body.style.overflow = this.props.spinning ? 'hidden' : 'auto';
+    }
 
-	public render(): React.ReactNode {
-		const {spinning} = this.props;
+    public render(): React.ReactNode {
+        const {spinning} = this.props;
 
-		const children = (
-			<div
-				className={b()}
-				style={{display: spinning ? 'flex' : 'none'}}
-			>
-				<Spinner />
-			</div>
-		);
+        const children = (
+            <div className={b()} style={{display: spinning ? 'flex' : 'none'}}>
+                <Spinner />
+            </div>
+        );
 
-		return children;
-	}
+        return children;
+    }
 }

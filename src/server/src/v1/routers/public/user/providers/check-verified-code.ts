@@ -12,33 +12,33 @@ interface Body {
 }
 
 export const checkVerifiedCode = wrap<Request, Response>(async (req, res) => {
-	const {email, verifiedCode} = req.body as Body;
+    const {email, verifiedCode} = req.body as Body;
 
-	const user = await UserDbProvider.getUserByEmail(email);
+    const user = await UserDbProvider.getUserByEmail(email);
 
-	if (!user) {
-		throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
-	}
+    if (!user) {
+        throw Boom.badRequest(ClientStatusCode.USER_NOT_EXIST);
+    }
 
-	if (user.verifiedCode !== verifiedCode) {
-		throw Boom.badRequest(ClientStatusCode.USER_WRONG_VERIFIED_CODE);
-	}
+    if (user.verifiedCode !== verifiedCode) {
+        throw Boom.badRequest(ClientStatusCode.USER_WRONG_VERIFIED_CODE);
+    }
 
-	if (!user.verified) {
-		await UserDbProvider.verifiedUser(email);
-		user.verified = true;
-	}
+    if (!user.verified) {
+        await UserDbProvider.verifiedUser(email);
+        user.verified = true;
+    }
 
-	const authToken = AuthToken.encode({
-		email,
-		verifiedCode
-	});
+    const authToken = AuthToken.encode({
+        email,
+        verifiedCode
+    });
 
-	setAuthTokenCookie(authToken, res);
-	res.json({
-		authToken,
-		email: user.email,
-		verified: user.verified,
-		avatar: user.avatar
-	});
+    setAuthTokenCookie(authToken, res);
+    res.json({
+        authToken,
+        email: user.email,
+        verified: user.verified,
+        avatar: user.avatar
+    });
 });

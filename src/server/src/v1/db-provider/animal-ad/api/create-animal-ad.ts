@@ -4,7 +4,7 @@ import {DbTable} from 'server/types/consts';
 import {DBTableAnimalAd} from 'server/types/db/animal-ad';
 
 interface Params {
-	name: string;
+    name: string;
     description: string;
     isBasicVaccinations: boolean;
     cost: number;
@@ -20,26 +20,24 @@ type PublicId = string;
 const knex = Knex({client: 'pg'});
 
 export async function createAnimalAd(params: Params): Promise<PublicId> {
-	const {
-		name, description, address, documents,
-		isBasicVaccinations, sex, cost,
-		animalBreedId, ownerId
-	} = params;
+    const {name, description, address, documents, isBasicVaccinations, sex, cost, animalBreedId, ownerId} = params;
 
-	const query = knex(DbTable.ANIMAL_AD)
-		.insert({
-			name,
-			description,
-			is_basic_vaccinations: isBasicVaccinations,
-			sex,
-			cost,
-			owner_id: ownerId,
-			animal_breed_id: animalBreedId,
-			documents: JSON.stringify(documents),
-			address
-		})
-		.returning('public_id as publicId');
+    const query = knex(DbTable.ANIMAL_AD)
+        .insert({
+            name,
+            description,
+            is_basic_vaccinations: isBasicVaccinations,
+            sex,
+            cost,
+            owner_id: ownerId,
+            animal_breed_id: animalBreedId,
+            documents: JSON.stringify(documents),
+            address
+        })
+        .returning('public_id as publicId');
 
-	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
-	return row.publicId;
+    const {
+        rows: [row]
+    } = await dbManager.executeModifyQuery(query.toString());
+    return row.publicId;
 }

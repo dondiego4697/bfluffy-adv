@@ -10,14 +10,16 @@ interface City {
 const knex = Knex({client: 'pg'});
 
 export async function getCityByCityCode(cityCode: string): Promise<City | undefined> {
-	const query = knex(DbTable.CITY)
-		.select({
-			id: 'id'
-		})
-		.where({
-			code: cityCode
-		});
+    const query = knex(DbTable.CITY)
+        .select({
+            id: 'id'
+        })
+        .where({
+            code: cityCode
+        });
 
-	const {rows: [row]} = await dbManager.executeReadQuery(query.toString());
-	return row;
+    const {
+        rows: [row]
+    } = await dbManager.executeReadQuery(query.toString());
+    return row;
 }

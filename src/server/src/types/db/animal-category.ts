@@ -1,5 +1,4 @@
 export namespace DBTableAnimalCategory {
-
     export interface Schema {
         id: number;
         code: string;

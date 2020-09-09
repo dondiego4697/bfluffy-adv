@@ -14,20 +14,20 @@ interface AnimalBreed {
 const knex = Knex({client: 'pg'});
 
 export async function getAnimalBreedList(): Promise<AnimalBreed[]> {
-	const query = knex(DbTable.ANIMAL_BREED)
-		.select([
-			knex.raw(`${DbTable.ANIMAL_BREED}.code as "breedCode"`),
-			knex.raw(`${DbTable.ANIMAL_BREED}.display_name as "breedDisplayName"`),
-			knex.raw(`${DbTable.ANIMAL_CATEGORY}.code as "categoryCode"`),
-			knex.raw(`${DbTable.ANIMAL_CATEGORY}.display_name as "categoryDisplayName"`)
-		])
-		.innerJoin(
-			DbTable.ANIMAL_CATEGORY,
-			`${DbTable.ANIMAL_CATEGORY}.id`,
-			`${DbTable.ANIMAL_BREED}.animal_category_id`
-		)
-		.orderBy([`${DbTable.ANIMAL_CATEGORY}.id`, `${DbTable.ANIMAL_BREED}.id`]);
+    const query = knex(DbTable.ANIMAL_BREED)
+        .select([
+            knex.raw(`${DbTable.ANIMAL_BREED}.code as "breedCode"`),
+            knex.raw(`${DbTable.ANIMAL_BREED}.display_name as "breedDisplayName"`),
+            knex.raw(`${DbTable.ANIMAL_CATEGORY}.code as "categoryCode"`),
+            knex.raw(`${DbTable.ANIMAL_CATEGORY}.display_name as "categoryDisplayName"`)
+        ])
+        .innerJoin(
+            DbTable.ANIMAL_CATEGORY,
+            `${DbTable.ANIMAL_CATEGORY}.id`,
+            `${DbTable.ANIMAL_BREED}.animal_category_id`
+        )
+        .orderBy([`${DbTable.ANIMAL_CATEGORY}.id`, `${DbTable.ANIMAL_BREED}.id`]);
 
-	const {rows} = await dbManager.executeReadQuery(query.toString());
-	return rows;
+    const {rows} = await dbManager.executeReadQuery(query.toString());
+    return rows;
 }

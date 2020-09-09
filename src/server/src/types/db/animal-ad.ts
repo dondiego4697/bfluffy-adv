@@ -1,5 +1,4 @@
 export namespace DBTableAnimalAd {
-
     export interface FieldDocuments {
         vetPassport?: boolean; // ветеринарный паспорт
         genericMark?: boolean; // родовая метка

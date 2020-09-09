@@ -22,30 +22,26 @@ interface User {
 const knex = Knex({client: 'pg'});
 
 export async function createUser(params: Params): Promise<User> {
-	const existedUser = await UserDbProvider.getUserByEmail(params.email);
-	if (existedUser) {
-		throw Boom.badRequest(ClientStatusCode.USER_EMAIL_EXIST);
-	}
+    const existedUser = await UserDbProvider.getUserByEmail(params.email);
+    if (existedUser) {
+        throw Boom.badRequest(ClientStatusCode.USER_EMAIL_EXIST);
+    }
 
-	const query = knex(DbTable.USERS)
-		.insert({
-			email: params.email,
-			verified_code: params.verifiedCode
-		})
-		.returning([
-			'id',
-			'email',
-			'verified_code as verifiedCode',
-			'created_at as createdAt',
-			'verified'
-		]);
+    const query = knex(DbTable.USERS)
+        .insert({
+            email: params.email,
+            verified_code: params.verifiedCode
+        })
+        .returning(['id', 'email', 'verified_code as verifiedCode', 'created_at as createdAt', 'verified']);
 
-	const {rows: [user]} = await dbManager.executeModifyQuery(query.toString());
+    const {
+        rows: [user]
+    } = await dbManager.executeModifyQuery(query.toString());
 
-	if (!user) {
-		logger.error(`[create user] user did not create: ${JSON.stringify(params)}`);
-		throw Boom.badRequest();
-	}
+    if (!user) {
+        logger.error(`[create user] user did not create: ${JSON.stringify(params)}`);
+        throw Boom.badRequest();
+    }
 
-	return user;
+    return user;
 }

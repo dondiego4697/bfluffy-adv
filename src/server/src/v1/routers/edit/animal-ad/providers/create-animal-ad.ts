@@ -7,46 +7,37 @@ import {DBTableAnimalAd} from 'server/types/db/animal-ad';
 import {logger} from 'server/lib/logger';
 
 export interface Body {
-	documents: DBTableAnimalAd.FieldDocuments;
-	isBasicVaccinations: boolean;
-	description: string;
+    documents: DBTableAnimalAd.FieldDocuments;
+    isBasicVaccinations: boolean;
+    description: string;
     name: string;
     cost: number;
     sex: boolean;
-	animalBreedCode: string;
-	address?: string;
+    animalBreedCode: string;
+    address?: string;
 }
 
 export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
-	const {
-		documents,
-		address,
-		isBasicVaccinations,
-		name,
-		description,
-		cost,
-		sex,
-		animalBreedCode
-	} = req.body as Body;
+    const {documents, address, isBasicVaccinations, name, description, cost, sex, animalBreedCode} = req.body as Body;
 
-	const animalBreed = await AnimalDbProvider.getAnimalBreedByCode(animalBreedCode);
+    const animalBreed = await AnimalDbProvider.getAnimalBreedByCode(animalBreedCode);
 
-	if (!animalBreed) {
-		logger.error(`invalid animal breed code: ${animalBreedCode}`);
-		throw Boom.badRequest();
-	}
+    if (!animalBreed) {
+        logger.error(`invalid animal breed code: ${animalBreedCode}`);
+        throw Boom.badRequest();
+    }
 
-	const publicId = await AnimalAdDbProvider.createAnimalAd({
-		name,
-		address,
-		description,
-		isBasicVaccinations,
-		documents,
-		cost,
-		sex,
-		animalBreedId: animalBreed.id,
-		ownerId: req.userData.id
-	});
+    const publicId = await AnimalAdDbProvider.createAnimalAd({
+        name,
+        address,
+        description,
+        isBasicVaccinations,
+        documents,
+        cost,
+        sex,
+        animalBreedId: animalBreed.id,
+        ownerId: req.userData.id
+    });
 
-	res.json({publicId});
+    res.json({publicId});
 });

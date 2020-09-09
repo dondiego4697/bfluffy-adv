@@ -23,31 +23,29 @@ interface AnimalAd {
 const knex = Knex({client: 'pg'});
 
 export async function getAnimalAdByPublicId(publicId: string): Promise<AnimalAd | undefined> {
-	const query = knex(DbTable.ANIMAL_AD)
-		.select({
-			ownerId: `${DbTable.ANIMAL_AD}.owner_id`,
-			publicId: `${DbTable.ANIMAL_AD}.public_id`,
-			cost: `${DbTable.ANIMAL_AD}.cost`,
-			sex: `${DbTable.ANIMAL_AD}.sex`,
-			name: `${DbTable.ANIMAL_AD}.name`,
-			description: `${DbTable.ANIMAL_AD}.description`,
-			address: `${DbTable.ANIMAL_AD}.address`,
-			documents: `${DbTable.ANIMAL_AD}.documents`,
-			viewsCount: `${DbTable.ANIMAL_AD}.views_count`,
-			createdAt: `${DbTable.ANIMAL_AD}.created_at`,
-			updatedAt: `${DbTable.ANIMAL_AD}.updated_at`,
-			animalBreedCode: `${DbTable.ANIMAL_BREED}.code`,
-			animalBreedDisplayName: `${DbTable.ANIMAL_BREED}.display_name`
-		})
-		.join(
-			DbTable.ANIMAL_BREED,
-			`${DbTable.ANIMAL_BREED}.id`,
-			`${DbTable.ANIMAL_AD}.animal_breed_id`
-		)
-		.where({
-			public_id: publicId
-		});
+    const query = knex(DbTable.ANIMAL_AD)
+        .select({
+            ownerId: `${DbTable.ANIMAL_AD}.owner_id`,
+            publicId: `${DbTable.ANIMAL_AD}.public_id`,
+            cost: `${DbTable.ANIMAL_AD}.cost`,
+            sex: `${DbTable.ANIMAL_AD}.sex`,
+            name: `${DbTable.ANIMAL_AD}.name`,
+            description: `${DbTable.ANIMAL_AD}.description`,
+            address: `${DbTable.ANIMAL_AD}.address`,
+            documents: `${DbTable.ANIMAL_AD}.documents`,
+            viewsCount: `${DbTable.ANIMAL_AD}.views_count`,
+            createdAt: `${DbTable.ANIMAL_AD}.created_at`,
+            updatedAt: `${DbTable.ANIMAL_AD}.updated_at`,
+            animalBreedCode: `${DbTable.ANIMAL_BREED}.code`,
+            animalBreedDisplayName: `${DbTable.ANIMAL_BREED}.display_name`
+        })
+        .join(DbTable.ANIMAL_BREED, `${DbTable.ANIMAL_BREED}.id`, `${DbTable.ANIMAL_AD}.animal_breed_id`)
+        .where({
+            public_id: publicId
+        });
 
-	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
-	return row;
+    const {
+        rows: [row]
+    } = await dbManager.executeModifyQuery(query.toString());
+    return row;
 }

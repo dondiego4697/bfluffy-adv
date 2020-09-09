@@ -14,36 +14,29 @@ interface ShowSuccessParams {
 const b = bevis('bfluffy-modal-message');
 
 const UI = (message: string) => (
-	<div className={b()}>
-		<div className={b('message')}>
-			{message}
-		</div>
-		<Button
-    		type='primary'
-			text='ОК'
-			className={b('ok-button')}
-			onClickHandler={() => uiGlobal.destroyModal()}
-		/>
-	</div>
+    <div className={b()}>
+        <div className={b('message')}>{message}</div>
+        <Button type="primary" text="ОК" className={b('ok-button')} onClickHandler={() => uiGlobal.destroyModal()} />
+    </div>
 );
 
 function showError(message: string) {
-	uiGlobal.showModal({
-		title: 'Ошибка',
-		children: UI(message)
-	});
+    uiGlobal.showModal({
+        title: 'Ошибка',
+        children: UI(message)
+    });
 }
 
 function showSuccess(params: ShowSuccessParams) {
-	const {title, message} = params;
+    const {title, message} = params;
 
-	uiGlobal.showModal({
-		title,
-		children: UI(message)
-	});
+    uiGlobal.showModal({
+        title,
+        children: UI(message)
+    });
 }
 
 export const ModalMessage = {
-	showError,
-	showSuccess
+    showError,
+    showSuccess
 };

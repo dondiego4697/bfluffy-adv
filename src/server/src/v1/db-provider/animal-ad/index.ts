@@ -3,7 +3,7 @@ import {getAnimalAdByPublicId} from 'server/v1/db-provider/animal-ad/api/get-ani
 import {updateAnimalAd} from 'server/v1/db-provider/animal-ad/api/update-animal-ad';
 
 export const AnimalAdDbProvider = {
-	createAnimalAd,
-	getAnimalAdByPublicId,
-	updateAnimalAd
+    createAnimalAd,
+    getAnimalAdByPublicId,
+    updateAnimalAd
 };

@@ -17,21 +17,20 @@ const bColor = bevis('bfluffy-label-color');
 const bSize = bevis('bfluffy-label-size');
 
 export class Label extends React.Component<Props> {
-	public render(): React.ReactNode {
-		const {
-			text, color, size, className
-		} = this.props;
+    public render(): React.ReactNode {
+        const {text, color, size, className} = this.props;
 
-		return (
-			<div className={classnames({
-				[b('container')]: true,
-				[bSize(size || 'regular')]: true,
-				[bColor(color || 'black')]: true,
-				...(className ? {[className]: true} : {})
-			})}
-			>
-				{text}
-			</div>
-		);
-	}
+        return (
+            <div
+                className={classnames({
+                    [b('container')]: true,
+                    [bSize(size || 'regular')]: true,
+                    [bColor(color || 'black')]: true,
+                    ...(className ? {[className]: true} : {})
+                })}
+            >
+                {text}
+            </div>
+        );
+    }
 }

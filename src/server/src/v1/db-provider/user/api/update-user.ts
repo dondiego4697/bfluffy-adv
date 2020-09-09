@@ -4,7 +4,7 @@ import {DbTable} from 'server/types/consts';
 import {DBTableUsers} from 'server/types/db/users';
 
 interface User {
-	id: DBTableUsers.Schema['id'];
+    id: DBTableUsers.Schema['id'];
     email: DBTableUsers.Schema['email'];
     name: DBTableUsers.Schema['name'];
     contacts: DBTableUsers.Schema['contacts'];
@@ -15,68 +15,70 @@ interface User {
 }
 
 interface UpdateVerifiedCodeByEmailParams {
-	email: string;
-	verifiedCode: string;
+    email: string;
+    verifiedCode: string;
 }
 
 interface UpdateUserInfoParams {
-	name: string;
-	contacts: DBTableUsers.FieldContacts;
+    name: string;
+    contacts: DBTableUsers.FieldContacts;
 }
 
 const knex = Knex({client: 'pg'});
 
 export async function verifiedUser(email: string): Promise<void> {
-	const query = knex(DbTable.USERS)
-		.update({verified: true})
-		.where({email});
+    const query = knex(DbTable.USERS).update({verified: true}).where({email});
 
-	await dbManager.executeModifyQuery(query.toString());
+    await dbManager.executeModifyQuery(query.toString());
 }
 
 export async function updateVerifiedCodeByEmail(params: UpdateVerifiedCodeByEmailParams): Promise<User> {
-	const {email, verifiedCode} = params;
+    const {email, verifiedCode} = params;
 
-	const query = knex(DbTable.USERS)
-		.update({
-			verified_code: verifiedCode
-		})
-		.where({email})
-		.returning([
-			'id',
-			'email',
-			'name',
-			'contacts',
-			'verified_code as verifiedCode',
-			'created_at as createdAt',
-			'updated_at as updatedAt',
-			'verified'
-		]);
+    const query = knex(DbTable.USERS)
+        .update({
+            verified_code: verifiedCode
+        })
+        .where({email})
+        .returning([
+            'id',
+            'email',
+            'name',
+            'contacts',
+            'verified_code as verifiedCode',
+            'created_at as createdAt',
+            'updated_at as updatedAt',
+            'verified'
+        ]);
 
-	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
-	return row;
+    const {
+        rows: [row]
+    } = await dbManager.executeModifyQuery(query.toString());
+    return row;
 }
 
 export async function updateUserInfo(id: number, params: UpdateUserInfoParams): Promise<User> {
-	const {name, contacts} = params;
+    const {name, contacts} = params;
 
-	const query = knex(DbTable.USERS)
-		.update({
-			name,
-			contacts: JSON.stringify(contacts)
-		})
-		.where({id})
-		.returning([
-			'id',
-			'email',
-			'name',
-			'contacts',
-			'verified_code as verifiedCode',
-			'created_at as createdAt',
-			'updated_at as updatedAt',
-			'verified'
-		]);
+    const query = knex(DbTable.USERS)
+        .update({
+            name,
+            contacts: JSON.stringify(contacts)
+        })
+        .where({id})
+        .returning([
+            'id',
+            'email',
+            'name',
+            'contacts',
+            'verified_code as verifiedCode',
+            'created_at as createdAt',
+            'updated_at as updatedAt',
+            'verified'
+        ]);
 
-	const {rows: [row]} = await dbManager.executeModifyQuery(query.toString());
-	return row;
+    const {
+        rows: [row]
+    } = await dbManager.executeModifyQuery(query.toString());
+    return row;
 }

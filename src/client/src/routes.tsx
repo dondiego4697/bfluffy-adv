@@ -16,25 +16,21 @@ interface Props {
 }
 
 export class RoutesApp extends React.Component<Props> {
-	private renderRouter(): React.ReactNode {
-		return (
-  			<Switch>
-				<Route exact path={RoutePaths.MAIN} component={MainPage} />
-				<Route exact path={RoutePaths.USER_CABINET} component={UserCabinetPage} />
-				<Route exact path={RoutePaths.AD_EDIT} component={AdEditPage} />
-				<Route exact path={RoutePaths.LOGIN} component={LoginPage} />
-				<Route exact path={RoutePaths.LOGIN_VERIFIED} component={VerifiedPage} />
-				<Route exact path={RoutePaths.LOGIN_VERIFIED} component={VerifiedPage} />
-				<Route component={NotFoundPage} />
-			</Switch>
-		);
-	}
+    private renderRouter(): React.ReactNode {
+        return (
+            <Switch>
+                <Route exact path={RoutePaths.MAIN} component={MainPage} />
+                <Route exact path={RoutePaths.USER_CABINET} component={UserCabinetPage} />
+                <Route exact path={RoutePaths.AD_EDIT} component={AdEditPage} />
+                <Route exact path={RoutePaths.LOGIN} component={LoginPage} />
+                <Route exact path={RoutePaths.LOGIN_VERIFIED} component={VerifiedPage} />
+                <Route exact path={RoutePaths.LOGIN_VERIFIED} component={VerifiedPage} />
+                <Route component={NotFoundPage} />
+            </Switch>
+        );
+    }
 
-	public render(): React.ReactNode {
-		return (
-  			<App>
-				{this.renderRouter()}
-			</App>
-		);
-	}
+    public render(): React.ReactNode {
+        return <App>{this.renderRouter()}</App>;
+    }
 }

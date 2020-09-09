@@ -1,5 +1,4 @@
 export namespace DBTableUsers {
-
     export interface FieldContacts {
         phone?: string;
         email?: string;
