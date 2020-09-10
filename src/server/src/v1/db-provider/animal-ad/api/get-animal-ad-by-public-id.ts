@@ -5,6 +5,7 @@ import {DBTableAnimalAd} from 'server/types/db/animal-ad';
 import {DBTableAnimalBreed} from 'server/types/db/animal-breed';
 
 interface AnimalAd {
+    id: DBTableAnimalAd.Schema['id'];
     ownerId: DBTableAnimalAd.Schema['owner_id'];
     publicId: DBTableAnimalAd.Schema['public_id'];
     cost: DBTableAnimalAd.Schema['cost'];
@@ -25,6 +26,7 @@ const knex = Knex({client: 'pg'});
 export async function getAnimalAdByPublicId(publicId: string): Promise<AnimalAd | undefined> {
     const query = knex(DbTable.ANIMAL_AD)
         .select({
+            id: `${DbTable.ANIMAL_AD}.id`,
             ownerId: `${DbTable.ANIMAL_AD}.owner_id`,
             publicId: `${DbTable.ANIMAL_AD}.public_id`,
             cost: `${DbTable.ANIMAL_AD}.cost`,

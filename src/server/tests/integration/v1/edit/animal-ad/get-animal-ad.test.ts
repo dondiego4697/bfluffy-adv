@@ -1,7 +1,6 @@
 import got from 'got';
 import * as http from 'http';
 import * as nock from 'nock';
-import {omit} from 'lodash';
 import {app} from 'server/app';
 import {TestDb} from 'tests/test-db';
 import {startServer, stopServer} from 'tests/test-server';
@@ -25,7 +24,7 @@ const client = got.extend({
     }
 });
 
-const REQUEST_PATH = '/api/v1/edit/animal_ad/create';
+const REQUEST_PATH = '/api/v1/edit/animal_ad/info';
 
 describe(REQUEST_PATH, () => {
     let server: http.Server;
@@ -47,47 +46,35 @@ describe(REQUEST_PATH, () => {
         await TestFactory.createUser(BASE_USER);
     });
 
-    it('should create animal ad', async () => {
+    it('should get animal ad info', async () => {
         const animalCategory = await TestFactory.createAnimaCategory();
         const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
+        const animalAd = await TestFactory.createAnimalAd({
+            ownerId: 1,
+            breedId: animalBreed.id
+        });
 
-        const imageUrls = ['url1', 'url2', 'url3'];
-        const {body, statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
-            json: {
-                name: 'animal ad name',
-                cost: 0.0,
-                sex: true,
-                address: 'address',
-                animalBreedCode: animalBreed.code,
-                documents: {
-                    genericMark: true
-                },
-                imageUrls
+        const urls = ['url1', 'url2', 'url3'];
+        await TestFactory.createAnimalAdImages({
+            animalAdId: animalAd.id,
+            urls
+        });
+
+        const {body, statusCode} = await client.get<any>(`${url}${REQUEST_PATH}`, {
+            searchParams: {
+                publicId: animalAd.publicId
             }
         });
 
         expect(statusCode).toEqual(200);
-
-        const animalAds = await TestFactory.getAllAnimalAds();
-        const animalAd = animalAds.find((item) => item.publicId === body.publicId);
-
-        expect(omit(animalAd, ['createdAt', 'updatedAt'])).toEqual({
-            animalBreedId: animalBreed.id,
-            cost: '0.00',
-            description: null,
-            name: 'animal ad name',
-            address: 'address',
-            id: 1,
-            isArchive: false,
-            isBasicVaccinations: false,
-            ownerId: 1,
-            publicId: body.publicId,
-            sex: true,
-            viewsCount: 0,
-            documents: {
-                genericMark: true
-            },
-            imageUrls
+        expect(body).toEqual({
+            cost: animalAd.cost,
+            sex: animalAd.sex,
+            name: animalAd.name,
+            description: animalAd.description,
+            address: animalAd.address,
+            documents: animalAd.documents,
+            imageUrls: urls
         });
     });
 });

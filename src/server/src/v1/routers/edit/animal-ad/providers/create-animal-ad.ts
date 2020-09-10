@@ -15,10 +15,21 @@ export interface Body {
     sex: boolean;
     animalBreedCode: string;
     address?: string;
+    imageUrls: string[];
 }
 
 export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
-    const {documents, address, isBasicVaccinations, name, description, cost, sex, animalBreedCode} = req.body as Body;
+    const {
+        documents,
+        address,
+        isBasicVaccinations,
+        name,
+        description,
+        cost,
+        sex,
+        animalBreedCode,
+        imageUrls
+    } = req.body as Body;
 
     const animalBreed = await AnimalDbProvider.getAnimalBreedByCode(animalBreedCode);
 
@@ -27,7 +38,7 @@ export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
         throw Boom.badRequest();
     }
 
-    const publicId = await AnimalAdDbProvider.createAnimalAd({
+    const {id, publicId} = await AnimalAdDbProvider.createAnimalAd({
         name,
         address,
         description,
@@ -38,6 +49,14 @@ export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
         animalBreedId: animalBreed.id,
         ownerId: req.userData.id
     });
+
+    if (imageUrls.length > 0) {
+        await AnimalAdDbProvider.updateAnimalAdImages({
+            animalAdId: id,
+            forInsertUrls: imageUrls,
+            forDeleteUrls: []
+        });
+    }
 
     res.json({publicId});
 });

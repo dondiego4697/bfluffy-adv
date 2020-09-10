@@ -12,7 +12,8 @@ export enum DbTable {
     ANIMAL_BREED = 'animal_breed',
     CITY = 'city',
     REGION = 'region',
-    ANIMAL_AD = 'animal_ad'
+    ANIMAL_AD = 'animal_ad',
+    ANIMAL_AD_GALLARY = 'animal_ad_gallery'
 }
 
 export enum ClientStatusCode {

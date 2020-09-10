@@ -25,3 +25,10 @@ export namespace DBTableAnimalAd {
         updated_at: Date;
     }
 }
+
+export namespace DBTableAnimalAdGallary {
+    export interface Schema {
+        animal_ad_id: number;
+        url: string;
+    }
+}

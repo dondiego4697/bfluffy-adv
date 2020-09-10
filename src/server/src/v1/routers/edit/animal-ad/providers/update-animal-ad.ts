@@ -1,4 +1,5 @@
 import * as Boom from '@hapi/boom';
+import {difference} from 'lodash';
 import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import {AnimalDbProvider} from 'server/v1/db-provider/animal';
@@ -13,7 +14,17 @@ interface Query {
 
 export const updateAnimalAd = wrap<Request, Response>(async (req, res) => {
     const {publicId} = (req.query as unknown) as Query;
-    const {documents, address, isBasicVaccinations, name, description, cost, sex, animalBreedCode} = req.body as Body;
+    const {
+        documents,
+        address,
+        isBasicVaccinations,
+        name,
+        description,
+        cost,
+        sex,
+        animalBreedCode,
+        imageUrls
+    } = req.body as Body;
 
     const [animalBreed, animalAd] = await Promise.all([
         AnimalDbProvider.getAnimalBreedByCode(animalBreedCode),
@@ -43,6 +54,16 @@ export const updateAnimalAd = wrap<Request, Response>(async (req, res) => {
         cost,
         sex,
         animalBreedId: animalBreed.id
+    });
+
+    const currentImageUrls = await AnimalAdDbProvider.getAnimalAdImages(animalAd.id);
+    const forInsertUrls = difference(imageUrls, currentImageUrls);
+    const forDeleteUrls = difference(currentImageUrls, imageUrls);
+
+    await AnimalAdDbProvider.updateAnimalAdImages({
+        animalAdId: animalAd.id,
+        forDeleteUrls,
+        forInsertUrls
     });
 
     res.json({publicId});

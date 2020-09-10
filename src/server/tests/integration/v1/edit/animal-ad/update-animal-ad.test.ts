@@ -62,6 +62,7 @@ describe(REQUEST_PATH, () => {
                 name: 'updated',
                 description: 'updated',
                 cost: 0.0,
+                address: 'updated',
                 sex: !animalAd.sex,
                 animalBreedCode: anotherAnimalBreed.code,
                 documents: {
@@ -85,6 +86,7 @@ describe(REQUEST_PATH, () => {
             createdAt: animalAd.createdAt,
             name: 'updated',
             description: 'updated',
+            address: 'updated',
             documents: {
                 genericMark: true
             },
@@ -94,8 +96,51 @@ describe(REQUEST_PATH, () => {
             ownerId: 1,
             publicId: animalAd.publicId,
             sex: !animalAd.sex,
-            viewsCount: 0
+            viewsCount: 0,
+            imageUrls: []
         });
+    });
+
+    it('should update image urls', async () => {
+        const animalCategory = await TestFactory.createAnimaCategory();
+        const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
+        const animalAd = await TestFactory.createAnimalAd({
+            ownerId: 1,
+            breedId: animalBreed.id
+        });
+
+        const urls = ['url1', 'url2', 'url3', 'url4'];
+        await TestFactory.createAnimalAdImages({
+            animalAdId: animalAd.id,
+            urls
+        });
+
+        const animalAdsBefore = await TestFactory.getAllAnimalAds();
+        const animalAdBefore = animalAdsBefore.find((item) => item.publicId === animalAd.publicId);
+        expect(animalAdBefore?.imageUrls).toEqual(urls);
+
+        const updatedUrls = ['url1', 'url3', 'url5'];
+        const {body, statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
+            json: {
+                name: 'updated',
+                description: 'updated',
+                cost: 0.0,
+                address: 'updated',
+                sex: !animalAd.sex,
+                animalBreedCode: animalBreed.code,
+                imageUrls: updatedUrls
+            },
+            searchParams: {
+                publicId: animalAd.publicId
+            }
+        });
+
+        expect(statusCode).toEqual(200);
+        expect(body).toEqual({publicId: animalAd.publicId});
+
+        const animalAdsAfter = await TestFactory.getAllAnimalAds();
+        const animalAdAfter = animalAdsAfter.find((item) => item.publicId === animalAd.publicId);
+        expect(animalAdAfter?.imageUrls).toEqual(updatedUrls);
     });
 
     it('should throw error if owner id not equal with request user id', async () => {

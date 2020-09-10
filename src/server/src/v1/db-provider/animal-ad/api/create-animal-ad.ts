@@ -15,11 +15,14 @@ interface Params {
     documents: DBTableAnimalAd.FieldDocuments;
 }
 
-type PublicId = string;
+interface Response {
+    id: number;
+    publicId: string;
+}
 
 const knex = Knex({client: 'pg'});
 
-export async function createAnimalAd(params: Params): Promise<PublicId> {
+export async function createAnimalAd(params: Params): Promise<Response> {
     const {name, description, address, documents, isBasicVaccinations, sex, cost, animalBreedId, ownerId} = params;
 
     const query = knex(DbTable.ANIMAL_AD)
@@ -34,10 +37,10 @@ export async function createAnimalAd(params: Params): Promise<PublicId> {
             documents: JSON.stringify(documents),
             address
         })
-        .returning('public_id as publicId');
+        .returning(['id', 'public_id as publicId']);
 
     const {
         rows: [row]
     } = await dbManager.executeModifyQuery(query.toString());
-    return row.publicId;
+    return row;
 }
