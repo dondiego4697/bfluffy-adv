@@ -15,9 +15,8 @@ html, body, #root {
     font-family: MontserratMedium;
 
     &__container {
-        width: 100vw;
-        height: 100vh;
         overflow: auto;
         padding: 24px 8%;
+        height: 100vh;
     }
 }

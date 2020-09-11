@@ -22,30 +22,47 @@ const b = bevis('root');
 @inject('clientDataModel', 'uiGlobal')
 @observer
 class App extends React.Component<Props> {
+    private renderSVGdef() {
+        return (
+            <svg width="0" height="0">
+                <defs>
+                    <linearGradient x1="100%" y1="0" x2="0" y2="100%" id="spinnerGradient">
+                        <stop stopColor="#477DFF" offset="30%" />
+                        <stop stopColor="#1294FF" offset="80%" />
+                    </linearGradient>
+                </defs>
+            </svg>
+        );
+    }
+
+    private renderGlobalSpinner() {
+        const {uiGlobal} = this.props;
+        return <GlobalSpinner spinning={uiGlobal?.spinning} />;
+    }
+
+    private renderGlobalModal() {
+        const {uiGlobal} = this.props;
+        return (
+            <Modal
+                visible={uiGlobal?.modal.visible}
+                title={uiGlobal?.modal.title}
+                onCloseHandler={() => uiGlobal?.destroyModal()}
+            >
+                {uiGlobal?.modal.children}
+            </Modal>
+        );
+    }
+
     public render(): React.ReactNode {
-        const {children, uiGlobal} = this.props;
         return (
             <div className={b()}>
-                <svg width="0" height="0">
-                    <defs>
-                        <linearGradient x1="100%" y1="0" x2="0" y2="100%" id="spinnerGradient">
-                            <stop stopColor="#477DFF" offset="30%" />
-                            <stop stopColor="#1294FF" offset="80%" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <GlobalSpinner spinning={uiGlobal?.spinning} />
-                <Modal
-                    visible={uiGlobal?.modal.visible}
-                    title={uiGlobal?.modal.title}
-                    onCloseHandler={() => uiGlobal?.destroyModal()}
-                >
-                    {uiGlobal?.modal.children}
-                </Modal>
+                {this.renderSVGdef()}
+                {this.renderGlobalSpinner()}
+                {this.renderGlobalModal()}
 
                 <div className={b('container')}>
                     <Navbar />
-                    {children}
+                    {this.props.children}
                 </div>
             </div>
         );

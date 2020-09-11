@@ -1,23 +1,27 @@
 .logo {
-    display: flex;
-    flex-direction: row;
-    user-select: none;
+    text-decoration: none;
 
-    & h2 {
-        margin: 5px 0 0 8px;
-        font-family: MontserratBold;
-        font-size: 22px;
-        height: 30px;
-        color: black;
-    }
+    &__container {
+        display: flex;
+        flex-direction: row;
+        user-select: none;
 
-    & img.logo {
-        width: 35px;
-        height: 35px;
-    }
+        & h2 {
+            margin: 5px 0 0 8px;
+            font-family: MontserratBold;
+            font-size: 22px;
+            height: 30px;
+            color: black;
+        }
 
-    & img.beta {
-        width: 24px;
-        height: 24px;
+        & img.logo {
+            width: 35px;
+            height: 35px;
+        }
+
+        & img.beta {
+            width: 24px;
+            height: 24px;
+        }
     }
 }

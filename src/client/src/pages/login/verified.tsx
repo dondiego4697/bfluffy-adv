@@ -2,8 +2,7 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 import {observer, inject} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
-import {Store} from 'rc-field-form/lib/interface';
-import {Form, Input} from 'antd';
+import {Formik, FormikErrors, Form, Field, FieldProps} from 'formik';
 
 import bevis from 'client/lib/bevis';
 import {ClientDataModel} from 'client/models/client-data';
@@ -11,11 +10,11 @@ import {Paper} from 'client/components/base/paper';
 import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
 import {ModalMessage} from 'client/components/base/modal-message';
 import {Button} from 'client/components/base/button';
-import {EDIT_TEXT_ROOT_CLASS_NAME, EDIT_TEXT_FORM_ITEM_CLASS_NAME} from 'client/components/base/edit-text';
-import {FORM_VALIDATE_MESSAGES, FORM_ITEM_REQUIRED} from 'client/consts';
+import {EditText} from 'client/components/base/edit-text';
 import {RoutePaths} from 'client/lib/routes';
 import {Label} from 'client/components/base/label';
 import {UIGlobal} from 'client/models/ui-global';
+import {FieldErrors} from 'client/consts';
 
 import './verified.scss';
 
@@ -24,22 +23,35 @@ interface Props extends RouteComponentProps {
     uiGlobal?: UIGlobal;
 }
 
+interface Values {
+    code: string;
+}
+
 const b = bevis('verified-page');
 
 @inject('clientDataModel', 'uiGlobal')
 @observer
 export class VerifiedPage extends React.Component<Props> {
+    private onValidateHandler = (values: Values) => {
+        const errors: FormikErrors<Values> = {};
+        if (!values.code) {
+            errors.code = FieldErrors.REQUIRED;
+        }
+        return errors;
+    };
+
     private getEmail() {
         const params = new URLSearchParams(this.props.location.search || '');
         return params.get('email');
     }
 
-    private onFinishHandler = (values: Store) => {
+    private onSubmitHandler = (values: Values) => {
         const {uiGlobal} = this.props;
         const {code} = values;
         const email = this.getEmail();
 
         if (!email) {
+            this.props.history.replace(RoutePaths.LOGIN);
             return Promise.resolve();
         }
 
@@ -55,11 +67,12 @@ export class VerifiedPage extends React.Component<Props> {
     public render(): React.ReactNode {
         const email = this.getEmail();
 
-        // TODO если залогинен перенаправлять на главную страницу
-        // TODO нельзя просто так зайти на страницу эту (а то начнут заходить и подтверждать старым кодом)
+        if (this.props.clientDataModel?.user) {
+            this.props.history.replace(RoutePaths.MAIN);
+        }
 
         if (!email) {
-            // TODO обработать кейс
+            this.props.history.replace(RoutePaths.LOGIN);
         }
 
         return (
@@ -69,25 +82,34 @@ export class VerifiedPage extends React.Component<Props> {
                         <img className="image" src="/image/animal-category/dog.svg" />
                         <Label size="header" text="Код из письма" className={b('preimage-label')} />
                     </div>
-                    <Form
-                        className={b('form')}
-                        layout="vertical"
-                        onFinish={this.onFinishHandler}
-                        validateMessages={FORM_VALIDATE_MESSAGES}
-                    >
-                        <div className={b('info')}>
-                            На почту <p className="bold">{email}</p> отправлено письмо отправлено письмо
-                        </div>
-                        <Form.Item name="code" className={EDIT_TEXT_FORM_ITEM_CLASS_NAME} rules={[FORM_ITEM_REQUIRED]}>
-                            <Input
-                                className={classnames(EDIT_TEXT_ROOT_CLASS_NAME, b('input-code'))}
-                                placeholder="Код из письма"
-                            />
-                        </Form.Item>
-                        <Form.Item className={b('submit-button')}>
-                            <Button type="primary" text="Подтвердить" htmlType="submit" />
-                        </Form.Item>
-                    </Form>
+                    <Formik
+                        initialValues={{code: ''}}
+                        onSubmit={this.onSubmitHandler}
+                        validate={this.onValidateHandler}
+                        render={() => (
+                            <Form className={b('form')}>
+                                <div className={b('info')}>
+                                    На почту <p className="bold">{email}</p> отправлено письмо
+                                </div>
+                                <Field
+                                    name="code"
+                                    render={({meta, field}: FieldProps) => (
+                                        <EditText
+                                            className={classnames('', b('input-code'))}
+                                            placeholder="Код из письма"
+                                            value={field.value}
+                                            name={field.name}
+                                            error={(meta.touched && meta.error && meta.error) || ''}
+                                            onChange={field.onChange}
+                                        />
+                                    )}
+                                />
+                                <div className={b('submit-button')}>
+                                    <Button type="primary" text="Подтвердить" htmlType="submit" />
+                                </div>
+                            </Form>
+                        )}
+                    />
                     <Button
                         type="link"
                         className={b('another-email')}

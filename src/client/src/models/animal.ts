@@ -1,4 +1,4 @@
-import {observable, action} from 'mobx';
+import {observable, action, computed} from 'mobx';
 import {groupBy} from 'lodash';
 
 import {AnimalRequestBookV1, AnimalBreed} from 'client/lib/request-book/v1/animal';
@@ -22,6 +22,10 @@ export class AnimalModel {
 
     constructor() {
         this.init();
+    }
+
+    @computed public get isReady() {
+        return Object.values(this.breedHash).length > 0;
     }
 
     @action public init() {

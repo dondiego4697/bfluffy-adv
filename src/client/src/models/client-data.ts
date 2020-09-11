@@ -1,7 +1,6 @@
 import {observable, action} from 'mobx';
 import * as browserCookie from 'browser-cookies';
 
-import {DataState} from 'client/consts';
 import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
 
 interface ClientConfig {}
@@ -21,7 +20,7 @@ export class ClientDataModel {
 
     @observable public user: User | null = null;
 
-    @observable public state: DataState = DataState.LOADING;
+    @observable public isReady: boolean = false;
 
     constructor() {
         const node = window.document.getElementsByClassName('config-view')[0];
@@ -30,7 +29,7 @@ export class ClientDataModel {
         }
 
         this.initClientDataModel().finally(() => {
-            this.state = DataState.READY;
+            this.isReady = true;
         });
     }
 

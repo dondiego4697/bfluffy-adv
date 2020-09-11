@@ -42,15 +42,6 @@
             text-align: center;
             color: #BFBFBF;
         }
-
-        & .ant-menu-item-selected {
-            background-color: unset !important;
-            color: black;
-        }
-
-        & .ant-menu-item-active {
-            color: black;
-        }
     }
 
     &__not-authorized {

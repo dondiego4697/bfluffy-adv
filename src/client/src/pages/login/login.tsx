@@ -1,21 +1,21 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
+import {pickBy, identity} from 'lodash';
 import {observer, inject} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
-import {Store} from 'rc-field-form/lib/interface';
-import {Form, Input} from 'antd';
+import {Formik, FormikErrors, Form, Field, FieldProps} from 'formik';
 
 import bevis from 'client/lib/bevis';
 import {ClientDataModel} from 'client/models/client-data';
 import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
 import {ModalMessage} from 'client/components/base/modal-message';
 import {Button} from 'client/components/base/button';
+import {EditText} from 'client/components/base/edit-text';
 import {Paper} from 'client/components/base/paper';
-import {EDIT_TEXT_ROOT_CLASS_NAME, EDIT_TEXT_FORM_ITEM_CLASS_NAME} from 'client/components/base/edit-text';
-import {FORM_VALIDATE_MESSAGES, FORM_EMAIL_REQUIRED} from 'client/consts';
 import {Label} from 'client/components/base/label';
 import {UIGlobal} from 'client/models/ui-global';
 import {RoutePaths} from 'client/lib/routes';
+import {validateEmail} from 'client/consts';
 
 import './login.scss';
 
@@ -24,12 +24,22 @@ interface Props extends RouteComponentProps {
     uiGlobal?: UIGlobal;
 }
 
+interface Values {
+    email: string;
+}
+
 const b = bevis('login-page');
 
 @inject('clientDataModel', 'uiGlobal')
 @observer
 export class LoginPage extends React.Component<Props> {
-    private onFinishHandler = (values: Store) => {
+    private onValidateHandler = (values: Values) => {
+        const errors: FormikErrors<Values> = {};
+        errors.email = validateEmail(values.email);
+        return pickBy(errors, identity);
+    };
+
+    private onSubmitHandler = (values: Values) => {
         const {uiGlobal} = this.props;
         const {email} = values;
 
@@ -44,7 +54,9 @@ export class LoginPage extends React.Component<Props> {
     };
 
     public render(): React.ReactNode {
-        // TODO если залогинен перенаправлять на главную страницу
+        if (this.props.clientDataModel?.user) {
+            this.props.history.replace(RoutePaths.MAIN);
+        }
 
         return (
             <div className={b()}>
@@ -53,26 +65,31 @@ export class LoginPage extends React.Component<Props> {
                         <img className="image" src="/image/animal-category/cat.svg" />
                         <Label size="header" text="Вход на сайт" className={b('preimage-label')} />
                     </div>
-                    <Form
-                        className={b('form')}
-                        layout="vertical"
-                        onFinish={this.onFinishHandler}
-                        validateMessages={FORM_VALIDATE_MESSAGES}
-                    >
-                        <Form.Item
-                            className={EDIT_TEXT_FORM_ITEM_CLASS_NAME}
-                            name="email"
-                            rules={[FORM_EMAIL_REQUIRED]}
-                        >
-                            <Input
-                                className={classnames(EDIT_TEXT_ROOT_CLASS_NAME, b('input-email'))}
-                                placeholder="Адрес электронной почты"
-                            />
-                        </Form.Item>
-                        <Form.Item className={b('submit-button')}>
-                            <Button type="primary" text="Войти" htmlType="submit" />
-                        </Form.Item>
-                    </Form>
+                    <Formik
+                        initialValues={{email: ''}}
+                        onSubmit={this.onSubmitHandler}
+                        validate={this.onValidateHandler}
+                        render={() => (
+                            <Form className={b('form')}>
+                                <Field
+                                    name="email"
+                                    render={({meta, field}: FieldProps) => (
+                                        <EditText
+                                            className={classnames('', b('input-email'))}
+                                            placeholder="Адрес электронной почты"
+                                            value={field.value}
+                                            name={field.name}
+                                            error={(meta.touched && meta.error && meta.error) || ''}
+                                            onChange={field.onChange}
+                                        />
+                                    )}
+                                />
+                                <div className={b('submit-button')}>
+                                    <Button type="primary" text="Войти" htmlType="submit" />
+                                </div>
+                            </Form>
+                        )}
+                    />
                 </Paper>
             </div>
         );

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as classnames from 'classnames';
-import {Input} from 'antd';
 
 import bevis from 'client/lib/bevis';
 
@@ -9,25 +8,30 @@ import './index.scss';
 interface Props {
     placeholder?: string;
     className?: string;
+    value?: string;
+    label?: string;
+    name?: string;
+    error?: string;
+    onChange: (event: React.ChangeEvent<any>) => void;
 }
 
-export const EDIT_TEXT_ROOT_CLASS_NAME = 'bfluffy-edit-text';
-export const EDIT_TEXT_FORM_ITEM_CLASS_NAME = 'bfluffy-edit-text-form-item';
-
-const b = bevis(EDIT_TEXT_ROOT_CLASS_NAME);
+const b = bevis('bfluffy-edit-text');
 
 export class EditText extends React.Component<Props> {
     public render(): React.ReactNode {
-        const {className, placeholder} = this.props;
+        const {name, error, label, className, placeholder, value, onChange} = this.props;
 
         return (
-            <Input
+            <label
                 className={classnames({
                     [b()]: true,
                     ...(className ? {[className]: true} : {})
                 })}
-                placeholder={placeholder}
-            />
+            >
+                {label}
+                <input type="text" name={name} placeholder={placeholder} value={value} onChange={onChange} />
+                {error && <p className={b('error')}>{error}</p>}
+            </label>
         );
     }
 }

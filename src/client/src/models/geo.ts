@@ -1,4 +1,4 @@
-import {observable, action} from 'mobx';
+import {observable, action, computed} from 'mobx';
 import {uniqBy} from 'lodash';
 
 import {GeoRequestBookV1, City} from 'client/lib/request-book/v1/geo';
@@ -13,6 +13,10 @@ export class GeoModel {
     @observable public cityList: City[] = [];
 
     @observable public geoObjectList: GeoObject[] = [];
+
+    @computed public get isReady() {
+        return this.geoObjectList.length > 0;
+    }
 
     constructor() {
         this.init();

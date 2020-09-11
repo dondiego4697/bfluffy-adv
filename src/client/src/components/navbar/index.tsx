@@ -9,7 +9,6 @@ import {RoutePaths} from 'client/lib/routes';
 import {Logo} from 'client/components/logo';
 
 import './index.scss';
-import 'antd/dist/antd.css';
 
 interface Props {
     clientDataModel?: ClientDataModel;

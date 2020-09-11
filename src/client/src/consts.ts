@@ -1,30 +1,20 @@
-import {RuleObject} from 'rc-field-form/lib/interface';
-
-export interface Meta {
-    limit: number;
-    offset: number;
-    total: number;
-}
-
-export enum DataState {
-    LOADING = 'loading',
-    READY = 'ready'
-}
-
 export const NEW_ITEM = 'new';
 
-export const FORM_VALIDATE_MESSAGES = {
-    required: 'Обязательное поле',
-    types: {
-        email: 'Невалидный email'
+export enum FieldErrors {
+    REQUIRED = 'Обязательное поле',
+    WRONG_EMAIL = 'Некорректный email'
+}
+
+function isValidEmail(email: string) {
+    // eslint-disable-next-line max-len
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+export function validateEmail(email?: string): string | undefined {
+    if (!email) {
+        return FieldErrors.REQUIRED;
+    } else if (!isValidEmail(email)) {
+        return FieldErrors.WRONG_EMAIL;
     }
-};
-
-export const FORM_ITEM_REQUIRED: RuleObject = {
-    required: true
-};
-
-export const FORM_EMAIL_REQUIRED: RuleObject = {
-    required: true,
-    type: 'email'
-};
+}

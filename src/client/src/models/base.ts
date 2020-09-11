@@ -1,18 +1,11 @@
-import {observable} from 'mobx';
-
-import {DataState} from 'client/consts';
-import {clientDataModel} from 'client/models';
+import {uiGlobal} from 'client/models';
 
 export class BasePageModel {
-    @observable public state: DataState = DataState.LOADING;
-
     public setLoading() {
-        this.state = DataState.LOADING;
-        clientDataModel.state = DataState.LOADING;
+        uiGlobal.showSpinner();
     }
 
     public setReady() {
-        this.state = DataState.READY;
-        clientDataModel.state = DataState.READY;
+        uiGlobal.destroySpinner();
     }
 }
