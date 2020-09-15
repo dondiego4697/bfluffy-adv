@@ -2,6 +2,11 @@
 
 ## Migrate schema:
 
+```sql
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION pg_trgm;
+```
+
 ```sh
 make migrate-db
 make migrate-test-db

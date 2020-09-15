@@ -71,3 +71,7 @@ migrate-db: build-server
 migrate-test-db: build-server
 	@ENVIRONMENT=tests \
 		node $(OUT_DIR)/server/tools/create-tables.js
+
+.PHONY: fill-samples
+fill-samples: build-server
+	node $(OUT_DIR)/server/tools/fill-samples.js
