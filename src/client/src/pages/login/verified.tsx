@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as classnames from 'classnames';
 import {observer, inject} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
 import {Formik, FormikErrors, Form, Field, FieldProps} from 'formik';
@@ -95,7 +94,7 @@ export class VerifiedPage extends React.Component<Props> {
                                     name="code"
                                     render={({meta, field}: FieldProps) => (
                                         <EditText
-                                            className={classnames('', b('input-code'))}
+                                            className={b('input-code')}
                                             placeholder="Код из письма"
                                             value={field.value}
                                             name={field.name}

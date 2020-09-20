@@ -47,12 +47,4 @@ export class GeoModel {
             ];
         });
     }
-
-    public findGeoObjectsByName(subtext?: string) {
-        if (!subtext) {
-            return this.geoObjectList;
-        }
-
-        return this.geoObjectList.filter((item) => item.displayName.toLowerCase().includes(subtext.toLowerCase()));
-    }
 }

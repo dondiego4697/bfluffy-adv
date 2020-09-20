@@ -82,17 +82,17 @@ export class AnimalSearchPanel extends React.Component<Props, State> {
     };
 
     public render(): React.ReactNode {
-        const breeds = this.props.animalModel!.findBreedByName({
-            subtext: this.state.breedSubtext,
-            categoryCode: this.state.categoryCodeSelected
-        });
+        // const breeds = this.props.animalModel!.findBreedByName({
+        //     subtext: this.state.breedSubtext,
+        //     categoryCode: this.state.categoryCodeSelected
+        // });
 
-        const breedsOptions = breeds.map((item) => (
-            <div />
-            // <Option key={`search-animal-breed-${item.breedCode}`} value={item.breedCode}>
-            //     {item.breedDisplayName}
-            // </Option>
-        ));
+        // const breedsOptions = breeds.map((item) => (
+        //     <div />
+        //     // <Option key={`search-animal-breed-${item.breedCode}`} value={item.breedCode}>
+        //     //     {item.breedDisplayName}
+        //     // </Option>
+        // ));
 
         const categoriesOptions = this.props.animalModel!.categoryList.map((item) => (
             <div />
@@ -101,13 +101,13 @@ export class AnimalSearchPanel extends React.Component<Props, State> {
             // </Option>
         ));
 
-        const geoObjects = this.props.geoModel!.findGeoObjectsByName(this.state.geoSubtext);
-        const geoObjectsOptions = geoObjects.map((item) => (
-            <div />
-            // <Option key={`search-geo-object-${item.type}-${item.code}`} value={item.code}>
-            //     {item.displayName}
-            // </Option>
-        ));
+        // const geoObjects = this.props.geoModel!.findGeoObjectsByName(this.state.geoSubtext);
+        // const geoObjectsOptions = geoObjects.map((item) => (
+        //     <div />
+        //     // <Option key={`search-geo-object-${item.type}-${item.code}`} value={item.code}>
+        //     //     {item.displayName}
+        //     // </Option>
+        // ));
 
         return (
             <div className={b()}>

@@ -14,14 +14,36 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
 
-        & .display-name {
-            font-family: MontserratBold;
-            font-size: $font-size-m;
-            color: $primary-color;
-            margin-bottom: 4px;
-            margin-top: 16px;
+    &__display-name {
+        font-family: MontserratBold;
+        font-size: $font-size-m;
+        color: $primary-color;
+        margin-bottom: 4px;
+        margin-top: 16px;
+    }
+
+    &__menu {
+        margin-top: 48px;
+        padding: 0;
+
+        & li {
+            margin-bottom: 8px;
+            text-align: center;
+            list-style-type: none;
+            color: #BFBFBF;
+            cursor: pointer;
+            font-size: $font-size-s;
+
+            &:hover {
+                color: #818181;
+            }
         }
+    }
+
+    &__menu_selected {
+        color: black !important;
     }
 
     &__input-name, &__input-phone {
@@ -34,18 +56,12 @@
         }
     }
 
-    &__menu {
-        margin-top: 64px !important;
-        border-right: 0 !important;
-
-        & li {
-            text-align: center;
-            color: #BFBFBF;
-        }
-    }
-
     &__not-authorized {
         text-align: center;
+    }
+
+    &__input-name, &__input-phone {
+        margin-bottom: 8px;
     }
 
     &__my-ads-panel {

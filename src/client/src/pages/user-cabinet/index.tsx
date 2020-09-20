@@ -3,15 +3,17 @@ import * as React from 'react';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
 import {AsYouType} from 'libphonenumber-js';
+import {Formik, Form, Field, FieldProps} from 'formik';
 
+import bevis from 'client/lib/bevis';
 import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
 import {ClientDataModel} from 'client/models/client-data';
 import {Paper} from 'client/components/base/paper';
 import {Label} from 'client/components/base/label';
 import {AvatarUpload} from 'client/components/base/avatar-upload';
-import bevis from 'client/lib/bevis';
 import {UIGlobal} from 'client/models/ui-global';
 import {Button} from 'client/components/base/button';
+import {EditText} from 'client/components/base/edit-text';
 import {ModalMessage} from 'client/components/base/modal-message';
 import {Spinner} from 'client/components/base/spinner/spinner';
 
@@ -27,9 +29,19 @@ enum MenuItemSelected {
     SETTINGS = 'settings'
 }
 
+const menuItemSelectedText: Record<MenuItemSelected, string> = {
+    [MenuItemSelected.MY_ADS]: 'Мои объявления',
+    [MenuItemSelected.SETTINGS]: 'Настройки'
+};
+
 interface State {
     menuItemSelected: MenuItemSelected;
     phone: string | null;
+}
+
+interface Values {
+    name?: string;
+    phone?: string;
 }
 
 const b = bevis('user-cabinet');
@@ -42,15 +54,16 @@ export class UserCabinetPage extends React.Component<Props, State> {
         phone: null
     };
 
-    private onSaveSettingsHandler = (values: any) => {
+    private onSaveSettingsHandler = (values: Values) => {
         const {uiGlobal} = this.props;
+        const {name, phone} = values;
 
         uiGlobal?.showSpinner();
 
         return UserRequestBookV1.updateInfo({
-            name: values.name || null,
+            name,
             contacts: {
-                phone: values.phone || null
+                phone
             }
         })
             .then(() => this.props.clientDataModel?.initClientDataModel())
@@ -64,19 +77,18 @@ export class UserCabinetPage extends React.Component<Props, State> {
         return (
             <div className={b('control-panel')}>
                 <AvatarUpload url={clientDataModel?.user?.avatar} />
-                <h2 className="display-name">{clientDataModel?.user?.name}</h2>
-                {/* <Menu
-                    className={b('menu')}
-                    selectedKeys={[this.state.menuItemSelected]}
-                    onSelect={({key}) =>
-                        this.setState({
-                            menuItemSelected: key as MenuItemSelected
-                        })
-                    }
-                >
-                    <Menu.Item key={MenuItemSelected.MY_ADS}>Мои объявления</Menu.Item>
-                    <Menu.Item key={MenuItemSelected.SETTINGS}>Настройки</Menu.Item>
-                </Menu> */}
+                <h2 className={b('display-name')}>{clientDataModel?.user?.name}</h2>
+                <ul className={b('menu')}>
+                    {[MenuItemSelected.MY_ADS, MenuItemSelected.SETTINGS].map((key, i) => (
+                        <li
+                            key={`user-cabinet-menu-control-${i}`}
+                            className={key === this.state.menuItemSelected ? b('menu_selected') : ''}
+                            onClick={() => this.setState({menuItemSelected: key})}
+                        >
+                            {menuItemSelectedText[key]}
+                        </li>
+                    ))}
+                </ul>
             </div>
         );
     }
@@ -88,51 +100,57 @@ export class UserCabinetPage extends React.Component<Props, State> {
     private renderSettingsPanel(): React.ReactNode {
         return (
             <div className={b('settings-panel')}>
-                {/* <Form
-                    className={b('form')}
-                    layout="vertical"
-                    onFinish={this.onSaveSettingsHandler}
-                    validateMessages={FORM_VALIDATE_MESSAGES}
-                    fields={[
-                        {
-                            name: 'name',
-                            value: this.props.clientDataModel?.user?.name
-                        },
-                        {
-                            name: 'phone',
-                            value:
-                                this.state.phone === null
-                                    ? this.props.clientDataModel?.user?.contacts.phone
-                                    : this.state.phone
-                        }
-                    ]}
-                >
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name="name">
-                        <Input
-                            className={classnames('EDIT_TEXT_ROOT_CLASS_NAME', b('input-name'))}
-                            placeholder="Ваше имя"
-                            maxLength={100}
-                        />
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name="phone">
-                        <Input
-                            className={classnames('EDIT_TEXT_ROOT_CLASS_NAME', b('input-phone'))}
-                            placeholder="Ваш контактный телефон"
-                            onChange={(event) => {
-                                const {value} = event.target;
+                <Formik
+                    initialValues={{
+                        name: this.props.clientDataModel?.user?.name || '',
+                        phone: this.props.clientDataModel?.user?.contacts.phone || ''
+                    }}
+                    onSubmit={this.onSaveSettingsHandler}
+                    render={() => (
+                        <Form className={b('form')}>
+                            <Field
+                                name="name"
+                                render={({meta, field}: FieldProps) => (
+                                    <EditText
+                                        className={classnames('', b('input-name'))}
+                                        placeholder="Ваше имя"
+                                        maxLength={100}
+                                        value={field.value}
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="phone"
+                                render={({meta, field}: FieldProps) => (
+                                    <EditText
+                                        className={classnames('', b('input-phone'))}
+                                        placeholder="Ваш контактный телефон"
+                                        value={field.value}
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        onChange={(event) => {
+                                            let {value} = event.target;
+                                            if (value.startsWith('7')) {
+                                                value = `+${value}`;
+                                            }
 
-                                const phone = value.length < 7 ? value : new AsYouType('RU').input(value);
+                                            const phone = value.length < 7 ? value : new AsYouType('RU').input(value);
+                                            event.target.value = phone;
 
-                                this.setState({
-                                    phone
-                                });
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item className={b('submit-button')}>
-                        <Button type="primary" text="Изменить" htmlType="submit" />
-                    </Form.Item>
-                </Form> */}
+                                            field.onChange(event);
+                                        }}
+                                    />
+                                )}
+                            />
+                            <div className={b('submit-button')}>
+                                <Button type="primary" text="Изменить" htmlType="submit" />
+                            </div>
+                        </Form>
+                    )}
+                />
             </div>
         );
     }

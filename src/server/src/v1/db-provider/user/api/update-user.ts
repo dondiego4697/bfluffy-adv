@@ -62,7 +62,7 @@ export async function updateUserInfo(id: number, params: UpdateUserInfoParams): 
 
     const query = knex(DbTable.USERS)
         .update({
-            name,
+            name: name || null,
             contacts: JSON.stringify(contacts)
         })
         .where({id})

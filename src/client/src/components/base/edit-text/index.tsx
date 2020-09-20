@@ -12,6 +12,8 @@ interface Props {
     label?: string;
     name?: string;
     error?: string;
+    maxLength?: number;
+    type?: 'number' | 'text';
     onChange: (event: React.ChangeEvent<any>) => void;
 }
 
@@ -19,7 +21,7 @@ const b = bevis('bfluffy-edit-text');
 
 export class EditText extends React.Component<Props> {
     public render(): React.ReactNode {
-        const {name, error, label, className, placeholder, value, onChange} = this.props;
+        const {type, name, error, label, className, placeholder, value, maxLength, onChange} = this.props;
 
         return (
             <label
@@ -29,7 +31,17 @@ export class EditText extends React.Component<Props> {
                 })}
             >
                 {label}
-                <input type="text" name={name} placeholder={placeholder} value={value} onChange={onChange} />
+                <input
+                    className={classnames({
+                        [b('input-number')]: type === 'number'
+                    })}
+                    maxLength={maxLength}
+                    type={type || 'text'}
+                    name={name}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={onChange}
+                />
                 {error && <p className={b('error')}>{error}</p>}
             </label>
         );

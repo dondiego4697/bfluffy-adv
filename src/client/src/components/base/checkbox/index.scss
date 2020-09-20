@@ -1,0 +1,18 @@
+@import '../../../consts.scss';
+
+.bfluffy-checkbox {
+
+    &__container {
+        font-size: $font-size-s;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__checkbox-item {
+        cursor: pointer;
+        margin-top: 4px;
+        display: inline-flex;
+        max-width: fit-content;
+        align-items: center;
+    }
+}

@@ -1,8 +1,131 @@
 @import '../../../consts.scss';
 
 .bfluffy-select {
+    box-shadow: unset;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    font-size: $font-size-s;
+    font-family: MontserratBold;
 
-    &__container {
-        
+    &__error {
+        font-size: $font-size-xs;
+        color: $primary-color;
+        margin: 0;
+    }
+
+    &__input-container {
+        font-family: MontserratMedium;
+        border-radius: $border-radius;
+        outline: none;
+        border: none;
+        background-color: $surface-color;
+        padding: 10px 18px;
+
+        input {
+            z-index: 1;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+        }
+    }
+
+    &__input-text-container {
+        position: relative;
+        color: $gray-color;
+        font-family: MontserratMedium;
+        font-size: $font-size-s;
+        height: 16px;
+    }
+
+    &__placeholder-container {
+        & span.selected {
+            color: black;
+        }
+    }
+
+    &__chevrons_enabled {
+        color: black !important;
+    }
+
+    &__chevrons {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 12px;
+        color: #8b8b8b;
+        display: flex;
+        flex-direction: column;
+
+        & i {
+            display: block;
+            text-align: right;
+            margin: auto auto 0 auto;
+
+            &::before {
+                border-style: solid;
+                border-width: 2px 2px 0 0;
+                content: '';
+                display: inline-block;
+                height: 4px;
+                position: relative;
+                transform: rotate(-45deg);
+                vertical-align: top;
+                width: 4px;
+            }
+        }
+    }
+
+    &__chevron-down {
+        margin: 0 auto auto auto !important;
+
+        &::before {
+            top: 0 !important;
+	        transform: rotate(135deg) !important;
+        }
+    }
+
+    &__options-container {
+        display: none;
+        z-index: 2;
+        position: absolute;
+        top: 36px;
+        background-color: white;
+        border-radius: $border-radius;
+        width: 100%;
+        margin-top: 8px;
+        box-shadow: $box-shadow;
+        user-select: none;
+        max-height: 300px;
+        overflow: scroll;
+
+        & option {
+            border-radius: $border-radius;
+            padding: 8 16px;
+            margin: 8px 8px 8px;
+
+            &:hover {
+                background-color: $surface-color;
+                cursor: pointer;
+            }
+
+            &:last-child {
+                margin: 8px
+            }
+        }
+    }
+
+    &__options-container_visible {
+        display: block;
+    }
+
+    &__options-selected {
+        background-color: $surface-color;
     }
 }

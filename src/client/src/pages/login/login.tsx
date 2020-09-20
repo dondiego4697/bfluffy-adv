@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as classnames from 'classnames';
 import {pickBy, identity} from 'lodash';
 import {observer, inject} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
@@ -75,7 +74,7 @@ export class LoginPage extends React.Component<Props> {
                                     name="email"
                                     render={({meta, field}: FieldProps) => (
                                         <EditText
-                                            className={classnames('', b('input-email'))}
+                                            className={b('input-email')}
                                             placeholder="Адрес электронной почты"
                                             value={field.value}
                                             name={field.name}

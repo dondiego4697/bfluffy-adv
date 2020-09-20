@@ -2,8 +2,8 @@
 
 .ad-edit-page {
 
-    &__container {
-
+    &__base-input {
+        margin-bottom: 12px;
     }
 
     &__form {
@@ -11,8 +11,8 @@
         margin: auto;
     }
 
-    &__label {
-        font-size: $font-size-s;
-        margin-bottom: 2px;
+    &__form-header {
+        margin-bottom: 32px;
+        text-align: center;
     }
 }

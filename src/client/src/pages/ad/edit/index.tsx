@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
+import {Formik, FormikErrors, Form, Field, FieldProps} from 'formik';
 
 import {Button} from 'client/components/base/button';
 import {AdEditPageModel} from 'client/models/ad/edit';
@@ -11,13 +12,15 @@ import {NotFoundPage} from 'client/pages/not-found';
 import {NEW_ITEM} from 'client/consts';
 import {UIGlobal} from 'client/models/ui-global';
 import {Paper} from 'client/components/base/paper';
-import {GeoSelect} from 'client/components/base/custom-select/geo';
-import {AnimalCategorySelect} from 'client/components/base/custom-select/animal-category';
-import {AnimalBreedSelect} from 'client/components/base/custom-select/animal-breed';
+import {SearchSelect} from 'client/components/base/search-select';
+import {Select} from 'client/components/base/select';
 import {AnimalModel} from 'client/models/animal';
 import {GeoModel} from 'client/models/geo';
 import {Spinner} from 'client/components/base/spinner/spinner';
 import {EditText} from 'client/components/base/edit-text';
+import {Label} from 'client/components/base/label';
+import {RadioGroup} from 'client/components/base/radio-group';
+import {CheckBox} from 'client/components/base/checkbox';
 
 import './index.scss';
 
@@ -33,52 +36,30 @@ interface Props extends RouteComponentProps<RouteParams> {
     geoModel?: GeoModel;
 }
 
+interface Values {
+    breedCategoryCode: string;
+    sex: boolean;
+    documents?: string[];
+    address?: string;
+    name?: string;
+    description?: string;
+    cityCode?: string;
+    breedCode?: string;
+    price?: number;
+}
+
 const b = bevis('ad-edit-page');
 
 @inject('adEditPageModel', 'clientDataModel', 'uiGlobal', 'animalModel', 'geoModel')
 @observer
 export class AdEditPage extends React.Component<Props> {
-    // public componentWillMount() {
-    // 	this.props.farmEditModel!.clearFarm();
-    // }
+    public componentWillUnmount() {
+        this.props.adEditPageModel?.clearAd();
+    }
 
     public componentDidMount(): void {
         this.loadData();
     }
-
-    // public componentWillReceiveProps(nextProps: Props) {
-    // 	if (nextProps.match.params.id !== this.props.match.params.id) {
-    // 		this.props.farmEditModel!.clearFarm();
-
-    // 		this.loadData(nextProps.match.params.id)
-    // 			.then(() => this.formRef.current?.resetFields());
-    // 	}
-    // }
-
-    // private searchCityHandler = (cityDisplayName?: string) => this.props.farmEditModel!.findCity(cityDisplayName);
-
-    // private onFinishHandler = (values: Store) => {
-    // 	const params = {
-    // 		cityCode: values.cityCode.value,
-    // 		contacts: {
-    // 			email: values.email,
-    // 			phone: values.phone
-    // 		},
-    // 		name: values.farmName,
-    // 		description: values.farmDescription,
-    // 		address: values.farmAddress
-    // 	};
-
-    // 	if (this.props.farmEditModel!.isNew) {
-    // 		return this.props.farmEditModel!.createFarm(params)
-    // 			.then((response) => this.props.history.replace(RoutePaths.FARM_EDIT.replace(':id', response.publicId)))
-    // 			.catch((error) => ModalMessage.showError(error.response.data.message));
-    // 	}
-
-    // 	return this.props.farmEditModel!.updateFarm(params)
-    // 		.then((response) => this.props.history.replace(RoutePaths.FARM_EDIT.replace(':id', response.publicId)))
-    // 		.catch((error) => ModalMessage.showError(error.response.data.message));
-    // }
 
     private loadData(id?: string) {
         const publicId = id || this.props.match.params.id;
@@ -89,106 +70,220 @@ export class AdEditPage extends React.Component<Props> {
         return this.props.adEditPageModel?.getInfo(publicId);
     }
 
-    private onSaveAdHandler = (values: any) => {
-        const {uiGlobal} = this.props;
-        uiGlobal?.showSpinner();
+    private onValidateHandler = (values: Values) => {
+        // TODO install Yup
+    };
 
+    private onSubmitHandler = (values: Values) => {
         console.log(values);
+        // const {uiGlobal} = this.props;
+
+        // uiGlobal?.showSpinner();
+
+        // return UserRequestBookV1.loginByEmail(email)
+        //     .then(() => this.props.history.push(`${RoutePaths.LOGIN_VERIFIED}?email=${email}`))
+        //     .catch((error) => ModalMessage.showError(error.response.data.message))
+        //     .finally(() => uiGlobal?.destroySpinner());
     };
 
     private renderForm() {
-        // TODO переработать компоненты select
-
-        // 1. Сделать один с выпадашкой обычно
-        // 2. Сделать один с поиском
-        // 3. Сделать свой radio button group
-
         return (
             <Paper>
-                {/* <EditText
-                    placeholder={'что-то'}
-                    onChange={(value) => console.log(value)}
-                    label='xnj'
+                <Formik<Values>
+                    initialValues={{
+                        breedCategoryCode: 'dogs',
+                        sex: true
+                    }}
+                    onSubmit={this.onSubmitHandler}
+                    validate={this.onValidateHandler}
+                    render={() => (
+                        <Form className={b('form')}>
+                            <Label size="header" text="Ваше объявление" className={b('form-header')} />
+                            <Field
+                                name="name"
+                                render={({meta, field}: FieldProps) => (
+                                    <EditText
+                                        className={classnames(b('base-input'))}
+                                        placeholder="Заголовок объявления"
+                                        value={field.value}
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="description"
+                                render={({meta, field}: FieldProps) => (
+                                    <EditText
+                                        className={classnames(b('base-input'))}
+                                        placeholder="Описание"
+                                        value={field.value}
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="breedCategoryCode"
+                                render={({meta, field, form}: FieldProps) => (
+                                    <Select
+                                        className={classnames(b('base-input'))}
+                                        placeholder="Вид"
+                                        selectedKey={field.value}
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        items={
+                                            this.props.animalModel?.categoryList.map((item) => ({
+                                                key: item.code,
+                                                value: item.displayName
+                                            })) || []
+                                        }
+                                        onKeyChange={(key) => {
+                                            form.setFieldValue('breedCategoryCode', key);
+                                            form.setFieldValue('breedCode', undefined);
+                                        }}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="breedCode"
+                                render={({meta, field, form}: FieldProps) => (
+                                    <SearchSelect
+                                        className={classnames(b('base-input'))}
+                                        selectedKey={field.value}
+                                        placeholder="Порода"
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        items={
+                                            this.props.animalModel?.breedList
+                                                .filter(
+                                                    (item) =>
+                                                        item.categoryCode ===
+                                                        form.getFieldProps('breedCategoryCode')?.value
+                                                )
+                                                .map((item) => ({
+                                                    key: item.breedCode,
+                                                    value: item.breedDisplayName
+                                                })) || []
+                                        }
+                                        onKeyChange={(key) => {
+                                            console.log(123123, key);
+                                            form.setFieldValue('breedCode', key);
+                                        }}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="sex"
+                                render={({meta, field, form}: FieldProps) => (
+                                    <RadioGroup
+                                        className={classnames(b('base-input'))}
+                                        selectedKey={field.value ? 'boy' : 'girl'}
+                                        items={[
+                                            {
+                                                key: 'boy',
+                                                value: 'Мальчик'
+                                            },
+                                            {
+                                                key: 'girl',
+                                                value: 'Девочка'
+                                            }
+                                        ]}
+                                        onKeyChange={(key) => {
+                                            form.setFieldValue('sex', key === 'boy' ? true : false);
+                                        }}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="documents"
+                                render={({meta, field, form}: FieldProps) => (
+                                    <CheckBox
+                                        className={classnames(b('base-input'))}
+                                        selectedKeys={field.value}
+                                        items={[
+                                            {
+                                                key: 'vetPassport',
+                                                value: 'Ветеринарный паспорт'
+                                            },
+                                            {
+                                                key: 'genericMark',
+                                                value: 'Родовая метка'
+                                            },
+                                            {
+                                                key: 'pedigree',
+                                                value: 'Родословная'
+                                            },
+                                            {
+                                                key: 'contractOfSale',
+                                                value: 'Договор купли-продажи'
+                                            },
+                                            {
+                                                key: 'withoutDocuments',
+                                                value: 'Без документов'
+                                            }
+                                        ]}
+                                        onChange={(keys) => {
+                                            form.setFieldValue('documents', keys);
+                                        }}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="price"
+                                render={({meta, field}: FieldProps) => (
+                                    <EditText
+                                        className={classnames(b('base-input'))}
+                                        placeholder="Цена"
+                                        type="number"
+                                        value={field.value}
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="cityCode"
+                                render={({meta, field, form}: FieldProps) => (
+                                    <SearchSelect
+                                        className={classnames(b('base-input'))}
+                                        placeholder="Ваш город"
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        items={
+                                            this.props.geoModel?.geoObjectList.map((item) => ({
+                                                key: item.code,
+                                                value: item.displayName
+                                            })) || []
+                                        }
+                                        onKeyChange={(key) => {
+                                            form.setFieldValue('cityCode', key);
+                                        }}
+                                    />
+                                )}
+                            />
+                            <Field
+                                name="address"
+                                render={({meta, field}: FieldProps) => (
+                                    <EditText
+                                        className={classnames(b('base-input'))}
+                                        placeholder="Адрес осмотра"
+                                        value={field.value}
+                                        name={field.name}
+                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        onChange={field.onChange}
+                                    />
+                                )}
+                            />
+                            <div className={b('submit-button')}>
+                                <Button type="primary" text="Сохранить" htmlType="submit" />
+                            </div>
+                        </Form>
+                    )}
                 />
-    		    <Form
-    		    	className={b('form')}
-    		    	layout='vertical'
-                    onFinish={this.onSaveAdHandler}
-                    validateMessages={FORM_VALIDATE_MESSAGES}
-    		    >
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='city'>
-                        <GeoSelect
-                            label='Ваш город'
-                            onChange={(code) => console.log(code)}
-                        />
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='category'>
-                        <AnimalCategorySelect
-                            label='Категория'
-                            onChange={(code) => {
-                                this.props.adEditPageModel?.updateCategoryCode(code);
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='type'>
-                        <AnimalBreedSelect
-                            categoryCodeSelected={this.props.adEditPageModel?.categoryCodeSelected}
-                            label='Вид или порода'
-                            onChange={(code) => console.log(code)}
-                        />
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='sex'>
-                        <p className={b('label')}>Пол</p>
-                        <Radio.Group
-                            defaultValue={1}
-                            onChange={(event) => console.log(event.target.value)}
-                        >
-                            <Radio className={b('radio-sex')} value={0}>
-                                Девочка
-                            </Radio>
-                            <Radio className={b('radio-sex')} value={1}>
-                                Мальчик
-                            </Radio>
-                        </Radio.Group>
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='documents'>
-                        <Input
-                            className={classnames('', b('input-documents'))}
-                            placeholder='Документы'
-                        />
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='price'>
-                        <Input
-                            className={classnames('', b('input-price'))}
-                            placeholder='Цена'
-                        />
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='address'>
-                        <Input
-                            className={classnames('EDIT_TEXT_ROOT_CLASS_NAME', b('input-address'))}
-                            placeholder='Адрес осмотра'
-                        />
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='title'>
-                        <Input
-                            className={classnames('EDIT_TEXT_ROOT_CLASS_NAME', b('input-title'))}
-                            placeholder='Заголовок объявления'
-                        />
-                    </Form.Item>
-                    <Form.Item className={'EDIT_TEXT_FORM_ITEM_CLASS_NAME'} name='description'>
-                        <Input
-                            className={classnames('EDIT_TEXT_ROOT_CLASS_NAME', b('input-description'))}
-                            placeholder='Описание'
-                        />
-                    </Form.Item>
-                    <Form.Item className={b('submit-button')}>
-                        <Button
-                            type='primary'
-                            htmlType='submit'
-                            text={this.props.adEditPageModel?.isNew ? 'Сохранить' : 'Обновить'}
-                        />
-                    </Form.Item>
-    		    </Form> */}
             </Paper>
         );
     }

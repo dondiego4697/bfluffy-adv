@@ -8,11 +8,6 @@ interface AnimalCategory {
     displayName: string;
 }
 
-interface FindBreedByNameParams {
-    subtext?: string;
-    categoryCode?: string;
-}
-
 export class AnimalModel {
     @observable public breedHash: Record<string, AnimalBreed[]> = {};
 
@@ -41,26 +36,5 @@ export class AnimalModel {
                 });
             });
         });
-    }
-
-    public findBreedByName(params: FindBreedByNameParams): AnimalBreed[] {
-        // TODO полнотекстовый поиск
-        const {categoryCode, subtext} = params;
-
-        if (categoryCode && !subtext) {
-            return this.breedHash[categoryCode] || [];
-        }
-
-        if (!categoryCode && subtext) {
-            return this.breedList.filter((item) => item.breedDisplayName.toLowerCase().includes(subtext.toLowerCase()));
-        }
-
-        if (categoryCode && subtext) {
-            return (this.breedHash[categoryCode] || []).filter((item) =>
-                item.breedDisplayName.toLowerCase().includes(subtext.toLowerCase())
-            );
-        }
-
-        return this.breedList;
     }
 }

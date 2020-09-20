@@ -20,42 +20,6 @@ export class AdEditPageModel extends BasePageModel {
         this.categoryCodeSelected = code;
     }
 
-    @computed public get formFields() {
-        if (!this.ad) {
-            return [];
-        }
-
-        return [
-            // {
-            //     name: ['farmName'],
-            //     value: this.farm.name
-            // },
-            // {
-            //     name: ['farmDescription'],
-            //     value: this.farm.description
-            // },
-            // {
-            //     name: ['farmAddress'],
-            //     value: this.farm.address
-            // },
-            // {
-            //     name: ['email'],
-            //     value: this.farm.contacts.email
-            // },
-            // {
-            //     name: ['phone'],
-            //     value: this.farm.contacts.phone
-            // },
-            // {
-            //     name: ['cityCode'],
-            //     value: {
-            //         // value: city?.cityCode,
-            //         // label: city?.cityDisplayName
-            //     }
-            // }
-        ];
-    }
-
     @action public clearAd() {
         this.ad = null;
     }
