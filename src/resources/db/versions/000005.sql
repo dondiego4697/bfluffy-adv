@@ -2,6 +2,7 @@ CREATE TABLE animal_ad (
     id BIGSERIAL NOT NULL,
     public_id UUID NOT NULL DEFAULT uuid_generate_v1(),
     animal_breed_id INTEGER NOT NULL,
+    city_id BIGINT NOT NULL,
     sex BOOLEAN,
     cost NUMERIC(9, 2) NOT NULL,
     name TEXT NOT NULL,
@@ -16,7 +17,8 @@ CREATE TABLE animal_ad (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     CONSTRAINT pk_animal_ad PRIMARY KEY (id),
     CONSTRAINT fk_animal_ad_animal_breed_id_animal_breed FOREIGN KEY(animal_breed_id) REFERENCES animal_breed (id),
-    CONSTRAINT fk_animal_ad_owner_id_users FOREIGN KEY(owner_id) REFERENCES users (id)
+    CONSTRAINT fk_animal_ad_owner_id_users FOREIGN KEY(owner_id) REFERENCES users (id),
+    CONSTRAINT fk_animal_ad_city_id_city FOREIGN KEY(city_id) REFERENCES city (id)
 );
 
 CREATE INDEX animal_ad_public_id_idx ON animal_ad (public_id);

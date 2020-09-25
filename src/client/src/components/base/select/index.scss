@@ -37,7 +37,7 @@
 
     &__input-text-container {
         position: relative;
-        color: $gray-color;
+        color: $line-color;
         font-family: MontserratMedium;
         font-size: $font-size-s;
         height: 16px;
@@ -49,45 +49,29 @@
         }
     }
 
-    &__chevrons_enabled {
-        color: black !important;
+    &__chevron_enabled {
+        opacity: 1 !important;
+
+        & img {
+            transform: rotate(0) !important;
+        }
     }
 
-    &__chevrons {
+    &__chevron {
         position: absolute;
         top: 0;
         right: 0;
         bottom: 0;
-        width: 12px;
-        color: #8b8b8b;
         display: flex;
-        flex-direction: column;
+        opacity: 0.5;
 
-        & i {
-            display: block;
-            text-align: right;
-            margin: auto auto 0 auto;
-
-            &::before {
-                border-style: solid;
-                border-width: 2px 2px 0 0;
-                content: '';
-                display: inline-block;
-                height: 4px;
-                position: relative;
-                transform: rotate(-45deg);
-                vertical-align: top;
-                width: 4px;
-            }
-        }
-    }
-
-    &__chevron-down {
-        margin: 0 auto auto auto !important;
-
-        &::before {
-            top: 0 !important;
-	        transform: rotate(135deg) !important;
+        & img {
+            margin: auto;
+            width: 12px;
+            height: 12px;
+            opacity: 0.8;
+            transform: rotate(180deg);
+            transition: $base-transition;
         }
     }
 
@@ -107,16 +91,24 @@
 
         & option {
             border-radius: $border-radius;
-            padding: 8 16px;
-            margin: 8px 8px 8px;
+            padding: 8px 10px;
+            margin: 2px 8px;
+            color: $line-color;
+            font-size: $font-size-s;
+            font-family: MontserratBold;
 
             &:hover {
-                background-color: $surface-color;
+                background-color: rgba(128, 207, 224, 0.1);
+                color: $secondary-color !important;
                 cursor: pointer;
             }
 
+            &:first-child {
+                margin-top: 8px
+            }
+
             &:last-child {
-                margin: 8px
+                margin-bottom: 8px
             }
         }
     }
@@ -125,7 +117,7 @@
         display: block;
     }
 
-    &__options-selected {
-        background-color: $surface-color;
+    &__option-selected {
+        color: black !important;
     }
 }

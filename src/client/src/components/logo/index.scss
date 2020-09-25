@@ -1,3 +1,5 @@
+@import '../../consts.scss';
+
 .logo {
     text-decoration: none;
 
@@ -7,11 +9,15 @@
         user-select: none;
 
         & h2 {
-            margin: 5px 0 0 8px;
+            margin: 8px 0 0 16px;
             font-family: MontserratBold;
-            font-size: 22px;
+            font-size: $font-size-xl;
             height: 30px;
             color: black;
+
+            @media only screen and (max-width: 768px) {
+                display: none;
+            }
         }
 
         & img.logo {

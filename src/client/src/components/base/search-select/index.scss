@@ -18,7 +18,7 @@
         font-size: $font-size-s;
 
         &::placeholder {
-            color: $gray-color;
+            color: $line-color;
             font-family: MontserratMedium;
             font-size: $font-size-s;
         }
@@ -45,16 +45,24 @@
 
         & option {
             border-radius: $border-radius;
-            padding: 8 16px;
-            margin: 8px 8px 8px;
+            padding: 8px 10px;
+            margin: 2px 8px;
+            color: $line-color;
+            font-size: $font-size-s;
+            font-family: MontserratBold;
 
             &:hover {
-                background-color: $surface-color;
+                background-color: rgba(128, 207, 224, 0.1);
+                color: $secondary-color !important;
                 cursor: pointer;
             }
 
+            &:first-child {
+                margin-top: 8px
+            }
+
             &:last-child {
-                margin: 8px
+                margin-bottom: 8px
             }
         }
     }

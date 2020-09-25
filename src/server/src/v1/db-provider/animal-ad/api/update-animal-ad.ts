@@ -10,6 +10,7 @@ interface Params {
     cost: number;
     sex: boolean;
     animalBreedId: number;
+    cityId: number;
     address?: string;
     documents: DBTableAnimalAd.FieldDocuments;
 }
@@ -17,7 +18,7 @@ interface Params {
 const knex = Knex({client: 'pg'});
 
 export async function updateAnimalAd(publicId: string, params: Params) {
-    const {name, description, address, documents, isBasicVaccinations, sex, cost, animalBreedId} = params;
+    const {name, description, address, documents, cityId, isBasicVaccinations, sex, cost, animalBreedId} = params;
 
     const query = knex(DbTable.ANIMAL_AD)
         .update({
@@ -27,6 +28,7 @@ export async function updateAnimalAd(publicId: string, params: Params) {
             sex,
             cost,
             animal_breed_id: animalBreedId,
+            city_id: cityId,
             documents: JSON.stringify(documents),
             address
         })

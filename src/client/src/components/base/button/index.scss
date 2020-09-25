@@ -12,6 +12,8 @@
         cursor: pointer;
         user-select: none;
         text-decoration: none;
+        white-space: nowrap;
+        transition: $base-transition;
     }
 }
 
@@ -40,17 +42,17 @@
         &:hover {
             background-color: $primary-color;
             color: white;
-            opacity: 0.6;
+            opacity: 0.8;
         }
     }
 
     &__base {
         box-shadow: $box-shadow;
-        color: $gray-color;
+        color: $line-color;
         background-color: white;
 
         &:hover {
-            color: $gray-color;
+            color: $line-color;
             box-shadow: $box-shadow_hover;
         }
     }

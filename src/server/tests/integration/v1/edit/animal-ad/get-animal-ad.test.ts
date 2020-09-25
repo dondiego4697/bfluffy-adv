@@ -47,11 +47,15 @@ describe(REQUEST_PATH, () => {
     });
 
     it('should get animal ad info', async () => {
+        const region = await TestFactory.createRegion();
+        const city = await TestFactory.createCity(region.id);
+
         const animalCategory = await TestFactory.createAnimaCategory();
         const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
         const animalAd = await TestFactory.createAnimalAd({
             ownerId: 1,
-            breedId: animalBreed.id
+            breedId: animalBreed.id,
+            cityId: city.id
         });
 
         const urls = ['url1', 'url2', 'url3'];

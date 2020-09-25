@@ -5,6 +5,7 @@ import {AnimalDbProvider} from 'server/v1/db-provider/animal';
 import {AnimalAdDbProvider} from 'server/v1/db-provider/animal-ad';
 import {DBTableAnimalAd} from 'server/types/db/animal-ad';
 import {logger} from 'server/lib/logger';
+import {GeoDbProvider} from 'server/v1/db-provider/geo';
 
 export interface Body {
     documents: DBTableAnimalAd.FieldDocuments;
@@ -14,6 +15,7 @@ export interface Body {
     cost: number;
     sex: boolean;
     animalBreedCode: string;
+    cityCode: string;
     address?: string;
     imageUrls: string[];
 }
@@ -28,13 +30,22 @@ export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
         cost,
         sex,
         animalBreedCode,
+        cityCode,
         imageUrls
     } = req.body as Body;
 
-    const animalBreed = await AnimalDbProvider.getAnimalBreedByCode(animalBreedCode);
+    const [animalBreed, city] = await Promise.all([
+        AnimalDbProvider.getAnimalBreedByCode(animalBreedCode),
+        GeoDbProvider.getCityByCityCode(cityCode)
+    ]);
 
     if (!animalBreed) {
         logger.error(`invalid animal breed code: ${animalBreedCode}`);
+        throw Boom.badRequest();
+    }
+
+    if (!city) {
+        logger.error(`invalid city code: ${cityCode}`);
         throw Boom.badRequest();
     }
 
@@ -47,6 +58,7 @@ export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
         cost,
         sex,
         animalBreedId: animalBreed.id,
+        cityId: city.id,
         ownerId: req.userData.id
     });
 

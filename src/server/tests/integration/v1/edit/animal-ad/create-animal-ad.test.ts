@@ -48,6 +48,9 @@ describe(REQUEST_PATH, () => {
     });
 
     it('should create animal ad', async () => {
+        const region = await TestFactory.createRegion();
+        const city = await TestFactory.createCity(region.id);
+
         const animalCategory = await TestFactory.createAnimaCategory();
         const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
 
@@ -59,6 +62,7 @@ describe(REQUEST_PATH, () => {
                 sex: true,
                 address: 'address',
                 animalBreedCode: animalBreed.code,
+                cityCode: city.code,
                 documents: {
                     genericMark: true
                 },

@@ -8,6 +8,7 @@ import {getAnimalAd} from 'server/v1/routers/edit/animal-ad/providers/get-animal
 const createSchema = {
     body: Joi.object({
         animalBreedCode: Joi.string().required(),
+        cityCode: Joi.string().required(),
         sex: Joi.boolean(),
         cost: Joi.number().min(0).required(),
         name: Joi.string().required(),

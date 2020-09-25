@@ -11,6 +11,7 @@ export namespace DBTableAnimalAd {
         id: number;
         public_id: string;
         animal_breed_id: number;
+        city_id: number;
         sex: boolean;
         cost: number;
         name: string;

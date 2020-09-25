@@ -49,11 +49,15 @@ describe(REQUEST_PATH, () => {
     });
 
     it('should update animal ad', async () => {
+        const region = await TestFactory.createRegion();
+        const city = await TestFactory.createCity(region.id);
+
         const animalCategory = await TestFactory.createAnimaCategory();
         const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
         const animalAd = await TestFactory.createAnimalAd({
             ownerId: 1,
-            breedId: animalBreed.id
+            breedId: animalBreed.id,
+            cityId: city.id
         });
         const anotherAnimalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
 
@@ -65,6 +69,7 @@ describe(REQUEST_PATH, () => {
                 address: 'updated',
                 sex: !animalAd.sex,
                 animalBreedCode: anotherAnimalBreed.code,
+                cityCode: city.code,
                 documents: {
                     genericMark: true
                 }
@@ -102,11 +107,15 @@ describe(REQUEST_PATH, () => {
     });
 
     it('should update image urls', async () => {
+        const region = await TestFactory.createRegion();
+        const city = await TestFactory.createCity(region.id);
+
         const animalCategory = await TestFactory.createAnimaCategory();
         const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
         const animalAd = await TestFactory.createAnimalAd({
             ownerId: 1,
-            breedId: animalBreed.id
+            breedId: animalBreed.id,
+            cityId: city.id
         });
 
         const urls = ['url1', 'url2', 'url3', 'url4'];
@@ -128,6 +137,7 @@ describe(REQUEST_PATH, () => {
                 address: 'updated',
                 sex: !animalAd.sex,
                 animalBreedCode: animalBreed.code,
+                cityCode: city.code,
                 imageUrls: updatedUrls
             },
             searchParams: {
@@ -144,12 +154,16 @@ describe(REQUEST_PATH, () => {
     });
 
     it('should throw error if owner id not equal with request user id', async () => {
+        const region = await TestFactory.createRegion();
+        const city = await TestFactory.createCity(region.id);
+
         const animalCategory = await TestFactory.createAnimaCategory();
         const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
         const {user} = await TestFactory.createUser();
         const animalAd = await TestFactory.createAnimalAd({
             ownerId: user.id,
-            breedId: animalBreed.id
+            breedId: animalBreed.id,
+            cityId: city.id
         });
 
         const {body, statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
@@ -157,7 +171,8 @@ describe(REQUEST_PATH, () => {
                 name: 'updated',
                 cost: 0.0,
                 sex: !animalAd.sex,
-                animalBreedCode: animalBreed.code
+                animalBreedCode: animalBreed.code,
+                cityCode: city.code
             },
             searchParams: {
                 publicId: animalAd.publicId
@@ -169,6 +184,9 @@ describe(REQUEST_PATH, () => {
     });
 
     it('should throw error if public id does not exist', async () => {
+        const region = await TestFactory.createRegion();
+        const city = await TestFactory.createCity(region.id);
+
         const animalCategory = await TestFactory.createAnimaCategory();
         const animalBreed = await TestFactory.createAnimalBreed(animalCategory.id);
 
@@ -177,7 +195,8 @@ describe(REQUEST_PATH, () => {
                 name: 'updated',
                 cost: 0.0,
                 sex: false,
-                animalBreedCode: animalBreed.code
+                animalBreedCode: animalBreed.code,
+                cityCode: city.code
             },
             searchParams: {
                 publicId: '1fc5a1fe-11ca-4e11-9a02-f157fd97f03d'

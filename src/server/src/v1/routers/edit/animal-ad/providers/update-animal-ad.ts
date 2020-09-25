@@ -4,6 +4,7 @@ import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import {AnimalDbProvider} from 'server/v1/db-provider/animal';
 import {AnimalAdDbProvider} from 'server/v1/db-provider/animal-ad';
+import {GeoDbProvider} from 'server/v1/db-provider/geo';
 import {logger} from 'server/lib/logger';
 import {Body} from 'server/v1/routers/edit/animal-ad/providers/create-animal-ad';
 import {ClientStatusCode} from 'server/types/consts';
@@ -20,15 +21,17 @@ export const updateAnimalAd = wrap<Request, Response>(async (req, res) => {
         isBasicVaccinations,
         name,
         description,
+        cityCode,
         cost,
         sex,
         animalBreedCode,
         imageUrls
     } = req.body as Body;
 
-    const [animalBreed, animalAd] = await Promise.all([
+    const [animalBreed, animalAd, city] = await Promise.all([
         AnimalDbProvider.getAnimalBreedByCode(animalBreedCode),
-        AnimalAdDbProvider.getAnimalAdByPublicId(publicId)
+        AnimalAdDbProvider.getAnimalAdByPublicId(publicId),
+        GeoDbProvider.getCityByCityCode(cityCode)
     ]);
 
     if (!animalAd) {
@@ -45,6 +48,11 @@ export const updateAnimalAd = wrap<Request, Response>(async (req, res) => {
         throw Boom.badRequest();
     }
 
+    if (!city) {
+        logger.error(`invalid city code: ${cityCode}`);
+        throw Boom.badRequest();
+    }
+
     await AnimalAdDbProvider.updateAnimalAd(publicId, {
         name,
         address,
@@ -53,7 +61,8 @@ export const updateAnimalAd = wrap<Request, Response>(async (req, res) => {
         documents,
         cost,
         sex,
-        animalBreedId: animalBreed.id
+        animalBreedId: animalBreed.id,
+        cityId: city.id
     });
 
     const currentImageUrls = await AnimalAdDbProvider.getAnimalAdImages(animalAd.id);

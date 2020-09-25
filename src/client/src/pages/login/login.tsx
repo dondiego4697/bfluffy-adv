@@ -78,7 +78,7 @@ export class LoginPage extends React.Component<Props> {
                                             placeholder="Адрес электронной почты"
                                             value={field.value}
                                             name={field.name}
-                                            error={(meta.touched && meta.error && meta.error) || ''}
+                                            error={(meta.touched && meta.error) || ''}
                                             onChange={field.onChange}
                                         />
                                     )}

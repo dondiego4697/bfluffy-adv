@@ -2,7 +2,8 @@ export const NEW_ITEM = 'new';
 
 export enum FieldErrors {
     REQUIRED = 'Обязательное поле',
-    WRONG_EMAIL = 'Некорректный email'
+    WRONG_EMAIL = 'Некорректный email',
+    MIN_NUMBER = 'Больше или равно ${min}'
 }
 
 function isValidEmail(email: string) {

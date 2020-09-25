@@ -8,6 +8,7 @@ import './index.scss';
 interface Item {
     key: string;
     value: string;
+    image?: string;
 }
 
 interface Props {
@@ -32,15 +33,17 @@ export class RadioGroup extends React.Component<Props> {
             >
                 <div className={b('container')}>
                     {items.map((item, i) => (
-                        <label key={`redio-group-item-${i}`} className={b('radio-item')}>
-                            <input
-                                type="radio"
-                                value={item.key}
-                                checked={item.key === selectedKey}
-                                onChange={(event) => {
-                                    onKeyChange(event.target.value);
-                                }}
-                            />
+                        <label
+                            key={`radio-group-item-${i}`}
+                            className={classnames({
+                                [b('radio-item')]: true,
+                                [b('radio-item_selected')]: item.key === selectedKey
+                            })}
+                            onClick={() => {
+                                onKeyChange(item.key);
+                            }}
+                        >
+                            {item.image && <img className={b('icon')} src={item.image} />}
                             {item.value}
                         </label>
                     ))}

@@ -39,9 +39,12 @@ export async function getAnimalAdByPublicId(publicId: string): Promise<AnimalAd 
             createdAt: `${DbTable.ANIMAL_AD}.created_at`,
             updatedAt: `${DbTable.ANIMAL_AD}.updated_at`,
             animalBreedCode: `${DbTable.ANIMAL_BREED}.code`,
-            animalBreedDisplayName: `${DbTable.ANIMAL_BREED}.display_name`
+            animalBreedDisplayName: `${DbTable.ANIMAL_BREED}.display_name`,
+            cityCode: `${DbTable.CITY}.code`,
+            cityDisplayName: `${DbTable.CITY}.display_name`
         })
         .join(DbTable.ANIMAL_BREED, `${DbTable.ANIMAL_BREED}.id`, `${DbTable.ANIMAL_AD}.animal_breed_id`)
+        .join(DbTable.CITY, `${DbTable.CITY}.id`, `${DbTable.ANIMAL_AD}.city_id`)
         .where({
             public_id: publicId
         });

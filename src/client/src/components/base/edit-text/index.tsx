@@ -13,7 +13,7 @@ interface Props {
     name?: string;
     error?: string;
     maxLength?: number;
-    type?: 'number' | 'text';
+    type?: 'number' | 'text' | 'textarea';
     onChange: (event: React.ChangeEvent<any>) => void;
 }
 
@@ -31,17 +31,25 @@ export class EditText extends React.Component<Props> {
                 })}
             >
                 {label}
-                <input
-                    className={classnames({
-                        [b('input-number')]: type === 'number'
-                    })}
-                    maxLength={maxLength}
-                    type={type || 'text'}
-                    name={name}
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={onChange}
-                />
+                {type === 'textarea' ? (
+                    <textarea
+                        rows={5}
+                        maxLength={maxLength}
+                        name={name}
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={onChange}
+                    />
+                ) : (
+                    <input
+                        maxLength={maxLength}
+                        type={type || 'text'}
+                        name={name}
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={onChange}
+                    />
+                )}
                 {error && <p className={b('error')}>{error}</p>}
             </label>
         );

@@ -45,10 +45,10 @@ export class Select extends React.Component<Props, State> {
                 {items.map((item, i) => (
                     <option
                         className={classnames({
-                            [b('options-selected')]: item.key === selectedKey
+                            [b('option-selected')]: item.key === selectedKey
                         })}
                         key={`select-item-${i}`}
-                        onClick={() => onKeyChange(item.key)}
+                        onMouseDown={() => onKeyChange(item.key)}
                     >
                         {item.value}
                     </option>
@@ -82,6 +82,11 @@ export class Select extends React.Component<Props, State> {
                                 showItems: event.target.checked
                             })
                         }
+                        onBlur={() =>
+                            this.setState({
+                                showItems: false
+                            })
+                        }
                     />
                     <div className={b('input-text-container')}>
                         <div className={b('placeholder-container')}>
@@ -95,12 +100,11 @@ export class Select extends React.Component<Props, State> {
                         </div>
                         <div
                             className={classnames({
-                                [b('chevrons')]: true,
-                                [b('chevrons_enabled')]: this.state.showItems
+                                [b('chevron')]: true,
+                                [b('chevron_enabled')]: this.state.showItems
                             })}
                         >
-                            <i className={b('chevron-up')} />
-                            <i className={b('chevron-down')} />
+                            <img src="/image/chevron.svg" />
                         </div>
                     </div>
                 </div>

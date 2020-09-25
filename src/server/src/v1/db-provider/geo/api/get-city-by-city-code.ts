@@ -5,6 +5,8 @@ import {DBTableCity} from 'server/types/db/city';
 
 interface City {
     id: DBTableCity.Schema['id'];
+    code: DBTableCity.Schema['code'];
+    displayName: DBTableCity.Schema['display_name'];
 }
 
 const knex = Knex({client: 'pg'});
@@ -12,7 +14,9 @@ const knex = Knex({client: 'pg'});
 export async function getCityByCityCode(cityCode: string): Promise<City | undefined> {
     const query = knex(DbTable.CITY)
         .select({
-            id: 'id'
+            id: 'id',
+            code: 'code',
+            displayName: 'display_name'
         })
         .where({
             code: cityCode

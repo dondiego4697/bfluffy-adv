@@ -35,7 +35,7 @@ export class Navbar extends React.Component<Props> {
                                     hrefTo={RoutePaths.USER_CABINET}
                                 />
                             ) : (
-                                <Button text="Вход и регистрация" type="base" hrefTo={RoutePaths.LOGIN} />
+                                <Button text="Вход" type="base" hrefTo={RoutePaths.LOGIN} />
                             )}
                         </div>
                         <Button

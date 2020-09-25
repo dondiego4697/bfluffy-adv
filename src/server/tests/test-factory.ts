@@ -208,6 +208,7 @@ async function createAnimaCategory(): Promise<AnimalCategory> {
 
 interface CreateAnimalAdParams {
     breedId: number;
+    cityId: number;
     ownerId: number;
     isArchive?: boolean;
     isBasicVaccinations?: boolean;
@@ -222,6 +223,7 @@ interface AnimalAd {
     id: DBTableAnimalAd.Schema['id'];
     publicId: DBTableAnimalAd.Schema['public_id'];
     animalBreedId: DBTableAnimalAd.Schema['animal_breed_id'];
+    cityId: DBTableAnimalAd.Schema['city_id'];
     sex: DBTableAnimalAd.Schema['sex'];
     cost: DBTableAnimalAd.Schema['cost'];
     name: DBTableAnimalAd.Schema['name'];
@@ -269,11 +271,12 @@ async function getAllAnimalAds(): Promise<AnimalAd[]> {
 }
 
 async function createAnimalAd(params: CreateAnimalAdParams): Promise<AnimalAd> {
-    const {breedId, ownerId, isBasicVaccinations, isArchive} = params;
+    const {breedId, ownerId, isBasicVaccinations, isArchive, cityId} = params;
 
     const query = knex(DbTable.ANIMAL_AD)
         .insert({
             animal_breed_id: breedId,
+            city_id: cityId,
             sex: faker.random.boolean(),
             cost: faker.commerce.price(),
             address: faker.address.streetAddress(),
@@ -287,6 +290,7 @@ async function createAnimalAd(params: CreateAnimalAdParams): Promise<AnimalAd> {
             'id',
             'public_id as publicId',
             'animal_breed_id as animalBreedId',
+            'city_id as cityId',
             'sex',
             'cost',
             'address',

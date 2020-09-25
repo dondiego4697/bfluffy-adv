@@ -1,8 +1,9 @@
+import * as Yup from 'yup';
 import * as React from 'react';
 import * as classnames from 'classnames';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
-import {Formik, FormikErrors, Form, Field, FieldProps} from 'formik';
+import {Formik, Form, Field, FieldProps} from 'formik';
 
 import {Button} from 'client/components/base/button';
 import {AdEditPageModel} from 'client/models/ad/edit';
@@ -16,11 +17,13 @@ import {SearchSelect} from 'client/components/base/search-select';
 import {Select} from 'client/components/base/select';
 import {AnimalModel} from 'client/models/animal';
 import {GeoModel} from 'client/models/geo';
-import {Spinner} from 'client/components/base/spinner/spinner';
 import {EditText} from 'client/components/base/edit-text';
 import {Label} from 'client/components/base/label';
 import {RadioGroup} from 'client/components/base/radio-group';
 import {CheckBox} from 'client/components/base/checkbox';
+import {AdRequestBookV1} from 'client/lib/request-book/v1/ad';
+import {ModalMessage} from 'client/components/base/modal-message';
+import {RoutePaths} from 'client/lib/routes';
 
 import './index.scss';
 
@@ -37,18 +40,30 @@ interface Props extends RouteComponentProps<RouteParams> {
 }
 
 interface Values {
+    name: string;
     breedCategoryCode: string;
+    breedCode: string;
+    cityCode: string;
     sex: boolean;
-    documents?: string[];
-    address?: string;
-    name?: string;
-    description?: string;
-    cityCode?: string;
-    breedCode?: string;
     price?: number;
+    description?: string;
+    documents: string[];
+    address?: string;
 }
 
 const b = bevis('ad-edit-page');
+
+const validationSchema = Yup.object().shape({
+    breedCategoryCode: Yup.string().required(),
+    breedCode: Yup.string().required(),
+    sex: Yup.boolean().required(),
+    address: Yup.string(),
+    name: Yup.string().required(),
+    documents: Yup.array().of(Yup.string()).default([]),
+    description: Yup.string(),
+    cityCode: Yup.string().required(),
+    price: Yup.number().min(0).default(0)
+});
 
 @inject('adEditPageModel', 'clientDataModel', 'uiGlobal', 'animalModel', 'geoModel')
 @observer
@@ -70,20 +85,32 @@ export class AdEditPage extends React.Component<Props> {
         return this.props.adEditPageModel?.getInfo(publicId);
     }
 
-    private onValidateHandler = (values: Values) => {
-        // TODO install Yup
-    };
-
     private onSubmitHandler = (values: Values) => {
-        console.log(values);
-        // const {uiGlobal} = this.props;
+        const {uiGlobal} = this.props;
 
-        // uiGlobal?.showSpinner();
+        uiGlobal?.showSpinner();
 
-        // return UserRequestBookV1.loginByEmail(email)
-        //     .then(() => this.props.history.push(`${RoutePaths.LOGIN_VERIFIED}?email=${email}`))
-        //     .catch((error) => ModalMessage.showError(error.response.data.message))
-        //     .finally(() => uiGlobal?.destroySpinner());
+        return AdRequestBookV1.createAd({
+            name: values.name,
+            description: values.description,
+            address: values.address,
+            animalBreedCode: values.breedCode,
+            cityCode: values.cityCode,
+            imageUrls: [],
+            documents: values.documents.reduce((result, doc) => ({...result, [doc]: true}), {}),
+            sex: values.sex,
+            isBasicVaccinations: false,
+            price: values.price || 0
+        })
+            .then((response) => this.props.history.replace(RoutePaths.AD_EDIT.replace(':id', response.publicId)))
+            .then(() =>
+                ModalMessage.showSuccess({
+                    title: 'Успешно',
+                    message: 'Ваше объявление успешно создано'
+                })
+            )
+            .catch((error) => ModalMessage.showError(error.response.data.message))
+            .finally(() => uiGlobal?.destroySpinner());
     };
 
     private renderForm() {
@@ -91,11 +118,17 @@ export class AdEditPage extends React.Component<Props> {
             <Paper>
                 <Formik<Values>
                     initialValues={{
+                        name: '',
+                        description: '',
+                        cityCode: '',
+                        documents: [],
+                        address: '',
                         breedCategoryCode: 'dogs',
+                        breedCode: '',
                         sex: true
                     }}
                     onSubmit={this.onSubmitHandler}
-                    validate={this.onValidateHandler}
+                    validationSchema={validationSchema}
                     render={() => (
                         <Form className={b('form')}>
                             <Label size="header" text="Ваше объявление" className={b('form-header')} />
@@ -107,8 +140,9 @@ export class AdEditPage extends React.Component<Props> {
                                         placeholder="Заголовок объявления"
                                         value={field.value}
                                         name={field.name}
-                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        error={(meta.touched && meta.error) || ''}
                                         onChange={field.onChange}
+                                        maxLength={100}
                                     />
                                 )}
                             />
@@ -117,10 +151,12 @@ export class AdEditPage extends React.Component<Props> {
                                 render={({meta, field}: FieldProps) => (
                                     <EditText
                                         className={classnames(b('base-input'))}
+                                        maxLength={400}
                                         placeholder="Описание"
+                                        type="textarea"
                                         value={field.value}
                                         name={field.name}
-                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        error={(meta.touched && meta.error) || ''}
                                         onChange={field.onChange}
                                     />
                                 )}
@@ -133,7 +169,7 @@ export class AdEditPage extends React.Component<Props> {
                                         placeholder="Вид"
                                         selectedKey={field.value}
                                         name={field.name}
-                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        error={(meta.touched && meta.error) || ''}
                                         items={
                                             this.props.animalModel?.categoryList.map((item) => ({
                                                 key: item.code,
@@ -155,7 +191,7 @@ export class AdEditPage extends React.Component<Props> {
                                         selectedKey={field.value}
                                         placeholder="Порода"
                                         name={field.name}
-                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        error={(meta.touched && meta.error) || ''}
                                         items={
                                             this.props.animalModel?.breedList
                                                 .filter(
@@ -169,7 +205,6 @@ export class AdEditPage extends React.Component<Props> {
                                                 })) || []
                                         }
                                         onKeyChange={(key) => {
-                                            console.log(123123, key);
                                             form.setFieldValue('breedCode', key);
                                         }}
                                     />
@@ -177,18 +212,20 @@ export class AdEditPage extends React.Component<Props> {
                             />
                             <Field
                                 name="sex"
-                                render={({meta, field, form}: FieldProps) => (
+                                render={({field, form}: FieldProps) => (
                                     <RadioGroup
                                         className={classnames(b('base-input'))}
                                         selectedKey={field.value ? 'boy' : 'girl'}
                                         items={[
                                             {
                                                 key: 'boy',
-                                                value: 'Мальчик'
+                                                value: 'Мальчик',
+                                                image: '/image/sex-male.svg'
                                             },
                                             {
                                                 key: 'girl',
-                                                value: 'Девочка'
+                                                value: 'Девочка',
+                                                image: '/image/sex-female.svg'
                                             }
                                         ]}
                                         onKeyChange={(key) => {
@@ -199,7 +236,7 @@ export class AdEditPage extends React.Component<Props> {
                             />
                             <Field
                                 name="documents"
-                                render={({meta, field, form}: FieldProps) => (
+                                render={({field, form}: FieldProps) => (
                                     <CheckBox
                                         className={classnames(b('base-input'))}
                                         selectedKeys={field.value}
@@ -234,15 +271,18 @@ export class AdEditPage extends React.Component<Props> {
                             <Field
                                 name="price"
                                 render={({meta, field}: FieldProps) => (
-                                    <EditText
-                                        className={classnames(b('base-input'))}
-                                        placeholder="Цена"
-                                        type="number"
-                                        value={field.value}
-                                        name={field.name}
-                                        error={(meta.touched && meta.error && meta.error) || ''}
-                                        onChange={field.onChange}
-                                    />
+                                    <div className={b('price-container')}>
+                                        <EditText
+                                            className={classnames(b('base-input'))}
+                                            placeholder="Цена"
+                                            type="number"
+                                            value={field.value}
+                                            name={field.name}
+                                            error={(meta.touched && meta.error) || ''}
+                                            onChange={field.onChange}
+                                        />
+                                        <img className={b('ruble')} src="/image/ruble.svg" />
+                                    </div>
                                 )}
                             />
                             <Field
@@ -251,13 +291,16 @@ export class AdEditPage extends React.Component<Props> {
                                     <SearchSelect
                                         className={classnames(b('base-input'))}
                                         placeholder="Ваш город"
+                                        selectedKey={field.value}
                                         name={field.name}
-                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        error={(meta.touched && meta.error) || ''}
                                         items={
-                                            this.props.geoModel?.geoObjectList.map((item) => ({
-                                                key: item.code,
-                                                value: item.displayName
-                                            })) || []
+                                            this.props.geoModel?.geoObjectList
+                                                .filter((item) => item.type === 'city')
+                                                .map((item) => ({
+                                                    key: item.code,
+                                                    value: item.displayName
+                                                })) || []
                                         }
                                         onKeyChange={(key) => {
                                             form.setFieldValue('cityCode', key);
@@ -273,7 +316,7 @@ export class AdEditPage extends React.Component<Props> {
                                         placeholder="Адрес осмотра"
                                         value={field.value}
                                         name={field.name}
-                                        error={(meta.touched && meta.error && meta.error) || ''}
+                                        error={(meta.touched && meta.error) || ''}
                                         onChange={field.onChange}
                                     />
                                 )}
@@ -291,10 +334,6 @@ export class AdEditPage extends React.Component<Props> {
     public render(): React.ReactNode {
         if (this.props.adEditPageModel?.notFound) {
             return <NotFoundPage />;
-        }
-
-        if (!this.props.geoModel?.isReady || !this.props.animalModel?.isReady) {
-            return <Spinner />;
         }
 
         return (

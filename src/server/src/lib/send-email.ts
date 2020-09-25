@@ -50,7 +50,7 @@ export async function sendEmail(email: string, params: Params) {
     try {
         const transporter = await getTransporter();
         const info = await transporter.sendMail({
-            from: `Be Fluffy ${config['email.login']}`,
+            from: config['email.login'],
             to: email,
             subject: params.subject,
             text: params.html,

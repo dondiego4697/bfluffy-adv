@@ -23,6 +23,7 @@ interface Props {
 
 interface State {
     items: Item[];
+    selectedKey?: string;
 }
 
 const b = bevis('bfluffy-search-select');
@@ -32,13 +33,42 @@ export class SearchSelect extends React.Component<Props, State> {
         items: []
     };
 
-    private removeSuggest(key?: string) {
-        this.setState({
-            items: []
-        });
+    inputRef = React.createRef<HTMLInputElement>();
+
+    public componentDidMount() {
+        this.updateValue(this.props.selectedKey);
     }
 
-    private setSuggest(subtext?: string) {
+    public componentWillReceiveProps(nextProps: Props) {
+        this.updateValue(nextProps.selectedKey);
+    }
+
+    private updateValue(key?: string) {
+        if (!this.inputRef.current) {
+            return;
+        }
+
+        if (!key) {
+            this.inputRef.current.value = '';
+            return;
+        }
+
+        const {items} = this.props;
+        const selectedItem = items.find((item) => item.key === key);
+        const value = selectedItem?.value;
+
+        if (!value) {
+            return;
+        }
+
+        this.inputRef.current.value = value;
+    }
+
+    private hideSuggest() {
+        this.setState({items: []});
+    }
+
+    private showSuggest(subtext?: string) {
         // TODO полнотекстовый поиск
 
         if (!subtext) {
@@ -61,9 +91,10 @@ export class SearchSelect extends React.Component<Props, State> {
                 {this.state.items.map((item, i) => (
                     <option
                         key={`search-select-item-${i}`}
-                        onClick={() => {
+                        onMouseDown={() => {
                             onKeyChange(item.key);
-                            this.removeSuggest(item.key);
+                            this.setState({selectedKey: item.key});
+                            this.hideSuggest();
                         }}
                     >
                         {item.value}
@@ -74,12 +105,7 @@ export class SearchSelect extends React.Component<Props, State> {
     }
 
     public render(): React.ReactNode {
-        const {name, error, label, className, placeholder, items, selectedKey, onKeyChange} = this.props;
-
-        const selectedItem = items.find((item) => item.key === selectedKey);
-        const value = selectedItem?.value;
-
-        console.log(selectedKey, value);
+        const {name, error, label, className, placeholder} = this.props;
 
         return (
             <label
@@ -90,18 +116,18 @@ export class SearchSelect extends React.Component<Props, State> {
             >
                 {label}
                 <input
+                    ref={this.inputRef}
                     type="text"
                     name={name}
                     placeholder={placeholder}
-                    value={value || ''}
                     onChange={(event) => {
-                        if (event.target.value.length < (value?.length || 0)) {
-                            onKeyChange();
-                        }
-
-                        this.setSuggest(event.target.value);
+                        this.showSuggest(event.target.value);
                     }}
-                    onFocus={() => !value && this.setSuggest()}
+                    onFocus={() => !this.inputRef.current?.value && this.showSuggest()}
+                    onBlur={() => {
+                        this.updateValue(this.state.selectedKey);
+                        this.hideSuggest();
+                    }}
                 />
                 {error && <p className={b('error')}>{error}</p>}
                 {this.renderOptions()}

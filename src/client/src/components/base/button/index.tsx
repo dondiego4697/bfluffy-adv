@@ -6,21 +6,31 @@ import bevis from 'client/lib/bevis';
 
 import './index.scss';
 
-interface Props {
-    type: 'primary' | 'link' | 'base';
+interface BaseProps {
     text: string;
-    onClickHandler?: () => void;
-    htmlType?: 'button' | 'submit' | 'reset';
     className?: string;
     hrefTo?: string;
 }
+
+interface ButtonProps extends BaseProps {
+    type: 'primary' | 'base';
+    onClickHandler?: () => void;
+    htmlType?: 'button' | 'submit' | 'reset';
+}
+
+interface LinkProps extends BaseProps {
+    type: 'link';
+    hrefTo: string;
+}
+
+type Props = LinkProps | ButtonProps;
 
 const b = bevis('bfluffy-button');
 const bType = bevis('bfluffy-button-type');
 
 export class Button extends React.Component<Props> {
     public render(): React.ReactNode {
-        const {text, type, htmlType, className, onClickHandler, hrefTo} = this.props;
+        const {type, className, text} = this.props;
 
         return (
             <div
@@ -29,12 +39,21 @@ export class Button extends React.Component<Props> {
                     ...(className ? {[className]: true} : {})
                 })}
             >
-                {(hrefTo && (
-                    <Link to={hrefTo} className={bType(type)}>
+                {this.props.type === 'link' ? (
+                    <Link to={this.props.hrefTo} className={bType(type)}>
                         {text}
                     </Link>
-                )) || (
-                    <input value={text} className={bType(type)} onClick={onClickHandler} type={htmlType || 'button'} />
+                ) : this.props.hrefTo ? (
+                    <Link to={this.props.hrefTo} className={bType(type)}>
+                        {text}
+                    </Link>
+                ) : (
+                    <input
+                        value={text}
+                        className={bType(type)}
+                        onClick={this.props.onClickHandler}
+                        type={this.props.htmlType || 'button'}
+                    />
                 )}
             </div>
         );
