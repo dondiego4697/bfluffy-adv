@@ -77,6 +77,9 @@ describe(REQUEST_PATH, () => {
             name: animalAd.name,
             description: animalAd.description,
             address: animalAd.address,
+            animalBreedCode: animalBreed.code,
+            animalCategoryCode: animalCategory.code,
+            cityCode: city.code,
             documents: animalAd.documents,
             imageUrls: urls
         });

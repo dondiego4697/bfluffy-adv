@@ -1,7 +1,15 @@
-import {postRequest} from 'client/lib/request';
+import {postRequest, getRequest} from 'client/lib/request';
 
 interface CreateAdResponse {
     publicId: string;
+}
+
+interface Documents {
+    vetPassport?: boolean;
+    genericMark?: boolean;
+    pedigree?: boolean;
+    contractOfSale?: boolean;
+    withoutDocuments?: boolean;
 }
 
 export interface CreateAdParams {
@@ -9,18 +17,25 @@ export interface CreateAdParams {
     animalBreedCode: string;
     cityCode: string;
     imageUrls: string[];
-    documents: {
-        vetPassport?: boolean;
-        genericMark?: boolean;
-        pedigree?: boolean;
-        contractOfSale?: boolean;
-        withoutDocuments?: boolean;
-    };
+    documents: Documents;
     price: number;
     sex?: boolean;
     description?: string;
     address?: string;
     isBasicVaccinations?: boolean;
+}
+
+export interface AdInfoResponse {
+    cost: number;
+    sex: boolean;
+    name: string;
+    description?: string;
+    address?: string;
+    documents: Documents;
+    imageUrls: string[];
+    animalBreedCode: string;
+    animalCategoryCode: string;
+    cityCode: string;
 }
 
 async function createAd(params: CreateAdParams) {
@@ -57,25 +72,50 @@ async function createAd(params: CreateAdParams) {
     );
 }
 
-// async function updateFarm(publicId: string, params: CreateFarmParams) {
-//     const {cityCode, contacts, name, description, address} = params;
+async function getAd(publicId: string) {
+    return getRequest<AdInfoResponse>('/api/v1/edit/animal_ad/info', {
+        params: {publicId},
+        responseType: 'json'
+    });
+}
 
-//     return postRequest<CreateFarmResponse>(
-//         '/api/v1/farm/update',
-//         {
-//             cityCode,
-//             contacts,
-//             name,
-//             description,
-//             address
-//         },
-//         {
-//             responseType: 'json',
-//             params: {publicId}
-//         }
-//     );
-// }
+async function updateAd(publicId: string, params: CreateAdParams) {
+    const {
+        name,
+        description,
+        address,
+        cityCode,
+        animalBreedCode,
+        imageUrls,
+        documents,
+        sex,
+        isBasicVaccinations,
+        price
+    } = params;
+
+    return postRequest<CreateAdResponse>(
+        '/api/v1/edit/animal_ad/update',
+        {
+            name,
+            description,
+            address,
+            animalBreedCode,
+            cityCode,
+            imageUrls,
+            documents,
+            sex,
+            isBasicVaccinations,
+            cost: price
+        },
+        {
+            responseType: 'json',
+            params: {publicId}
+        }
+    );
+}
 
 export const AdRequestBookV1 = {
-    createAd
+    createAd,
+    getAd,
+    updateAd
 };

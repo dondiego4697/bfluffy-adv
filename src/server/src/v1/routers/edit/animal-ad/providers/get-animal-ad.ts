@@ -32,6 +32,9 @@ export const getAnimalAd = wrap<Request, Response>(async (req, res) => {
         description: animalAd.description,
         address: animalAd.address,
         documents: animalAd.documents,
+        animalBreedCode: animalAd.animalBreedCode,
+        animalCategoryCode: animalAd.animalCategoryCode,
+        cityCode: animalAd.cityCode,
         imageUrls
     });
 });

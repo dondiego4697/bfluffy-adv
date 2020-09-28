@@ -1,23 +1,29 @@
-import {observable, action, computed} from 'mobx';
+import {observable, action} from 'mobx';
 
 import {BasePageModel} from 'client/models/base';
+import {CreateAdParams, AdRequestBookV1, AdInfoResponse} from 'client/lib/request-book/v1/ad';
+import {NEW_ITEM} from 'client/consts';
 
 export class AdEditPageModel extends BasePageModel {
-    @observable public ad: any | null = null;
+    @observable public ad: AdInfoResponse | null = null;
     @observable public notFound: boolean = false;
-
-    @observable public categoryCodeSelected: string = '';
 
     @action public getInfo(publicId: string) {
         this.setLoading();
+
+        return AdRequestBookV1.getAd(publicId)
+            .then((response) => (this.ad = response))
+            .finally(() => this.setReady());
     }
 
-    @computed public get isNew() {
-        return !this.ad?.farmPublicId;
-    }
+    @action public createAd(id: string, params: CreateAdParams) {
+        this.setLoading();
 
-    @action public updateCategoryCode(code: string) {
-        this.categoryCodeSelected = code;
+        if (id === NEW_ITEM) {
+            return AdRequestBookV1.createAd(params).finally(() => this.setReady());
+        }
+
+        return AdRequestBookV1.updateAd(id, params).finally(() => this.setReady());
     }
 
     @action public clearAd() {

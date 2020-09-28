@@ -10,7 +10,6 @@ import {AdEditPageModel} from 'client/models/ad/edit';
 import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
 import {NotFoundPage} from 'client/pages/not-found';
-import {NEW_ITEM} from 'client/consts';
 import {UIGlobal} from 'client/models/ui-global';
 import {Paper} from 'client/components/base/paper';
 import {SearchSelect} from 'client/components/base/search-select';
@@ -21,9 +20,9 @@ import {EditText} from 'client/components/base/edit-text';
 import {Label} from 'client/components/base/label';
 import {RadioGroup} from 'client/components/base/radio-group';
 import {CheckBox} from 'client/components/base/checkbox';
-import {AdRequestBookV1} from 'client/lib/request-book/v1/ad';
 import {ModalMessage} from 'client/components/base/modal-message';
 import {RoutePaths} from 'client/lib/routes';
+import {NEW_ITEM} from 'client/consts';
 
 import './index.scss';
 
@@ -72,61 +71,90 @@ export class AdEditPage extends React.Component<Props> {
         this.props.adEditPageModel?.clearAd();
     }
 
-    public componentDidMount(): void {
+    public componentDidMount() {
         this.loadData();
     }
 
-    private loadData(id?: string) {
-        const publicId = id || this.props.match.params.id;
-        if (publicId === NEW_ITEM) {
+    public componentDidUpdate(prevProps: Props) {
+        if (this.props.location.pathname !== prevProps.location.pathname) {
+            this.props.adEditPageModel?.clearAd();
+            this.loadData();
+        }
+    }
+
+    private getPublicIdFromUrl() {
+        return this.props.match.params.id;
+    }
+
+    private isNew() {
+        const publicId = this.getPublicIdFromUrl();
+        return publicId === NEW_ITEM;
+    }
+
+    private loadData() {
+        if (this.isNew()) {
             return Promise.resolve();
         }
 
-        return this.props.adEditPageModel?.getInfo(publicId);
+        const publicId = this.getPublicIdFromUrl();
+        this.props.adEditPageModel?.getInfo(publicId);
     }
 
     private onSubmitHandler = (values: Values) => {
-        const {uiGlobal} = this.props;
-
-        uiGlobal?.showSpinner();
-
-        return AdRequestBookV1.createAd({
-            name: values.name,
-            description: values.description,
-            address: values.address,
-            animalBreedCode: values.breedCode,
-            cityCode: values.cityCode,
-            imageUrls: [],
-            documents: values.documents.reduce((result, doc) => ({...result, [doc]: true}), {}),
-            sex: values.sex,
-            isBasicVaccinations: false,
-            price: values.price || 0
-        })
+        return this.props.adEditPageModel
+            ?.createAd(this.props.match.params.id, {
+                name: values.name,
+                description: values.description,
+                address: values.address,
+                animalBreedCode: values.breedCode,
+                cityCode: values.cityCode,
+                imageUrls: [],
+                documents: values.documents.reduce((result, doc) => ({...result, [doc]: true}), {}),
+                sex: values.sex,
+                isBasicVaccinations: false,
+                price: values.price || 0
+            })
             .then((response) => this.props.history.replace(RoutePaths.AD_EDIT.replace(':id', response.publicId)))
             .then(() =>
                 ModalMessage.showSuccess({
                     title: 'Успешно',
-                    message: 'Ваше объявление успешно создано'
+                    message: `Объявление ${this.isNew() ? 'создано' : 'обновлено'}`
                 })
             )
-            .catch((error) => ModalMessage.showError(error.response.data.message))
-            .finally(() => uiGlobal?.destroySpinner());
+            .catch((error) => ModalMessage.showError(error.response.data.message));
     };
 
     private renderForm() {
+        const ad = this.props.adEditPageModel?.ad;
+
         return (
             <Paper>
                 <Formik<Values>
-                    initialValues={{
-                        name: '',
-                        description: '',
-                        cityCode: '',
-                        documents: [],
-                        address: '',
-                        breedCategoryCode: 'dogs',
-                        breedCode: '',
-                        sex: true
-                    }}
+                    enableReinitialize={true}
+                    initialValues={
+                        ad
+                            ? {
+                                  name: ad.name,
+                                  description: ad.description,
+                                  cityCode: ad.cityCode,
+                                  documents: Object.keys(ad.documents),
+                                  address: ad.address,
+                                  breedCategoryCode: ad.animalCategoryCode,
+                                  breedCode: ad.animalBreedCode,
+                                  sex: ad.sex,
+                                  price: ad.cost
+                              }
+                            : {
+                                  name: '',
+                                  description: '',
+                                  cityCode: '',
+                                  documents: [],
+                                  address: '',
+                                  breedCategoryCode: 'dogs',
+                                  breedCode: '',
+                                  sex: true
+                              }
+                    }
                     onSubmit={this.onSubmitHandler}
                     validationSchema={validationSchema}
                     render={() => (
