@@ -3,11 +3,13 @@ import {getAnimalAdByPublicId} from 'server/v1/db-provider/animal-ad/api/get-ani
 import {getAnimalAdImages} from 'server/v1/db-provider/animal-ad/api/get-animal-ad-images';
 import {updateAnimalAd} from 'server/v1/db-provider/animal-ad/api/update-animal-ad';
 import {updateAnimalAdImages} from 'server/v1/db-provider/animal-ad/api/update-animal-ad-images';
+import {getAnimalAdByOwnerId} from 'server/v1/db-provider/animal-ad/api/get-animal-ad-by-owner-id';
 
 export const AnimalAdDbProvider = {
     createAnimalAd,
     getAnimalAdByPublicId,
     updateAnimalAd,
     getAnimalAdImages,
-    updateAnimalAdImages
+    updateAnimalAdImages,
+    getAnimalAdByOwnerId
 };

@@ -65,7 +65,7 @@ describe(REQUEST_PATH, () => {
             json: {
                 name: 'updated',
                 description: 'updated',
-                cost: 0.0,
+                cost: 1.1,
                 address: 'updated',
                 sex: !animalAd.sex,
                 animalBreedCode: anotherAnimalBreed.code,
@@ -87,7 +87,7 @@ describe(REQUEST_PATH, () => {
 
         expect(omit(updatedAnimalAd, ['updatedAt'])).toEqual({
             animalBreedId: 2,
-            cost: '0.00',
+            cost: 1.1,
             createdAt: animalAd.createdAt,
             name: 'updated',
             description: 'updated',

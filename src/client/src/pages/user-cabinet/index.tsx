@@ -7,6 +7,7 @@ import {Formik, Form, Field, FieldProps} from 'formik';
 
 import bevis from 'client/lib/bevis';
 import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
+import {AdRequestBookV1, AdItem} from 'client/lib/request-book/v1/ad';
 import {ClientDataModel} from 'client/models/client-data';
 import {Paper} from 'client/components/base/paper';
 import {Label} from 'client/components/base/label';
@@ -15,7 +16,7 @@ import {UIGlobal} from 'client/models/ui-global';
 import {Button} from 'client/components/base/button';
 import {EditText} from 'client/components/base/edit-text';
 import {ModalMessage} from 'client/components/base/modal-message';
-import {Spinner} from 'client/components/base/spinner/spinner';
+import {Page401} from 'client/pages/401';
 
 import './index.scss';
 
@@ -37,6 +38,7 @@ const menuItemSelectedText: Record<MenuItemSelected, string> = {
 interface State {
     menuItemSelected: MenuItemSelected;
     phone: string | null;
+    ads: AdItem[];
 }
 
 interface Values {
@@ -51,8 +53,17 @@ const b = bevis('user-cabinet');
 export class UserCabinetPage extends React.Component<Props, State> {
     state: State = {
         menuItemSelected: MenuItemSelected.MY_ADS,
-        phone: null
+        phone: null,
+        ads: []
     };
+
+    public componentDidMount() {
+        AdRequestBookV1.getUserAds().then((response) =>
+            this.setState({
+                ads: response
+            })
+        );
+    }
 
     private onSaveSettingsHandler = (values: Values) => {
         const {uiGlobal} = this.props;
@@ -94,7 +105,13 @@ export class UserCabinetPage extends React.Component<Props, State> {
     }
 
     private renderMyAdsPanel(): React.ReactNode {
-        return <div className={b('my-ads-panel')} />;
+        return (
+            <div className={b('my-ads-panel')}>
+                {this.state.ads.map((item, index) => (
+                    <div>{JSON.stringify(item)}</div>
+                ))}
+            </div>
+        );
     }
 
     private renderSettingsPanel(): React.ReactNode {
@@ -174,22 +191,20 @@ export class UserCabinetPage extends React.Component<Props, State> {
         const {clientDataModel} = this.props;
 
         if (!clientDataModel?.isReady) {
-            return <Spinner />;
+            return <div />;
+        }
+
+        if (!clientDataModel?.user) {
+            return <Page401 />;
         }
 
         return (
             <div className={b()}>
                 <Paper>
-                    {clientDataModel?.user ? (
-                        <div className={b('container')}>
-                            {this.renderControlPanel()}
-                            {this.renderMainPanel()}
-                        </div>
-                    ) : clientDataModel?.isReady ? (
-                        <Label className={b('not-authorized')} text="Вы не авторизованы" />
-                    ) : (
-                        <div className={b('container')} />
-                    )}
+                    <div className={b('container')}>
+                        {this.renderControlPanel()}
+                        {this.renderMainPanel()}
+                    </div>
                 </Paper>
             </div>
         );

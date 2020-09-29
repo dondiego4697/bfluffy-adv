@@ -58,7 +58,7 @@ describe(REQUEST_PATH, () => {
         const {body, statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
             json: {
                 name: 'animal ad name',
-                cost: 0.0,
+                cost: 1.2,
                 sex: true,
                 address: 'address',
                 animalBreedCode: animalBreed.code,
@@ -77,7 +77,7 @@ describe(REQUEST_PATH, () => {
 
         expect(omit(animalAd, ['createdAt', 'updatedAt'])).toEqual({
             animalBreedId: animalBreed.id,
-            cost: '0.00',
+            cost: 1.2,
             description: null,
             name: 'animal ad name',
             address: 'address',

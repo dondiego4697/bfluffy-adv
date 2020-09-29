@@ -4,6 +4,7 @@ import {bodyValidateMiddleware, queryValidateMiddleware} from 'server/middleware
 import {createAnimalAd} from 'server/v1/routers/edit/animal-ad/providers/create-animal-ad';
 import {updateAnimalAd} from 'server/v1/routers/edit/animal-ad/providers/update-animal-ad';
 import {getAnimalAd} from 'server/v1/routers/edit/animal-ad/providers/get-animal-ad';
+import {getUserAnimalAdList} from 'server/v1/routers/edit/animal-ad/providers/get-user-animal-ad-list';
 
 const createSchema = {
     body: Joi.object({
@@ -31,7 +32,7 @@ const createSchema = {
 
 export const router = express
     .Router()
-    .get('/list')
+    .get('/list', getUserAnimalAdList)
     .get('/info', queryValidateMiddleware(createSchema.query), getAnimalAd)
     .post('/add_view')
     .post('/create', bodyValidateMiddleware(createSchema.body), createAnimalAd)

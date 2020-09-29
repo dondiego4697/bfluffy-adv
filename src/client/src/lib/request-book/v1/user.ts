@@ -12,7 +12,7 @@ interface CheckVerifiedCodeResponse {
 }
 
 interface UploadAvatarResponse {
-    imageUrl: string;
+    url: string;
 }
 
 interface UpdateUserResponse {}

@@ -1,14 +1,18 @@
 import * as React from 'react';
 
 import bevis from 'client/lib/bevis';
-import {UserRequestBookV1} from 'client/lib/request-book/v1/user';
 import {ModalMessage} from 'client/components/base/modal-message';
 import {SpinnerWrapper} from 'client/components/base/spinner/spinner-wrapper';
 
 import './index.scss';
 
+type ImageUrl = string;
+
 interface Props {
     url?: string;
+    text?: string;
+    icon?: string;
+    onUploadImage: (file: File) => Promise<ImageUrl>;
 }
 
 interface State {
@@ -16,9 +20,9 @@ interface State {
     url?: string;
 }
 
-const b = bevis('bfluffy-avatar-upload');
+const b = bevis('bfluffy-image-upload');
 
-export class AvatarUpload extends React.Component<Props, State> {
+export class ImageUpload extends React.Component<Props, State> {
     inputRef = React.createRef<HTMLInputElement>();
 
     state: State = {
@@ -46,22 +50,28 @@ export class AvatarUpload extends React.Component<Props, State> {
             return;
         }
 
-        this.uploadAvatar(file);
+        this.uploadImage(file);
     };
 
-    private uploadAvatar(file: File) {
+    private uploadImage(file: File) {
         this.setState({uploading: true});
 
-        UserRequestBookV1.uploadAvatar(file).then(({url}) =>
-            this.setState({
-                url,
-                uploading: false
-            })
-        );
+        this.props
+            .onUploadImage(file)
+            .then((imageUrl) =>
+                this.setState({
+                    url: imageUrl
+                })
+            )
+            .finally(() =>
+                this.setState({
+                    uploading: false
+                })
+            );
     }
 
     public render(): React.ReactNode {
-        const {url: propsUrl} = this.props;
+        const {url: propsUrl, text, icon} = this.props;
         const {uploading, url: stateUrl} = this.state;
 
         const url = stateUrl || propsUrl;
@@ -70,8 +80,8 @@ export class AvatarUpload extends React.Component<Props, State> {
             <div className={b('container')}>
                 <SpinnerWrapper spinning={uploading}>
                     <label className={b('button-wrapper')}>
-                        {(url && <img src={url} alt="avatar" className={b('avatar-preview')} />) || (
-                            <span className={b('title')}>Загрузить аватарку</span>
+                        {(url && <img src={url} alt="image" className={b('image-preview')} />) || (
+                            <span className={b('title')}>{text || (icon && <img src={icon} />) || ''}</span>
                         )}
                         <input
                             className={b('upload-button')}

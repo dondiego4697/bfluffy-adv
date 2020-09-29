@@ -27,4 +27,11 @@
         position: absolute;
         right: -26px;
     }
+
+    &__images-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
 }

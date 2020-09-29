@@ -3,13 +3,14 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 import {inject, observer} from 'mobx-react';
 import {RouteComponentProps} from 'react-router';
-import {Formik, Form, Field, FieldProps} from 'formik';
+import {Formik, Form, Field, FieldArray, FieldProps} from 'formik';
 
 import {Button} from 'client/components/base/button';
 import {AdEditPageModel} from 'client/models/ad/edit';
 import {ClientDataModel} from 'client/models/client-data';
 import bevis from 'client/lib/bevis';
-import {NotFoundPage} from 'client/pages/not-found';
+import {Page404} from 'client/pages/404';
+import {Page401} from 'client/pages/401';
 import {UIGlobal} from 'client/models/ui-global';
 import {Paper} from 'client/components/base/paper';
 import {SearchSelect} from 'client/components/base/search-select';
@@ -23,6 +24,8 @@ import {CheckBox} from 'client/components/base/checkbox';
 import {ModalMessage} from 'client/components/base/modal-message';
 import {RoutePaths} from 'client/lib/routes';
 import {NEW_ITEM} from 'client/consts';
+import {ImageUpload} from 'client/components/base/image-upload';
+import {AdRequestBookV1} from 'client/lib/request-book/v1/ad';
 
 import './index.scss';
 
@@ -48,6 +51,7 @@ interface Values {
     description?: string;
     documents: string[];
     address?: string;
+    imageUrls: string[];
 }
 
 const b = bevis('ad-edit-page');
@@ -61,8 +65,12 @@ const validationSchema = Yup.object().shape({
     documents: Yup.array().of(Yup.string()).default([]),
     description: Yup.string(),
     cityCode: Yup.string().required(),
-    price: Yup.number().min(0).default(0)
+    price: Yup.number().min(0).default(0),
+    imageUrls: Yup.array().of(Yup.string()).default([])
 });
+
+const IMAGES_COUNT = 4;
+const EMPTY_IMAGE_URL = 'EMPTY_IMAGE_URL';
 
 @inject('adEditPageModel', 'clientDataModel', 'uiGlobal', 'animalModel', 'geoModel')
 @observer
@@ -108,7 +116,7 @@ export class AdEditPage extends React.Component<Props> {
                 address: values.address,
                 animalBreedCode: values.breedCode,
                 cityCode: values.cityCode,
-                imageUrls: [],
+                imageUrls: values.imageUrls.filter((url) => url !== EMPTY_IMAGE_URL),
                 documents: values.documents.reduce((result, doc) => ({...result, [doc]: true}), {}),
                 sex: values.sex,
                 isBasicVaccinations: false,
@@ -135,20 +143,25 @@ export class AdEditPage extends React.Component<Props> {
                         ad
                             ? {
                                   name: ad.name,
-                                  description: ad.description,
+                                  description: ad.description || '',
                                   cityCode: ad.cityCode,
                                   documents: Object.keys(ad.documents),
                                   address: ad.address,
                                   breedCategoryCode: ad.animalCategoryCode,
                                   breedCode: ad.animalBreedCode,
                                   sex: ad.sex,
-                                  price: ad.cost
+                                  price: ad.cost,
+                                  imageUrls: ad.imageUrls.reduce((result, url, index) => {
+                                      result[index] = url;
+                                      return result;
+                                  }, new Array(IMAGES_COUNT).fill(EMPTY_IMAGE_URL))
                               }
                             : {
                                   name: '',
                                   description: '',
                                   cityCode: '',
                                   documents: [],
+                                  imageUrls: new Array(IMAGES_COUNT).fill(EMPTY_IMAGE_URL),
                                   address: '',
                                   breedCategoryCode: 'dogs',
                                   breedCode: '',
@@ -157,7 +170,7 @@ export class AdEditPage extends React.Component<Props> {
                     }
                     onSubmit={this.onSubmitHandler}
                     validationSchema={validationSchema}
-                    render={() => (
+                    render={({values}) => (
                         <Form className={b('form')}>
                             <Label size="header" text="Ваше объявление" className={b('form-header')} />
                             <Field
@@ -341,13 +354,35 @@ export class AdEditPage extends React.Component<Props> {
                                 render={({meta, field}: FieldProps) => (
                                     <EditText
                                         className={classnames(b('base-input'))}
-                                        placeholder="Адрес осмотра"
+                                        placeholder="Адрес просмотра"
                                         value={field.value}
                                         name={field.name}
                                         error={(meta.touched && meta.error) || ''}
                                         onChange={field.onChange}
                                     />
                                 )}
+                            />
+                            <FieldArray
+                                name="imageUrls"
+                                render={(arrayHelpers) => {
+                                    return (
+                                        <div className={b('images-container')}>
+                                            {values.imageUrls.map((imageUrl, index) => (
+                                                <ImageUpload
+                                                    key={`ad-edit-image-${index}`}
+                                                    icon="/image/camera.svg"
+                                                    url={imageUrl !== EMPTY_IMAGE_URL ? imageUrl : undefined}
+                                                    onUploadImage={(file) =>
+                                                        AdRequestBookV1.uploadImage(file).then(({url}) => {
+                                                            arrayHelpers.replace(index, url);
+                                                            return url;
+                                                        })
+                                                    }
+                                                />
+                                            ))}
+                                        </div>
+                                    );
+                                }}
                             />
                             <div className={b('submit-button')}>
                                 <Button type="primary" text="Сохранить" htmlType="submit" />
@@ -360,8 +395,18 @@ export class AdEditPage extends React.Component<Props> {
     }
 
     public render(): React.ReactNode {
-        if (this.props.adEditPageModel?.notFound) {
-            return <NotFoundPage />;
+        const {clientDataModel, adEditPageModel} = this.props;
+
+        if (!clientDataModel?.isReady) {
+            return <div />;
+        }
+
+        if (!clientDataModel?.user) {
+            return <Page401 />;
+        }
+
+        if (adEditPageModel?.notFound) {
+            return <Page404 />;
         }
 
         return (

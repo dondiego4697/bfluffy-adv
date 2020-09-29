@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as fileUpload from 'express-fileupload';
 import {updateAvatar} from 'server/v1/routers/edit/s3-storage/providers/update-avatar';
+import {uploadAdImage} from 'server/v1/routers/edit/s3-storage/providers/upload-ad-image';
 
 export const router = express
     .Router()
@@ -12,4 +13,5 @@ export const router = express
             }
         })
     )
-    .post('/update_avatar', updateAvatar);
+    .post('/update_avatar', updateAvatar)
+    .post('/upload_ad_image', uploadAdImage);

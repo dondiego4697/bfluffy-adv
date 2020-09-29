@@ -9,6 +9,7 @@ function parseDbInt8(value: any) {
     return value === null ? null : parseInt(value, 10);
 }
 types.setTypeParser(types.builtins.INT8, parseDbInt8);
+types.setTypeParser(types.builtins.NUMERIC, parseFloat);
 
 export class DBManager {
     private dbClient: PgClient;
@@ -22,18 +23,8 @@ export class DBManager {
         return result.data;
     }
 
-    async executeReadCallback<T>(query: ClientCallback<T>) {
-        const result = await this.dbClient.executeReadCallback(query);
-        return result.data;
-    }
-
     async executeModifyQuery(query: ClientValue) {
         const result = await this.dbClient.executeWriteQuery(query);
-        return result.data;
-    }
-
-    async executeModifyCallback<T>(query: ClientCallback<T>) {
-        const result = await this.dbClient.executeWriteCallback(query);
         return result.data;
     }
 

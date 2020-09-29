@@ -13,7 +13,7 @@ interface Props {
 const b = bevis('not-found-page');
 
 @inject('clientDataModel')
-export class NotFoundPage extends React.Component<Props> {
+export class Page404 extends React.Component<Props> {
     public render(): React.ReactNode {
         return (
             <div className={b()}>
