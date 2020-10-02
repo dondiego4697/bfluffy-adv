@@ -33,7 +33,7 @@
     "jsonwebtoken": "8.5.1",
     "knex": "0.21.1",
     "libphonenumber-js": "1.7.57",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "mobx": "5.15.4",
     "mobx-react": "6.2.2",
     "moment": "2.26.0",
