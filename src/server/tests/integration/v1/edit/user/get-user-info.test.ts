@@ -25,7 +25,7 @@ const client = got.extend({
     }
 });
 
-const REQUEST_PATH = '/api/v1/edit/user/info';
+const REQUEST_PATH = '/api/v1/private/user/info';
 
 describe(REQUEST_PATH, () => {
     let server: http.Server;

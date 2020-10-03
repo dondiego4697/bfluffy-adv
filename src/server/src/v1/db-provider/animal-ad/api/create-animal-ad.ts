@@ -8,11 +8,12 @@ interface Params {
     description: string;
     isBasicVaccinations: boolean;
     cost: number;
-    sex: boolean;
+    sex: DBTableAnimalAd.FieldSex;
     animalBreedId: number;
     ownerId: number;
     cityId: number;
     address?: string;
+    ageMonths?: number;
     documents: DBTableAnimalAd.FieldDocuments;
 }
 
@@ -34,15 +35,17 @@ export async function createAnimalAd(params: Params): Promise<Response> {
         sex,
         cost,
         animalBreedId,
-        ownerId
+        ownerId,
+        ageMonths
     } = params;
 
     const query = knex(DbTable.ANIMAL_AD)
         .insert({
             name,
             description,
+            age_months: ageMonths,
             is_basic_vaccinations: isBasicVaccinations,
-            sex,
+            sex: JSON.stringify(sex),
             cost,
             owner_id: ownerId,
             city_id: cityId,

@@ -17,8 +17,14 @@
 
         "baseUrl": "./",
         "paths": {
-            "client/*": [
-                "./src/*"
+            "common/*": [
+                "./common/*"
+            ],
+            "desktop/*": [
+                "./desktop/*"
+            ],
+            "touch/*": [
+                "./touch/*"
             ]
         }
     },

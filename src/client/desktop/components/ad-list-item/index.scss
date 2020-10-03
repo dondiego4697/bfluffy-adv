@@ -1,0 +1,75 @@
+@import '../../consts.scss';
+
+$margin-v: 16px;
+$margin-h: 24px;
+
+.bfluffy-ad-list-item {
+    margin-bottom: $margin-v;
+    cursor: pointer;
+    transition: $base-transition;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+
+    &:hover {
+        box-shadow: $box-shadow_hover;
+    }
+
+    &__container {
+        display: flex;
+        max-height: 150px;
+    }
+
+    &__image-contaner {
+        & img {
+            height: 150px;
+        }
+    }
+
+    &__info-container {
+        padding: $margin-v $margin-h;
+        position: relative;
+        width: 100%;
+    }
+
+    &__breed-title {
+        font-family: MontserratBold;
+        font-size: $font-size-m;
+        margin: 0 0 4px 0;
+    }
+
+    &__address {
+        font-family: MontserratMedium;
+        font-size: $font-size-s;
+        margin: 4px 0 4px 0;
+        color: $line-color;
+    }
+
+    &__updated-at {
+        right: $margin-h;
+        top: $margin-v;
+        position: absolute;
+        font-size: $font-size-s;
+        color: $line-color;
+        margin: 0;
+    }
+
+    &__cost {
+        margin: 0;
+        font-family: MontserratBold;
+        position: absolute;
+        font-size: $font-size-s;
+        color: $line-color;
+        bottom: $margin-v;
+    }
+
+    &__sex-container {
+        margin: 0;
+        position: absolute;
+        bottom: $margin-v;
+        right: $margin-h;
+
+        & img {
+            width: 16px;
+        }
+    }
+}

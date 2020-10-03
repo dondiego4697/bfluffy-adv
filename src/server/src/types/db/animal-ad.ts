@@ -7,12 +7,17 @@ export namespace DBTableAnimalAd {
         withoutDocuments?: boolean; // без документов
     }
 
+    export interface FieldSex {
+        male?: boolean;
+        female?: boolean;
+    }
+
     export interface Schema {
         id: number;
         public_id: string;
         animal_breed_id: number;
         city_id: number;
-        sex: boolean;
+        sex: FieldSex;
         cost: number;
         name: string;
         description?: string;
@@ -24,6 +29,7 @@ export namespace DBTableAnimalAd {
         owner_id: number;
         created_at: Date;
         updated_at: Date;
+        age_months?: number;
     }
 }
 

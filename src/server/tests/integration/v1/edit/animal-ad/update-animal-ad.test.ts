@@ -26,7 +26,7 @@ const client = got.extend({
     }
 });
 
-const REQUEST_PATH = '/api/v1/edit/animal_ad/update';
+const REQUEST_PATH = '/api/v1/private/animal_ad/update';
 
 describe(REQUEST_PATH, () => {
     let server: http.Server;
@@ -67,12 +67,15 @@ describe(REQUEST_PATH, () => {
                 description: 'updated',
                 cost: 1.1,
                 address: 'updated',
-                sex: !animalAd.sex,
+                sex: {
+                    male: true
+                },
                 animalBreedCode: anotherAnimalBreed.code,
                 cityCode: city.code,
                 documents: {
                     genericMark: true
-                }
+                },
+                ageMonths: 11
             },
             searchParams: {
                 publicId: animalAd.publicId
@@ -100,8 +103,11 @@ describe(REQUEST_PATH, () => {
             isBasicVaccinations: false,
             ownerId: 1,
             publicId: animalAd.publicId,
-            sex: !animalAd.sex,
+            sex: {
+                male: true
+            },
             viewsCount: 0,
+            ageMonths: 11,
             imageUrls: []
         });
     });
@@ -135,7 +141,6 @@ describe(REQUEST_PATH, () => {
                 description: 'updated',
                 cost: 0.0,
                 address: 'updated',
-                sex: !animalAd.sex,
                 animalBreedCode: animalBreed.code,
                 cityCode: city.code,
                 imageUrls: updatedUrls
@@ -170,7 +175,6 @@ describe(REQUEST_PATH, () => {
             json: {
                 name: 'updated',
                 cost: 0.0,
-                sex: !animalAd.sex,
                 animalBreedCode: animalBreed.code,
                 cityCode: city.code
             },
@@ -194,7 +198,6 @@ describe(REQUEST_PATH, () => {
             json: {
                 name: 'updated',
                 cost: 0.0,
-                sex: false,
                 animalBreedCode: animalBreed.code,
                 cityCode: city.code
             },

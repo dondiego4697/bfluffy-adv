@@ -21,6 +21,8 @@ declare global {
 }
 
 export const auth = wrap<Request, Response>(async (req, res, next) => {
+    // TODO добавить поддержку авторизации через mail.ru | yandex.ru
+
     req.userData = {
         id: -1,
         isAuth: false,
@@ -38,7 +40,7 @@ export const auth = wrap<Request, Response>(async (req, res, next) => {
     const credentials = AuthToken.decode(authToken);
     const user = await UserDbProvider.getUserByEmail(credentials.email);
 
-    if (!user) {
+    if (!user || !user.id) {
         throw Boom.unauthorized(ClientStatusCode.USER_NOT_EXIST);
     }
 

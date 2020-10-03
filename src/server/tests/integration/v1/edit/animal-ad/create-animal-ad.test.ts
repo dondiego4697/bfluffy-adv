@@ -25,7 +25,7 @@ const client = got.extend({
     }
 });
 
-const REQUEST_PATH = '/api/v1/edit/animal_ad/create';
+const REQUEST_PATH = '/api/v1/private/animal_ad/create';
 
 describe(REQUEST_PATH, () => {
     let server: http.Server;
@@ -59,7 +59,11 @@ describe(REQUEST_PATH, () => {
             json: {
                 name: 'animal ad name',
                 cost: 1.2,
-                sex: true,
+                sex: {
+                    male: true,
+                    female: true
+                },
+                ageMonths: 10,
                 address: 'address',
                 animalBreedCode: animalBreed.code,
                 cityCode: city.code,
@@ -86,7 +90,11 @@ describe(REQUEST_PATH, () => {
             isBasicVaccinations: false,
             ownerId: 1,
             publicId: body.publicId,
-            sex: true,
+            sex: {
+                male: true,
+                female: true
+            },
+            ageMonths: 10,
             viewsCount: 0,
             documents: {
                 genericMark: true

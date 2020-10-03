@@ -1,6 +1,7 @@
 import got from 'got';
 import * as http from 'http';
 import * as nock from 'nock';
+import * as moment from 'moment';
 import {app} from 'server/app';
 import {TestDb} from 'tests/test-db';
 import {startServer, stopServer} from 'tests/test-server';
@@ -24,7 +25,7 @@ const client = got.extend({
     }
 });
 
-const REQUEST_PATH = '/api/v1/edit/animal_ad/list';
+const REQUEST_PATH = '/api/v1/private/animal_ad/list';
 
 describe(REQUEST_PATH, () => {
     let server: http.Server;
@@ -85,7 +86,7 @@ describe(REQUEST_PATH, () => {
                 documents: animalAd.documents,
                 imageUrls: urls,
                 createdAt: animalAd.createdAt.toISOString(),
-                updatedAt: animalAd.updatedAt.toISOString(),
+                updatedAt: moment(animalAd.updatedAt).startOf('day').fromNow(),
                 viewsCount: animalAd.viewsCount
             }
         ]);

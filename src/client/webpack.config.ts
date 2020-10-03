@@ -4,7 +4,6 @@ import * as ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const nodeModulesPath = path.resolve('./node_modules');
 const projectPath = path.resolve('./src/client');
-const srcPath = path.resolve(projectPath, './src');
 const outPath = path.resolve('./out/client');
 
 const babelPlugins = [
@@ -45,17 +44,22 @@ const config: webpack.Configuration = {
     mode: 'development',
     devtool: 'source-map',
     target: 'web',
-    entry: () => path.resolve(srcPath, './index.tsx'),
+    entry: {
+        desktop: path.resolve(projectPath, './desktop/index.tsx'),
+        touch: path.resolve(projectPath, './touch/index.tsx')
+    },
     output: {
         path: path.resolve(outPath, './bundles'),
-        filename: 'bundle.js'
+        filename: '[name].bundle.js'
     },
-    plugins: [new ExtractTextPlugin('bundle.css')],
+    plugins: [new ExtractTextPlugin('[name].bundle.css')],
     resolve: {
         alias: {
-            client: path.resolve(srcPath, './')
+            common: path.resolve(projectPath, './common'),
+            desktop: path.resolve(projectPath, './desktop'),
+            touch: path.resolve(projectPath, './touch')
         },
-        modules: [srcPath, nodeModulesPath],
+        modules: [projectPath, nodeModulesPath],
         extensions: ['.js', '.jsx', '.ts', '.tsx']
     },
     resolveLoader: {

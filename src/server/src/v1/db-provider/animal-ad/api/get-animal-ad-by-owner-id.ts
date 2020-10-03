@@ -52,7 +52,8 @@ export async function getAnimalAdByOwnerId(ownerId: number): Promise<AnimalAd[]>
         })
         .groupByRaw(
             `${DbTable.ANIMAL_AD}.id, ${DbTable.ANIMAL_BREED}.id, ${DbTable.ANIMAL_CATEGORY}.id, ${DbTable.CITY}.id`
-        );
+        )
+        .orderBy('updatedAt', 'desc');
 
     const {rows} = await dbManager.executeModifyQuery(query.toString());
     return rows;
