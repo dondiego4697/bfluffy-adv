@@ -1,0 +1,18 @@
+@import '../../../consts.scss';
+
+.bfluffy-modal-message {
+
+    &__message {
+        font-size: $font-size-s;
+        font-family: FontMedium;
+    }
+
+    &__ok-button {
+        display: flex;
+        margin-top: 16px;
+
+        & input {
+            margin-left: auto;
+        }
+    }
+}

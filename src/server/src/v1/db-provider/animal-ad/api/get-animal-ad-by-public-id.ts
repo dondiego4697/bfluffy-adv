@@ -12,7 +12,7 @@ interface AnimalAd {
     publicId: DBTableAnimalAd.Schema['public_id'];
     cost: DBTableAnimalAd.Schema['cost'];
     sex: DBTableAnimalAd.Schema['sex'];
-    name: DBTableAnimalAd.Schema['name'];
+    title: DBTableAnimalAd.Schema['title'];
     description: DBTableAnimalAd.Schema['description'];
     address: DBTableAnimalAd.Schema['address'];
     documents: DBTableAnimalAd.Schema['documents'];
@@ -37,7 +37,7 @@ export async function getAnimalAdByPublicId(publicId: string): Promise<AnimalAd 
             publicId: `${DbTable.ANIMAL_AD}.public_id`,
             cost: `${DbTable.ANIMAL_AD}.cost`,
             sex: `${DbTable.ANIMAL_AD}.sex`,
-            name: `${DbTable.ANIMAL_AD}.name`,
+            title: `${DbTable.ANIMAL_AD}.title`,
             description: `${DbTable.ANIMAL_AD}.description`,
             address: `${DbTable.ANIMAL_AD}.address`,
             documents: `${DbTable.ANIMAL_AD}.documents`,

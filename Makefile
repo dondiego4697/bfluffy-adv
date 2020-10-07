@@ -39,7 +39,11 @@ lint:
 
 .PHONY: dev
 dev:
-	$(MAKE) -j2 server-dev client-dev
+	$(MAKE) -j3 tunnel-dev server-dev client-dev
+
+.PHONY: tunnel-dev
+tunnel-dev:
+	@node_modules/.bin/lt --port 8080 --subdomain bfluffy
 
 .PHONY: client-dev
 client-dev:

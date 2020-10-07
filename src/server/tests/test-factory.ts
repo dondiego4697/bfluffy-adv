@@ -225,9 +225,9 @@ interface AnimalAd {
     animalBreedId: DBTableAnimalAd.Schema['animal_breed_id'];
     cityId: DBTableAnimalAd.Schema['city_id'];
     sex: DBTableAnimalAd.Schema['sex'];
-    ageMonths: DBTableAnimalAd.Schema['age_months'];
+    birthday: DBTableAnimalAd.Schema['birthday'];
     cost: DBTableAnimalAd.Schema['cost'];
-    name: DBTableAnimalAd.Schema['name'];
+    title: DBTableAnimalAd.Schema['title'];
     address: DBTableAnimalAd.Schema['address'];
     description: DBTableAnimalAd.Schema['description'];
     documents: DBTableAnimalAd.Schema['documents'];
@@ -246,11 +246,11 @@ async function getAllAnimalAds(): Promise<AnimalAd[]> {
             knex.raw(`${DbTable.ANIMAL_AD}.id`),
             knex.raw(`${DbTable.ANIMAL_AD}.public_id as "publicId"`),
             knex.raw(`${DbTable.ANIMAL_AD}.animal_breed_id as "animalBreedId"`),
-            knex.raw(`${DbTable.ANIMAL_AD}.age_months as "ageMonths"`),
+            knex.raw(`${DbTable.ANIMAL_AD}.birthday as birthday`),
             knex.raw(`${DbTable.ANIMAL_AD}.sex`),
             knex.raw(`${DbTable.ANIMAL_AD}.cost`),
             knex.raw(`${DbTable.ANIMAL_AD}.address`),
-            knex.raw(`${DbTable.ANIMAL_AD}.name`),
+            knex.raw(`${DbTable.ANIMAL_AD}.title`),
             knex.raw(`${DbTable.ANIMAL_AD}.description`),
             knex.raw(`${DbTable.ANIMAL_AD}.is_archive as "isArchive"`),
             knex.raw(`${DbTable.ANIMAL_AD}.is_basic_vaccinations as "isBasicVaccinations"`),
@@ -281,7 +281,7 @@ async function createAnimalAd(params: CreateAnimalAdParams): Promise<AnimalAd> {
             city_id: cityId,
             cost: faker.commerce.price(),
             address: faker.address.streetAddress(),
-            name: faker.company.companyName(),
+            title: faker.company.companyName(),
             description: faker.company.catchPhrase(),
             is_archive: 'isArchive' in params ? isArchive : false,
             is_basic_vaccinations: 'isBasicVaccinations' in params ? isBasicVaccinations : false,
@@ -295,7 +295,7 @@ async function createAnimalAd(params: CreateAnimalAdParams): Promise<AnimalAd> {
             'sex',
             'cost',
             'address',
-            'name',
+            'title',
             'description',
             'is_archive as isArchive',
             'is_basic_vaccinations as isBasicVaccinations',
@@ -304,7 +304,7 @@ async function createAnimalAd(params: CreateAnimalAdParams): Promise<AnimalAd> {
             'owner_id as ownerId',
             'created_at as createdAt',
             'updated_at as updatedAt',
-            'age_months as ageMonths'
+            'birthday as birthday'
         ]);
 
     const {

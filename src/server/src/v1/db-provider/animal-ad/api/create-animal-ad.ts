@@ -4,7 +4,7 @@ import {DbTable} from 'server/types/consts';
 import {DBTableAnimalAd} from 'server/types/db/animal-ad';
 
 interface Params {
-    name: string;
+    title: string;
     description: string;
     isBasicVaccinations: boolean;
     cost: number;
@@ -13,7 +13,7 @@ interface Params {
     ownerId: number;
     cityId: number;
     address?: string;
-    ageMonths?: number;
+    birthday?: Date;
     documents: DBTableAnimalAd.FieldDocuments;
 }
 
@@ -26,7 +26,7 @@ const knex = Knex({client: 'pg'});
 
 export async function createAnimalAd(params: Params): Promise<Response> {
     const {
-        name,
+        title,
         description,
         address,
         documents,
@@ -36,14 +36,14 @@ export async function createAnimalAd(params: Params): Promise<Response> {
         cost,
         animalBreedId,
         ownerId,
-        ageMonths
+        birthday
     } = params;
 
     const query = knex(DbTable.ANIMAL_AD)
         .insert({
-            name,
+            title,
             description,
-            age_months: ageMonths,
+            birthday,
             is_basic_vaccinations: isBasicVaccinations,
             sex: JSON.stringify(sex),
             cost,

@@ -77,7 +77,7 @@ describe(REQUEST_PATH, () => {
                 publicId: animalAd.publicId,
                 cost: animalAd.cost,
                 sex: animalAd.sex,
-                name: animalAd.name,
+                title: animalAd.title,
                 description: animalAd.description,
                 address: animalAd.address,
                 animalBreedDisplayName: animalBreed.displayName,

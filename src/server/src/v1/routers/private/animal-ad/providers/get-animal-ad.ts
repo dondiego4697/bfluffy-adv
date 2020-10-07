@@ -28,7 +28,7 @@ export const getAnimalAd = wrap<Request, Response>(async (req, res) => {
     res.json({
         cost: animalAd.cost,
         sex: animalAd.sex,
-        name: animalAd.name,
+        title: animalAd.title,
         description: animalAd.description,
         address: animalAd.address,
         documents: animalAd.documents,

@@ -19,14 +19,14 @@ export const updateAnimalAd = wrap<Request, Response>(async (req, res) => {
         documents,
         address,
         isBasicVaccinations,
-        name,
+        title,
         description,
         cityCode,
         cost,
         sex,
         animalBreedCode,
         imageUrls,
-        ageMonths
+        birthday
     } = req.body as Body;
 
     const [animalBreed, animalAd, city] = await Promise.all([
@@ -55,14 +55,14 @@ export const updateAnimalAd = wrap<Request, Response>(async (req, res) => {
     }
 
     await AnimalAdDbProvider.updateAnimalAd(publicId, {
-        name,
+        title,
         address,
         description,
         isBasicVaccinations,
         documents,
         cost,
         sex,
-        ageMonths,
+        birthday,
         animalBreedId: animalBreed.id,
         cityId: city.id
     });

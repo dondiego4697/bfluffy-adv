@@ -63,7 +63,7 @@ describe(REQUEST_PATH, () => {
 
         const {body, statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
             json: {
-                name: 'updated',
+                title: 'updated',
                 description: 'updated',
                 cost: 1.1,
                 address: 'updated',
@@ -74,8 +74,7 @@ describe(REQUEST_PATH, () => {
                 cityCode: city.code,
                 documents: {
                     genericMark: true
-                },
-                ageMonths: 11
+                }
             },
             searchParams: {
                 publicId: animalAd.publicId
@@ -92,7 +91,7 @@ describe(REQUEST_PATH, () => {
             animalBreedId: 2,
             cost: 1.1,
             createdAt: animalAd.createdAt,
-            name: 'updated',
+            title: 'updated',
             description: 'updated',
             address: 'updated',
             documents: {
@@ -107,8 +106,8 @@ describe(REQUEST_PATH, () => {
                 male: true
             },
             viewsCount: 0,
-            ageMonths: 11,
-            imageUrls: []
+            imageUrls: [],
+            birthday: null
         });
     });
 
@@ -137,7 +136,7 @@ describe(REQUEST_PATH, () => {
         const updatedUrls = ['url1', 'url3', 'url5'];
         const {body, statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
             json: {
-                name: 'updated',
+                title: 'updated',
                 description: 'updated',
                 cost: 0.0,
                 address: 'updated',
@@ -173,7 +172,7 @@ describe(REQUEST_PATH, () => {
 
         const {body, statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
             json: {
-                name: 'updated',
+                title: 'updated',
                 cost: 0.0,
                 animalBreedCode: animalBreed.code,
                 cityCode: city.code
@@ -196,7 +195,7 @@ describe(REQUEST_PATH, () => {
 
         const {statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
             json: {
-                name: 'updated',
+                title: 'updated',
                 cost: 0.0,
                 animalBreedCode: animalBreed.code,
                 cityCode: city.code

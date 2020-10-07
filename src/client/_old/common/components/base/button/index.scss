@@ -1,0 +1,77 @@
+@import '../../../consts.scss';
+
+.bfluffy-button {
+    & input, a {
+        line-height: 20px;
+        padding: 10px 16px;
+        font-family: FontMedium;
+        font-size: $font-size-s;
+        border-radius: $border-radius;
+        border: unset;
+        outline: none;
+        cursor: pointer;
+        user-select: none;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: $base-transition;
+        -webkit-appearance: none;
+    }
+}
+
+.bfluffy-button-type {
+
+    &__link {
+        border: none;
+        height: unset;
+        font-size: $font-size-s;
+        padding: 0 !important;
+        font-family: FontMedium;
+        color: $primary-color;
+        box-shadow: unset;
+        background-color: white;
+
+        &:hover {
+            color: $primary-color;
+            opacity: 0.8;
+        }
+    }
+
+    &__primary {
+        background-color: $primary-color;
+        color: white;
+
+        &:hover {
+            background-color: $primary-color;
+            color: white;
+            opacity: 0.8;
+        }
+    }
+
+    &__base {
+        box-shadow: $box-shadow;
+        color: $primary-text-color;
+        background-color: white;
+
+        &:hover {
+            color: $primary-text-color;
+            box-shadow: $box-shadow_hover;
+        }
+    }
+
+    &__image {
+        box-shadow: $box-shadow;
+        background-color: white;
+        padding: 10px !important;
+        display: flex;
+
+        &:hover {
+            box-shadow: $box-shadow_hover;
+        }
+
+        & svg {
+            height: 20px;
+            width: 20px;
+            margin: auto;
+        }
+    }
+}

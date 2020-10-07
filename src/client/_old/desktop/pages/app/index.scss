@@ -1,0 +1,29 @@
+@import '../../../common/consts.scss';
+
+html, body, #root {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-color: $background-color;
+}
+
+.root {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    background-color: $background-color;
+    font-family: FontMedium;
+
+    &__container {
+        padding: 0 32px;
+    }
+
+    &__init-preloader {
+        display: flex;
+        height: 100%;
+
+        & svg {
+            margin: auto;
+        }
+    }
+}

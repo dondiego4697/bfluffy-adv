@@ -12,7 +12,7 @@ export const getUserAnimalAdList = wrap<Request, Response>(async (req, res) => {
             publicId: item.publicId,
             cost: item.cost,
             sex: item.sex,
-            name: item.name,
+            title: item.title,
             description: item.description,
             address: item.address,
             documents: item.documents,

@@ -74,7 +74,7 @@ describe(REQUEST_PATH, () => {
         expect(body).toEqual({
             cost: animalAd.cost,
             sex: animalAd.sex,
-            name: animalAd.name,
+            title: animalAd.title,
             description: animalAd.description,
             address: animalAd.address,
             animalBreedCode: animalBreed.code,

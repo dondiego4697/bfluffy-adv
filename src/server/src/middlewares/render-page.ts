@@ -8,7 +8,7 @@ export const renderPage = wrap<Request, Response>(async (req, res) => {
     const bundleType = mobileDetect.mobile() ? 'touch' : 'desktop';
 
     const renderConfig = {
-        bundlesUrl: `${config['client.bundlesRootFolder']}/${bundleType}`
+        bundlesUrl: `${config['client.bundlesRootFolder']}${bundleType}`
     };
 
     const clientConfig = JSON.stringify({});

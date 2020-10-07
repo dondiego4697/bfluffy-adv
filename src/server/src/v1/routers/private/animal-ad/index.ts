@@ -10,13 +10,13 @@ const createSchema = {
     body: Joi.object({
         animalBreedCode: Joi.string().required(),
         cityCode: Joi.string().required(),
-        ageMonths: Joi.number(),
+        birthday: Joi.date().empty('').allow(null),
         sex: Joi.object({
             male: Joi.boolean(),
             female: Joi.boolean()
         }).default({}),
         cost: Joi.number().min(0).required(),
-        name: Joi.string().required(),
+        title: Joi.string().required(),
         description: Joi.string().empty('').allow(null),
         address: Joi.string().empty('').allow(null),
         isBasicVaccinations: Joi.boolean().default(false),

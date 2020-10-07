@@ -71,7 +71,7 @@ const development: Config = {
     'db.useCert': false,
     'auth.token.ttl': 10 * 60 * 1000, // 10m
     'host.app': 'http://localhost:8080',
-    'emulation.request': true,
+    'emulation.request': false,
     'validate.checkEmail.ttl': -1
 };
 

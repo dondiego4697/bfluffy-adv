@@ -10,7 +10,7 @@ interface AnimalAd {
     publicId: DBTableAnimalAd.Schema['public_id'];
     cost: DBTableAnimalAd.Schema['cost'];
     sex: DBTableAnimalAd.Schema['sex'];
-    name: DBTableAnimalAd.Schema['name'];
+    title: DBTableAnimalAd.Schema['title'];
     description: DBTableAnimalAd.Schema['description'];
     address: DBTableAnimalAd.Schema['address'];
     documents: DBTableAnimalAd.Schema['documents'];
@@ -31,7 +31,7 @@ export async function getAnimalAdByOwnerId(ownerId: number): Promise<AnimalAd[]>
             knex.raw(`${DbTable.ANIMAL_AD}.public_id as "publicId"`),
             knex.raw(`${DbTable.ANIMAL_AD}.cost as cost`),
             knex.raw(`${DbTable.ANIMAL_AD}.sex as sex`),
-            knex.raw(`${DbTable.ANIMAL_AD}.name as name`),
+            knex.raw(`${DbTable.ANIMAL_AD}.title as title`),
             knex.raw(`${DbTable.ANIMAL_AD}.description as description`),
             knex.raw(`${DbTable.ANIMAL_AD}.address as address`),
             knex.raw(`${DbTable.ANIMAL_AD}.documents as documents`),

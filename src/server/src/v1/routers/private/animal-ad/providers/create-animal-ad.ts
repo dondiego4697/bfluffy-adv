@@ -11,14 +11,14 @@ export interface Body {
     documents: DBTableAnimalAd.FieldDocuments;
     isBasicVaccinations: boolean;
     description: string;
-    name: string;
+    title: string;
     cost: number;
     sex: DBTableAnimalAd.FieldSex;
     animalBreedCode: string;
     cityCode: string;
     address?: string;
     imageUrls: string[];
-    ageMonths?: number;
+    birthday?: Date;
 }
 
 export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
@@ -26,14 +26,14 @@ export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
         documents,
         address,
         isBasicVaccinations,
-        name,
+        title,
         description,
         cost,
         sex,
         animalBreedCode,
         cityCode,
         imageUrls,
-        ageMonths
+        birthday
     } = req.body as Body;
 
     const [animalBreed, city] = await Promise.all([
@@ -52,14 +52,14 @@ export const createAnimalAd = wrap<Request, Response>(async (req, res) => {
     }
 
     const {id, publicId} = await AnimalAdDbProvider.createAnimalAd({
-        name,
+        title,
         address,
         description,
         isBasicVaccinations,
         documents,
         cost,
         sex,
-        ageMonths,
+        birthday,
         animalBreedId: animalBreed.id,
         cityId: city.id,
         ownerId: req.userData.id

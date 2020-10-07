@@ -57,20 +57,20 @@ describe(REQUEST_PATH, () => {
         const imageUrls = ['url1', 'url2', 'url3'];
         const {body, statusCode} = await client.post<any>(`${url}${REQUEST_PATH}`, {
             json: {
-                name: 'animal ad name',
+                title: 'animal ad title',
                 cost: 1.2,
                 sex: {
                     male: true,
                     female: true
                 },
-                ageMonths: 10,
                 address: 'address',
                 animalBreedCode: animalBreed.code,
                 cityCode: city.code,
                 documents: {
                     genericMark: true
                 },
-                imageUrls
+                imageUrls,
+                birthday: '01-12-2020'
             }
         });
 
@@ -83,7 +83,7 @@ describe(REQUEST_PATH, () => {
             animalBreedId: animalBreed.id,
             cost: 1.2,
             description: null,
-            name: 'animal ad name',
+            title: 'animal ad title',
             address: 'address',
             id: 1,
             isArchive: false,
@@ -94,12 +94,12 @@ describe(REQUEST_PATH, () => {
                 male: true,
                 female: true
             },
-            ageMonths: 10,
             viewsCount: 0,
             documents: {
                 genericMark: true
             },
-            imageUrls
+            imageUrls,
+            birthday: new Date('2020-01-12T00:00:00.000Z')
         });
     });
 });

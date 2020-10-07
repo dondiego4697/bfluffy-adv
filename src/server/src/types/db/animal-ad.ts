@@ -19,7 +19,7 @@ export namespace DBTableAnimalAd {
         city_id: number;
         sex: FieldSex;
         cost: number;
-        name: string;
+        title: string;
         description?: string;
         address?: string;
         is_archive: boolean;
@@ -29,7 +29,7 @@ export namespace DBTableAnimalAd {
         owner_id: number;
         created_at: Date;
         updated_at: Date;
-        age_months?: number;
+        birthday?: Date;
     }
 }
 
