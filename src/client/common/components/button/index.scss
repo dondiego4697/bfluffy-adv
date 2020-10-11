@@ -1,10 +1,12 @@
-@import '../../../consts.scss';
+@import '../../../common/consts.scss';
 
 .bfluffy-button {
     & input, a {
-        line-height: 20px;
+        width: 100%;
+        margin: 0;
         padding: 10px 16px;
         font-family: FontMedium;
+        background-color: rgba(0, 0, 0, 0);
         font-size: $font-size-s;
         border-radius: $border-radius;
         border: unset;
@@ -22,13 +24,11 @@
 
     &__link {
         border: none;
-        height: unset;
         font-size: $font-size-s;
-        padding: 0 !important;
+        padding: 0;
         font-family: FontMedium;
         color: $primary-color;
         box-shadow: unset;
-        background-color: white;
 
         &:hover {
             color: $primary-color;
@@ -37,41 +37,19 @@
     }
 
     &__primary {
-        background-color: $primary-color;
+        background-color: $primary-color !important;
         color: white;
 
         &:hover {
-            background-color: $primary-color;
-            color: white;
             opacity: 0.8;
         }
     }
 
     &__base {
-        box-shadow: $box-shadow;
-        color: $primary-text-color;
-        background-color: white;
+        background-color: $secondary-color-light !important;
 
         &:hover {
-            color: $primary-text-color;
-            box-shadow: $box-shadow_hover;
-        }
-    }
-
-    &__image {
-        box-shadow: $box-shadow;
-        background-color: white;
-        padding: 10px !important;
-        display: flex;
-
-        &:hover {
-            box-shadow: $box-shadow_hover;
-        }
-
-        & svg {
-            height: 20px;
-            width: 20px;
-            margin: auto;
+            background-color: $secondary-color-light_hover !important;
         }
     }
 }

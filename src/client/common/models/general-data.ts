@@ -47,11 +47,7 @@ export class GeneralDataModel {
     }
 
     @action private load() {
-        Promise.all([
-            this.signIn(),
-            this.loadAnimals(),
-            this.loadGeo()
-        ]).then(() => this.isInitReady = true);
+        Promise.all([this.signIn(), this.loadAnimals(), this.loadGeo()]).then(() => (this.isInitReady = true));
     }
 
     @action private loadAnimals() {
@@ -88,19 +84,21 @@ export class GeneralDataModel {
     }
 
     @action public loginByAuthToken() {
-        return UserRequestBookV1.checkAuthToken().then((response) =>
-            this.saveUser({
-                email: response.email,
-                name: response.name,
-                contacts: response.contacts,
-                verified: response.verified,
-                avatar: response.avatar
-            })
-        ).catch((error) => {
-            if (error.response.status === 400) {
-                this.deleteUser();
-            }
-        });
+        return UserRequestBookV1.checkAuthToken()
+            .then((response) =>
+                this.saveUser({
+                    email: response.email,
+                    name: response.name,
+                    contacts: response.contacts,
+                    verified: response.verified,
+                    avatar: response.avatar
+                })
+            )
+            .catch((error) => {
+                if (error.response.status === 400) {
+                    this.deleteUser();
+                }
+            });
     }
 
     @action public getAuthTokenFromCookie() {

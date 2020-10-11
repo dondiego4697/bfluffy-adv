@@ -18,7 +18,7 @@ interface Props extends RouteComponentProps {
 
 Yup.setLocale(YupLocaleObject);
 
-const b = bevis('root');
+const b = bevis('root-desktop');
 
 @inject('generalDataModel', 'uiModel')
 @observer
@@ -30,9 +30,7 @@ class App extends React.Component<Props> {
 
         return (
             <div className={b()}>
-                <div className={b('container')}>
-                    {this.props.children}
-                </div>
+                <div className={b('container')}>{this.props.children}</div>
             </div>
         );
     }

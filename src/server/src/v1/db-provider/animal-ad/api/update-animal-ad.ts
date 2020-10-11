@@ -20,8 +20,16 @@ const knex = Knex({client: 'pg'});
 
 export async function updateAnimalAd(publicId: string, params: Params) {
     const {
-        title, description, address, documents, cityId,
-        isBasicVaccinations, sex, cost, animalBreedId, birthday
+        title,
+        description,
+        address,
+        documents,
+        cityId,
+        isBasicVaccinations,
+        sex,
+        cost,
+        animalBreedId,
+        birthday
     } = params;
 
     const query = knex(DbTable.ANIMAL_AD)

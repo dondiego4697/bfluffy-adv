@@ -15,13 +15,10 @@ const b = bevis('main-page');
 
 @inject('generalDataModel')
 export class MainPage extends React.Component<Props> {
-
     public render(): React.ReactNode {
         return (
             <div className={b()}>
-                <div className={b('container')}>
-
-                </div>
+                <div className={b('container')}></div>
             </div>
         );
     }

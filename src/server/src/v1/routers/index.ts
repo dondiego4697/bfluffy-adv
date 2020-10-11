@@ -4,7 +4,8 @@ import {router as privateRouter} from 'server/v1/routers/private';
 import {requestEmulator} from 'server/middlewares/request-emulator';
 import {auth} from 'server/middlewares/auth';
 
-export const router = express.Router()
+export const router = express
+    .Router()
     .use(requestEmulator)
     .use('/public', publicRouter)
     .use(auth)
