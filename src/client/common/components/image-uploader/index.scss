@@ -1,0 +1,75 @@
+@import '../../../common/consts.scss';
+
+@mixin base-square {
+    width: 120px;
+    height: 120px;
+    border-radius: $border-radius;
+}
+
+.bfluffy-image-uploader {
+    @include base-square;
+    background-color: white;
+    user-select: none;
+    display: flex;
+    opacity: 0.9;
+    box-shadow: $box-shadow;
+    transition: $base-transition;
+
+    &:hover {
+        opacity: 1;
+        box-shadow: $box-shadow_hover;
+    }
+
+    &__container {
+        @include base-square;
+        display: inline-flex;
+        position: relative;
+    }
+
+    &__spinner-container {
+        cursor: pointer;
+        @include base-square;
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+
+        &_hide {
+            display: none;
+        }
+
+        & .bfluffy-spinner {
+            margin: auto;
+        }
+    }
+
+    &__image-preview {
+        @include base-square;
+        object-fit: cover;
+    }
+
+    &__icon {
+        display: inline-flex;
+        margin: auto;
+
+        & path {
+            stroke: $secondary-color-dark;
+        }
+    }
+
+    &__button-wrapper {
+        @include base-square;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+    }
+
+    &__upload-button {
+        outline: 0;
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
+        height: 0px;
+    }
+}

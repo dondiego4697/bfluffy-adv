@@ -1,16 +1,16 @@
-import * as React from 'react';
 import {observable, action} from 'mobx';
 
-interface Modal {
+interface Popup {
+    type?: 'error' | 'success';
     visible?: boolean;
     title?: string;
-    children?: React.ReactNode;
+    description?: string;
 }
 
 export class UIModel {
     @observable public spinning: boolean = false;
 
-    @observable public modal: Modal = {};
+    @observable public popup: Popup = {};
 
     @action public showSpinner() {
         this.spinning = true;
@@ -20,14 +20,14 @@ export class UIModel {
         this.spinning = false;
     }
 
-    @action public showModal(modal: Modal) {
-        this.modal = {
+    @action public showPopup(modal: Popup) {
+        this.popup = {
             ...modal,
             visible: true
         };
     }
 
-    @action public destroyModal() {
-        this.modal = {};
+    @action public destroyPopup() {
+        this.popup = {};
     }
 }

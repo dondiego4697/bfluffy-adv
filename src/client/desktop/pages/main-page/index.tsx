@@ -7,7 +7,8 @@ import bevis from 'common/lib/bevis';
 
 import './index.scss';
 
-import {EditText} from 'common/components/edit-text';
+import {ImageUploader} from 'common/components/image-uploader';
+import {UserRequestBookV1} from 'common/lib/request-book/v1/user';
 
 interface Props extends RouteComponentProps {
     generalDataModel?: GeneralDataModel;
@@ -21,13 +22,9 @@ export class MainPage extends React.Component<Props> {
         return (
             <div className={b()}>
                 <div className={b('container')}>
-                    <EditText
-                        type="number"
-                        label="Какое-то поле"
-                        measure="₽"
-                        required={true}
-                        error="тобi пiзда"
-                        onChange={() => {}}
+                    <ImageUploader
+                        iconType="camera"
+                        onUpload={(file) => UserRequestBookV1.updateAvatar(file).then(({url}) => url)}
                     />
                 </div>
             </div>
