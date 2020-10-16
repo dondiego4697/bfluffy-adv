@@ -8,8 +8,25 @@ html, body, #root {
 }
 
 .root-desktop {
+    &__toast-container {
+        width: 50% !important;
+        top: 100px !important;
+        font-size: FontMedium;
+        text-align: center;
+        font-size: $font-size-s;
 
-    &__container {
+        & .Toastify__toast {
+            padding: 32px;
+            background-color: white !important;
+            box-shadow: $box-shadow !important;
+            border-radius: $border-radius !important;
+        }
 
+        & .Toastify__toast-body {
+            padding: 16px;
+            background-color: $secondary-color-light !important;
+            border-radius: $border-radius !important;
+            color: black;
+        }
     }
 }

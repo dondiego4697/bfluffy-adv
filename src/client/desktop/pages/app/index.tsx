@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Yup from 'yup';
 import {observer, inject} from 'mobx-react';
 import {withRouter, RouteComponentProps} from 'react-router';
+import {ToastContainer} from 'react-toastify';
 
 import bevis from 'common/lib/bevis';
 import {GeneralDataModel} from 'common/models/general-data';
@@ -10,6 +11,8 @@ import {YupLocaleObject} from 'common/consts';
 import {Popup} from 'common/components/popup';
 
 import './index.scss';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {UserRequestBookV1} from 'common/lib/request-book/v1/user';
 
 interface Props extends RouteComponentProps {
@@ -50,7 +53,24 @@ class App extends React.Component<Props> {
         );
     }
 
+    private renderGlobalToastContainer() {
+        return (
+            <ToastContainer
+                className={b('toast-container')}
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={true}
+                closeOnClick
+                pauseOnHover
+                limit={2}
+                closeButton={false}
+            />
+        );
+    }
+
     public render(): React.ReactNode {
+        // TODO удалить
         UserRequestBookV1.checkVerifiedCode('dondiego4697@mail.ru', '1960');
 
         if (!this.props.generalDataModel?.isInitReady) {
@@ -61,6 +81,7 @@ class App extends React.Component<Props> {
             <div className={b()}>
                 {this.renderSVGdef()}
                 {this.renderGlobalPopup()}
+                {this.renderGlobalToastContainer()}
                 <div className={b('container')}>{this.props.children}</div>
             </div>
         );

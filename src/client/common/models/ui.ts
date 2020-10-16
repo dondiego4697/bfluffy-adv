@@ -20,9 +20,9 @@ export class UIModel {
         this.spinning = false;
     }
 
-    @action public showPopup(modal: Popup) {
+    @action public showPopup(popup: Popup) {
         this.popup = {
-            ...modal,
+            ...popup,
             visible: true
         };
     }
