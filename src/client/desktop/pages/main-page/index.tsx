@@ -9,7 +9,7 @@ import bevis from 'common/lib/bevis';
 
 import './index.scss';
 
-import {Button} from 'common/components/button';
+import {TimeoutButton} from 'common/components/timeout-button';
 
 interface Props extends RouteComponentProps {
     generalDataModel?: GeneralDataModel;
@@ -24,18 +24,7 @@ export class MainPage extends React.Component<Props> {
         return (
             <div className={b()}>
                 <div className={b('container')}>
-                    <Button
-                        actionType="button"
-                        styleType="base"
-                        text="click"
-                        onClickHandler={() =>
-                            toast(
-                                <p style={{margin: 0}}>
-                                    Что ты палишь <b>чмо</b>??
-                                </p>
-                            )
-                        }
-                    />
+                    <TimeoutButton text="Отправить код еще раз" seconds={9} onClickHandler={() => toast('нах иди')} />
                 </div>
             </div>
         );

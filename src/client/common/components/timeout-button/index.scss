@@ -1,0 +1,22 @@
+@import '../../../common/consts.scss';
+
+.bfluffy-timeout-button {
+
+    &__container {
+
+    }
+
+    &__button {
+        font-family: FontMedium;
+        color: #B4B4B4;
+        font-size: $font-size-s;
+        cursor: pointer;
+        margin: 0;
+        display: inline-flex;
+        user-select: none;
+
+        &_disable {
+            cursor: not-allowed !important;
+        }
+    }
+}

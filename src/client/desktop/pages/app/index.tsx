@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as Yup from 'yup';
 import {observer, inject} from 'mobx-react';
 import {withRouter, RouteComponentProps} from 'react-router';
-import {ToastContainer} from 'react-toastify';
+import {ToastContainer, Slide} from 'react-toastify';
 
 import bevis from 'common/lib/bevis';
 import {GeneralDataModel} from 'common/models/general-data';
@@ -56,7 +56,7 @@ class App extends React.Component<Props> {
     private renderGlobalToastContainer() {
         return (
             <ToastContainer
-                className={b('toast-container')}
+                className="bfluffy-toast"
                 position="top-center"
                 autoClose={3000}
                 hideProgressBar={true}
