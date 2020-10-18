@@ -9,7 +9,8 @@ import bevis from 'common/lib/bevis';
 
 import './index.scss';
 
-import {TimeoutButton} from 'common/components/timeout-button';
+import {CheckBox} from 'common/components/checkbox';
+import {SEX_FEMALE_SVG, SEX_MALE_SVG} from 'common/svg/icons';
 
 interface Props extends RouteComponentProps {
     generalDataModel?: GeneralDataModel;
@@ -20,11 +21,27 @@ const b = bevis('main-page');
 
 @inject('generalDataModel', 'uiModel')
 export class MainPage extends React.Component<Props> {
+    state = {items: ['male']};
     public render(): React.ReactNode {
         return (
             <div className={b()}>
                 <div className={b('container')}>
-                    <TimeoutButton text="Отправить код еще раз" seconds={9} onClickHandler={() => toast('нах иди')} />
+                    <CheckBox
+                        items={[
+                            {
+                                key: 'female',
+                                value: 'Девочка',
+                                img: SEX_FEMALE_SVG
+                            },
+                            {
+                                key: 'male',
+                                value: 'Девочка',
+                                img: SEX_MALE_SVG
+                            }
+                        ]}
+                        checkedKeys={this.state.items}
+                        onChange={(items) => this.setState({items})}
+                    />
                 </div>
             </div>
         );
