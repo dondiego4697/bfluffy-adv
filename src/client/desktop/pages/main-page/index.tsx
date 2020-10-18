@@ -9,7 +9,7 @@ import bevis from 'common/lib/bevis';
 
 import './index.scss';
 
-import {ToggleSwitch} from 'common/components/toggle-switch';
+import {TimeoutButton} from 'common/components/timeout-button';
 
 interface Props extends RouteComponentProps {
     generalDataModel?: GeneralDataModel;
@@ -20,12 +20,11 @@ const b = bevis('main-page');
 
 @inject('generalDataModel', 'uiModel')
 export class MainPage extends React.Component<Props> {
-    state = {value: true};
     public render(): React.ReactNode {
         return (
             <div className={b()}>
                 <div className={b('container')}>
-                    <ToggleSwitch value={this.state.value} onChange={(value) => this.setState({value})} />
+                    <TimeoutButton text="Отправить код еще раз" seconds={9} onClickHandler={() => toast('нах иди')} />
                 </div>
             </div>
         );

@@ -13,32 +13,30 @@ interface Props {
 
 interface State {
     seconds: number;
+    intervalId: number;
 }
 
 const b = bevis('bfluffy-timeout-button');
 
 export class TimeoutButton extends React.Component<Props, State> {
     state: State = {
-        seconds: 0
+        seconds: 0,
+        intervalId: -1
     };
-
-    interval: number | undefined;
-
-    public componentWillMount() {
-        this.launchInterval(0);
-    }
 
     private launchInterval(seconds: number) {
         this.setState({seconds});
 
-        this.interval = (setInterval(() => {
+        const intervalId = (setInterval(() => {
             if (this.state.seconds !== 0) {
                 return this.setState({seconds: this.state.seconds - 1});
             }
 
-            clearInterval(this.interval);
-            this.interval = undefined;
+            clearInterval(this.state.intervalId);
+            this.setState({intervalId: -1});
         }, 1000) as unknown) as number;
+
+        this.setState({intervalId});
     }
 
     private getFormattedTime(secondsRaw: number) {
@@ -51,7 +49,7 @@ export class TimeoutButton extends React.Component<Props, State> {
     public render(): React.ReactNode {
         const {text, seconds, onClickHandler} = this.props;
 
-        const enable = this.state.seconds === 0;
+        const enable = this.state.seconds === 0 && this.state.intervalId === -1;
         const formattedTime = this.getFormattedTime(this.state.seconds);
 
         return (
