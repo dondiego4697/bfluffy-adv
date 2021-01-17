@@ -1,0 +1,35 @@
+@font-face {
+    letter-spacing: -0.03em;
+    font-family: FontBold;
+    src: url('/fonts/Montserrat/Montserrat-Bold.ttf');
+}
+
+@font-face {
+    letter-spacing: -0.03em;
+    font-family: FontMedium;
+    src: url('/fonts/Montserrat/Montserrat-Medium.ttf');
+}
+
+$background-color: #FFFFFF;
+
+$primary-color: #F85F59;
+$secondary-color-light: #F3F3F4;
+$secondary-color-light_hover: #E7E7E9;
+$secondary-color-dark: #9CA9C4;
+
+$error-color-dark: #FF5555;
+$error-color-light: #FFEEEE;
+
+$box-shadow: 0px 8px 20px 0px rgba(156, 169, 196, 0.25);
+$box-shadow_hover: 0px 10px 25px 0px rgba(156, 169, 196, 0.5);
+
+
+$border-radius: 8px;
+
+$font-size-xs: 10px;
+$font-size-s: 12px;
+$font-size-m: 16px;
+$font-size-l: 18px;
+$font-size-xl: 20px;
+
+$base-transition: all 200ms ease;

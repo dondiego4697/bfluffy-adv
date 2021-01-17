@@ -1,0 +1,114 @@
+@import '../../../common/consts.scss';
+
+.bfluffy-popup {
+    display: none;
+    z-index: 1000;
+
+    &__content {
+        background-color: white;
+        padding: 56px 30px 30px 30px;
+        border-radius: 2 * $border-radius;
+        position: relative;
+        margin: 20% auto;
+        display: flex;
+        flex-direction: column;
+        outline: none;
+    }
+
+    &__title {
+        font-family: FontBold;
+        font-size: $font-size-xl;
+        line-height: $font-size-l;
+        margin: 0;
+        text-align: center;
+    }
+
+    &__description {
+        font-family: FontMedium;
+        font-size: $font-size-s;
+        line-height: $font-size-s;
+        text-align: center;
+        color: $secondary-color-dark;
+        margin-top: 16px;
+        margin-bottom: 32px;
+    }
+
+    &__visible {
+        display: block !important;
+    }
+
+    &__cross {
+        position: absolute;
+        cursor: pointer;
+        right: 16px;
+        top: 16px;
+        width: 24px;
+        height: 24px;
+        background: $secondary-color-light;
+        border-radius: 50%;
+        z-index: 1001;
+        outline: none;
+        transition: $base-transition;
+
+        &:before, &:after {
+            position: absolute;
+            border-radius: 25px;
+            left: 11px;
+            top: 6px;
+            content: ' ';
+            height: 11px;
+            width: 2px;
+            background-color: $secondary-color-dark;
+        }
+
+        &:before {
+            transform: rotate(45deg);
+        }
+
+        &:after {
+            transform: rotate(-45deg);
+        }
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    &__mask {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.65);
+    }
+
+    &__container {
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+    &__ok-btn {
+        font-family: FontBold;
+        padding: 16px 24px;
+        border-radius: 500px;
+        color: $primary-color;
+        font-size: $font-size-m;
+        text-align: center;
+        margin-left: 12px;
+        margin-right: 12px;
+        background-color: rgba(248, 95, 89, 0.3);
+        transition: $base-transition;
+        opacity: 0.8;
+        cursor: pointer;
+        outline: none;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+

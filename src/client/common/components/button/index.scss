@@ -1,0 +1,55 @@
+@import '../../../common/consts.scss';
+
+.bfluffy-button {
+    & input, a {
+        width: 100%;
+        margin: 0;
+        padding: 10px 16px;
+        font-family: FontMedium;
+        background-color: rgba(0, 0, 0, 0);
+        font-size: $font-size-s;
+        border-radius: $border-radius;
+        border: unset;
+        outline: none;
+        cursor: pointer;
+        user-select: none;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: $base-transition;
+        -webkit-appearance: none;
+    }
+}
+
+.bfluffy-button-type {
+
+    &__link {
+        border: none;
+        font-size: $font-size-s;
+        padding: 0;
+        font-family: FontMedium;
+        color: $primary-color;
+        box-shadow: unset;
+
+        &:hover {
+            color: $primary-color;
+            opacity: 0.8;
+        }
+    }
+
+    &__primary {
+        background-color: $primary-color !important;
+        color: white;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    &__base {
+        background-color: $secondary-color-light !important;
+
+        &:hover {
+            background-color: $secondary-color-light_hover !important;
+        }
+    }
+}

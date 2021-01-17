@@ -1,0 +1,84 @@
+@import '../../../common/consts.scss';
+
+.bfluffy-edit-text {
+    box-shadow: unset;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    & textarea {
+        resize: none;
+    }
+
+    & input, textarea {
+        border: 1px solid rgba(0, 0, 0, 0) !important;
+        transition: $base-transition;
+        font-family: FontMedium;
+        border-radius: $border-radius;
+        outline: none;
+        border: none;
+        background-color: $secondary-color-light;
+        padding: 10px 18px;
+        padding-right: 32px;
+        font-size: $font-size-s;
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        &::placeholder {}
+
+        &:focus {
+            background-color: white;
+            border: 1px solid #9CA9C4 !important;
+            box-sizing: border-box;
+            box-shadow: 0px 0px 0px 4px rgba(156, 169, 196, 0.25);
+            border-radius: 8px;
+        }
+    }
+
+    &__label {
+        margin: 0;
+        margin-bottom: 4px;
+        font-size: $font-size-xs;
+        font-family: FontBold;
+    }
+
+    &__required {
+        color: $error-color-dark;
+        display: inline;
+        margin-left: 2px;
+    }
+
+    &__error {
+        & input, textarea {
+            background-color: $error-color-light;
+
+            &:focus {
+                background-color: $error-color-light;
+                border: 1px solid $error-color-dark !important;
+                box-sizing: border-box;
+                box-shadow: 0px 0px 0px 4px $error-color-light;
+                border-radius: 8px;
+            }
+        }
+    }
+
+    &__error-value {
+        color: $error-color-dark;
+        margin: 0;
+        margin-top: 4px;
+        font-size: $font-size-xs;
+        font-family: FontBold;
+    }
+
+    &__measure {
+        margin: 0;
+        position: absolute;
+        top: 9px;
+        right: 16px;
+        font-size: $font-size-m;
+    }
+}

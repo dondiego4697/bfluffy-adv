@@ -1,0 +1,36 @@
+@import '../../consts.scss';
+
+.logo {
+    text-decoration: none;
+
+    &__container {
+        display: inline-flex;
+
+        & a {
+            display: flex;
+            flex-direction: row;
+            user-select: none;
+        }
+
+        & h2 {
+            margin: 10px 0 0 16px;
+            font-family: FontBold;
+            font-size: $font-size-xl;
+            height: 30px;
+            color: black;
+
+            @media only screen and (max-width: 768px) {
+                display: none;
+            }
+        }
+
+        & svg {
+            width: 32px;
+        }
+
+        & img.beta {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}

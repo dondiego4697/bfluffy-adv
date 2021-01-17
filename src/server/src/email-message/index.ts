@@ -1,7 +1,5 @@
-import {resetPassword} from 'server/email-message/mails/reset-password';
-import {signup} from 'server/email-message/mails/signup';
+import {verifiedCode} from 'server/email-message/mails/verified-code';
 
 export const EmailMessage = {
-	signup,
-	resetPassword
+    verifiedCode
 };

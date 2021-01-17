@@ -39,7 +39,11 @@ lint:
 
 .PHONY: dev
 dev:
-	$(MAKE) -j2 server-dev client-dev
+	$(MAKE) -j3 tunnel-dev server-dev client-dev
+
+.PHONY: tunnel-dev
+tunnel-dev:
+	@node_modules/.bin/lt --port 8080 --subdomain bfluffy
 
 .PHONY: client-dev
 client-dev:
@@ -61,7 +65,7 @@ server-dev:
 tests: build-server
 	@ENVIRONMENT=tests \
 		DISABLE_LOGGING=1 \
-		node_modules/.bin/jest --config=jest.config.json --runInBand --forceExit
+		node_modules/.bin/jest --config=jest.config.json --runInBand --forceExit ${TEST_PATTERN}
 
 .PHONY: migrate-db
 migrate-db: build-server
@@ -71,3 +75,7 @@ migrate-db: build-server
 migrate-test-db: build-server
 	@ENVIRONMENT=tests \
 		node $(OUT_DIR)/server/tools/create-tables.js
+
+.PHONY: fill-samples
+fill-samples: build-server
+	node $(OUT_DIR)/server/tools/fill-samples.js

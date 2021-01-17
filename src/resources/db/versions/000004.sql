@@ -1,6 +1,6 @@
 CREATE TABLE region (
     id SERIAL NOT NULL,
-    code SMALLINT NOT NULL,
+    code TEXT NOT NULL,
     display_name TEXT NOT NULL,
     CONSTRAINT pk_region PRIMARY KEY (id),
     CONSTRAINT uq_region_code UNIQUE (code)

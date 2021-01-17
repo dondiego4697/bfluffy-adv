@@ -3,13 +3,13 @@ import {Request, Response} from 'express';
 import {wrap} from 'async-middleware';
 import {AuthToken} from 'server/lib/auth-token';
 import {UserDbProvider} from 'server/v1/db-provider/user';
-import {getPasswordHash} from 'server/lib/crypto';
 import {ClientStatusCode} from 'server/types/consts';
+import {config} from 'server/config';
 
 interface UserData {
-	id: number;
-	isAuth: boolean; // Запрос с auth токеном
-	isVerified: boolean;
+    id: number;
+    isAuth: boolean; // Запрос с auth токеном
+    isVerified: boolean;
 }
 
 declare global {
@@ -20,33 +20,38 @@ declare global {
     }
 }
 
-export const auth = wrap<Request, Response>(async (req, _res, next) => {
-	req.userData = {
-		id: -1,
-		isAuth: false,
-		isVerified: false
-	};
+export const auth = wrap<Request, Response>(async (req, res, next) => {
+    // TODO добавить поддержку авторизации через mail.ru | yandex.ru
 
-	const {auth_token: authToken} = req.cookies;
+    req.userData = {
+        id: -1,
+        isAuth: false,
+        isVerified: false
+    };
 
-	if (!authToken) {
-		throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
-	}
+    const {auth_token: authToken} = req.cookies;
 
-	req.userData.isAuth = true;
+    if (!authToken) {
+        throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
+    }
 
-	const credentials = AuthToken.decode(authToken);
-	const user = await UserDbProvider.getUserByCredentials(
-		credentials.email,
-		getPasswordHash(credentials.password)
-	);
+    req.userData.isAuth = true;
 
-	if (!user) {
-		throw Boom.unauthorized(ClientStatusCode.USER_NOT_AUTHORIZED);
-	}
+    const credentials = AuthToken.decode(authToken);
+    const user = await UserDbProvider.getUserByEmail(credentials.email);
 
-	req.userData.id = user.id;
-	req.userData.isVerified = user.verified;
+    if (!user || !user.id) {
+        throw Boom.unauthorized(ClientStatusCode.USER_NOT_EXIST);
+    }
 
-	next();
+    req.userData.id = user.id;
+    req.userData.isVerified = user.verified;
+
+    setAuthTokenCookie(authToken, res);
+
+    next();
 });
+
+export function setAuthTokenCookie(authToken: string, res: Response) {
+    res.cookie('auth_token', authToken, {maxAge: config['auth.token.ttl']});
+}

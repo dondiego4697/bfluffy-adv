@@ -1,14 +1,18 @@
-import {SignUpType} from 'server/types/consts';
-
 export namespace DBTableUsers {
+    export interface FieldContacts {
+        phone?: string;
+        email?: string;
+    }
 
     export interface Schema {
         id: number;
         email: string;
-        display_name: string;
-        password: string;
-        sign_up_type: SignUpType;
-        created_at: Date;
+        verified_code: string;
         verified: boolean;
+        avatar?: string;
+        name?: string;
+        contacts: FieldContacts;
+        created_at: Date;
+        updated_at: Date;
     }
 }

@@ -14,19 +14,15 @@ interface City {
 const knex = Knex({client: 'pg'});
 
 export async function getCityList(): Promise<City[]> {
-	const query = knex(DbTable.CITY)
-		.select([
-			knex.raw(`${DbTable.CITY}.code as "cityCode"`),
-			knex.raw(`${DbTable.CITY}.display_name as "cityDisplayName"`),
-			knex.raw(`${DbTable.REGION}.code as "regionCode"`),
-			knex.raw(`${DbTable.REGION}.display_name as "regionDisplayName"`)
-		])
-		.innerJoin(
-			DbTable.REGION,
-			`${DbTable.REGION}.id`,
-			`${DbTable.CITY}.region_id`
-		);
+    const query = knex(DbTable.CITY)
+        .select([
+            knex.raw(`${DbTable.CITY}.code as "cityCode"`),
+            knex.raw(`${DbTable.CITY}.display_name as "cityDisplayName"`),
+            knex.raw(`${DbTable.REGION}.code as "regionCode"`),
+            knex.raw(`${DbTable.REGION}.display_name as "regionDisplayName"`)
+        ])
+        .innerJoin(DbTable.REGION, `${DbTable.REGION}.id`, `${DbTable.CITY}.region_id`);
 
-	const {rows} = await dbManager.executeReadQuery(query.toString());
-	return rows;
+    const {rows} = await dbManager.executeReadQuery(query.toString());
+    return rows;
 }
