@@ -34,7 +34,7 @@
     "lodash": "4.17.15",
     "mobx": "5.15.4",
     "mobx-react": "6.2.2",
-    "moment": "2.26.0",
+    "moment": "2.29.4",
     "nodemailer": "6.4.8",
     "pg": "8.2.1",
     "pg-types": "3.0.0",
