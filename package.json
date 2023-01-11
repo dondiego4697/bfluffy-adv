@@ -29,7 +29,7 @@
     "got": "11.3.0",
     "history": "4.9.0",
     "jsonwebtoken": "8.5.1",
-    "knex": "0.21.1",
+    "knex": "2.4.0",
     "libphonenumber-js": "1.7.53",
     "lodash": "4.17.15",
     "mobx": "5.15.4",
